@@ -87,9 +87,11 @@ class MDCAT_Platform_Admin_Menu {
 
     public static function subjects_page() {
 
-        echo '<div class="wrap">';
-        echo '<h1>Subjects Management</h1>';
-        echo '</div>';
+        if (!class_exists('MDCAT_Platform_Subjects')) {
+            wp_die(esc_html__('Subjects module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Subjects::render_page();
     }
 
     /**
