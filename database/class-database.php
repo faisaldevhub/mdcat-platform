@@ -54,6 +54,29 @@ class MDCAT_Platform_Database {
         dbDelta($sql_chapters);
 
         /**
+         * Collections Table
+         */
+
+        $collections_table = $wpdb->prefix . 'mdcat_collections';
+
+        $sql_collections = "CREATE TABLE $collections_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            chapter_id BIGINT UNSIGNED NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            description TEXT NULL,
+            sort_order INT DEFAULT 0,
+            status VARCHAR(20) DEFAULT 'active',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_collections);
+
+        /**
          * Quizzes Table
          */
 

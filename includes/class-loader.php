@@ -19,10 +19,13 @@ class MDCAT_Platform_Loader {
             require_once MDCAT_PLATFORM_PATH . 'modules/subjects/class-subjects.php';
             require_once MDCAT_PLATFORM_PATH . 'modules/chapters/class-chapters-handler.php';
             require_once MDCAT_PLATFORM_PATH . 'modules/chapters/class-chapters.php';
+            require_once MDCAT_PLATFORM_PATH . 'modules/collections/class-collections-handler.php';
+            require_once MDCAT_PLATFORM_PATH . 'modules/collections/class-collections.php';
 
             MDCAT_Platform_Admin_Menu::init();
             MDCAT_Platform_Subjects::init();
             MDCAT_Platform_Chapters::init();
+            MDCAT_Platform_Collections::init();
         }
 
         /**

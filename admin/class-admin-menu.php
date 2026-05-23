@@ -52,6 +52,15 @@ class MDCAT_Platform_Admin_Menu {
 
         add_submenu_page(
             'mdcat-platform',
+            'Collections',
+            'Collections',
+            'manage_options',
+            'mdcat-collections',
+            [__CLASS__, 'collections_page']
+        );
+
+        add_submenu_page(
+            'mdcat-platform',
             'Quizzes',
             'Quizzes',
             'manage_options',
@@ -105,6 +114,19 @@ class MDCAT_Platform_Admin_Menu {
         }
 
         MDCAT_Platform_Chapters::render_page();
+    }
+
+    /**
+     * Collections Page
+     */
+
+    public static function collections_page() {
+
+        if (!class_exists('MDCAT_Platform_Collections')) {
+            wp_die(esc_html__('Collections module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Collections::render_page();
     }
 
     /**
