@@ -32,6 +32,15 @@ class MDCAT_Platform_Loader {
         }
 
         /**
+         * Load Backend Modules
+         */
+
+        require_once MDCAT_PLATFORM_PATH . 'modules/attempts/class-attempts-handler.php';
+        require_once MDCAT_PLATFORM_PATH . 'modules/attempts/class-attempts.php';
+
+        MDCAT_Platform_Attempts::init();
+
+        /**
          * Load Public Files
          */
 

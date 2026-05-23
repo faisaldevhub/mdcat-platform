@@ -127,5 +127,58 @@ class MDCAT_Platform_Database {
 
         dbDelta($sql_questions);
 
+        /**
+         * Attempts Table
+         */
+
+        $attempts_table = $wpdb->prefix . 'mdcat_attempts';
+
+        $sql_attempts = "CREATE TABLE $attempts_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT UNSIGNED NOT NULL,
+            collection_id BIGINT UNSIGNED NOT NULL,
+            score DECIMAL(10,2) DEFAULT 0.00,
+            total_questions INT UNSIGNED DEFAULT 0,
+            correct_answers INT UNSIGNED DEFAULT 0,
+            wrong_answers INT UNSIGNED DEFAULT 0,
+            time_taken INT UNSIGNED DEFAULT 0,
+            status VARCHAR(20) DEFAULT 'in_progress',
+            started_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            completed_at DATETIME NULL,
+
+            PRIMARY KEY (id),
+            KEY user_id (user_id),
+            KEY collection_id (collection_id),
+            KEY status (status)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_attempts);
+
+        /**
+         * Attempt Answers Table
+         */
+
+        $attempt_answers_table = $wpdb->prefix . 'mdcat_attempt_answers';
+
+        $sql_attempt_answers = "CREATE TABLE $attempt_answers_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            attempt_id BIGINT UNSIGNED NOT NULL,
+            question_id BIGINT UNSIGNED NOT NULL,
+            selected_option VARCHAR(1) NOT NULL,
+            is_correct TINYINT(1) DEFAULT 0,
+            answered_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id),
+            KEY attempt_id (attempt_id),
+            KEY question_id (question_id),
+            KEY is_correct (is_correct)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_attempt_answers);
+
     }
 }
