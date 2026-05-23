@@ -17,9 +17,12 @@ class MDCAT_Platform_Loader {
             require_once MDCAT_PLATFORM_PATH . 'admin/class-admin-menu.php';
             require_once MDCAT_PLATFORM_PATH . 'modules/subjects/class-subjects-handler.php';
             require_once MDCAT_PLATFORM_PATH . 'modules/subjects/class-subjects.php';
+            require_once MDCAT_PLATFORM_PATH . 'modules/chapters/class-chapters-handler.php';
+            require_once MDCAT_PLATFORM_PATH . 'modules/chapters/class-chapters.php';
 
             MDCAT_Platform_Admin_Menu::init();
             MDCAT_Platform_Subjects::init();
+            MDCAT_Platform_Chapters::init();
         }
 
         /**

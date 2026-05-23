@@ -100,9 +100,11 @@ class MDCAT_Platform_Admin_Menu {
 
     public static function chapters_page() {
 
-        echo '<div class="wrap">';
-        echo '<h1>Chapters Management</h1>';
-        echo '</div>';
+        if (!class_exists('MDCAT_Platform_Chapters')) {
+            wp_die(esc_html__('Chapters module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Chapters::render_page();
     }
 
     /**
