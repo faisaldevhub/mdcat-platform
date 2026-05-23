@@ -4,6 +4,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once MDCAT_PLATFORM_PATH . 'modules/attempts/services/class-quiz-engine.php';
+
 class MDCAT_Platform_Attempts {
 
     /**
