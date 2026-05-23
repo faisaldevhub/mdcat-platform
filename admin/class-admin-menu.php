@@ -146,8 +146,10 @@ class MDCAT_Platform_Admin_Menu {
 
     public static function questions_page() {
 
-        echo '<div class="wrap">';
-        echo '<h1>Questions Management</h1>';
-        echo '</div>';
+        if (!class_exists('MDCAT_Platform_Questions')) {
+            wp_die(esc_html__('Questions module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Questions::render_page();
     }
 }

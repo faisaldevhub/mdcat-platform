@@ -107,19 +107,18 @@ class MDCAT_Platform_Database {
         $sql_questions = "CREATE TABLE $questions_table (
 
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-            quiz_id BIGINT UNSIGNED NOT NULL,
-
+            collection_id BIGINT UNSIGNED NOT NULL,
             question TEXT NOT NULL,
-
             option_a TEXT NOT NULL,
             option_b TEXT NOT NULL,
             option_c TEXT NOT NULL,
             option_d TEXT NOT NULL,
-
-            correct_answer VARCHAR(1) NOT NULL,
-
+            correct_option VARCHAR(1) NOT NULL,
             explanation TEXT NULL,
-
+            difficulty VARCHAR(20) DEFAULT 'easy',
+            marks DECIMAL(8,2) DEFAULT 1.00,
+            sort_order INT DEFAULT 0,
+            status VARCHAR(20) DEFAULT 'active',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
             PRIMARY KEY (id)
