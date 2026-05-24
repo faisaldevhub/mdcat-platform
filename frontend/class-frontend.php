@@ -13,6 +13,7 @@ class MDCAT_Platform_Frontend {
 
         add_shortcode('mdcat_quiz', [__CLASS__, 'render_quiz_shortcode']);
         add_shortcode('mdcat_attempt_history', [__CLASS__, 'render_attempt_history_shortcode']);
+        add_shortcode('mdcat_performance', [__CLASS__, 'render_performance_shortcode']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
     }
 
@@ -61,6 +62,7 @@ class MDCAT_Platform_Frontend {
                     'your_answer'       => __('Your answer', 'mdcat-platform'),
                     'correct_answer'    => __('Correct answer', 'mdcat-platform'),
                     'explanation'       => __('Explanation', 'mdcat-platform'),
+                    'analytics_empty'   => __('No performance data available yet.', 'mdcat-platform'),
                 ],
             ]
         );
@@ -169,6 +171,66 @@ class MDCAT_Platform_Frontend {
     }
 
     /**
+     * Render the student performance analytics container.
+     *
+     * @return string
+     */
+    public static function render_performance_shortcode() {
+
+        self::enqueue_quiz_assets();
+
+        ob_start();
+        ?>
+        <div class="mdcat-performance">
+            <div class="mdcat-performance__loading">
+                <?php esc_html_e('Loading...', 'mdcat-platform'); ?>
+            </div>
+
+            <div class="mdcat-performance__message" hidden></div>
+
+            <div class="mdcat-performance__content" hidden>
+                <section class="mdcat-performance__section">
+                    <h3><?php esc_html_e('Subject Performance', 'mdcat-platform'); ?></h3>
+                    <div class="mdcat-performance__table-wrap">
+                        <table class="mdcat-performance__table mdcat-performance__subject-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><?php esc_html_e('Subject', 'mdcat-platform'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Accuracy', 'mdcat-platform'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Correct', 'mdcat-platform'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Wrong', 'mdcat-platform'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Total', 'mdcat-platform'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="mdcat-performance__section">
+                    <h3><?php esc_html_e('Chapter Performance', 'mdcat-platform'); ?></h3>
+                    <div class="mdcat-performance__table-wrap">
+                        <table class="mdcat-performance__table mdcat-performance__chapter-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><?php esc_html_e('Subject', 'mdcat-platform'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Chapter', 'mdcat-platform'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Accuracy', 'mdcat-platform'); ?></th>
+                                    <th scope="col"><?php esc_html_e('Performance Label', 'mdcat-platform'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <?php
+
+        return ob_get_clean();
+    }
+
+    /**
      * Enqueue the quiz assets together.
      */
     private static function enqueue_quiz_assets() {
@@ -190,6 +252,6 @@ class MDCAT_Platform_Frontend {
             return false;
         }
 
-        return has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history');
+        return has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance');
     }
 }

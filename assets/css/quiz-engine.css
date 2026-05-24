@@ -322,3 +322,95 @@
     border-radius: 6px;
     background: #f6f7f7;
 }
+
+.mdcat-performance {
+    max-width: 980px;
+    margin: 24px auto;
+    color: #1d2327;
+}
+
+.mdcat-performance__loading,
+.mdcat-performance__message {
+    padding: 14px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.mdcat-performance__message[data-type="empty"] {
+    color: #50575e;
+}
+
+.mdcat-performance__message[data-type="error"] {
+    border-color: #f0c2c4;
+    background: #fcf0f1;
+    color: #b32d2e;
+}
+
+.mdcat-performance__content {
+    display: grid;
+    gap: 18px;
+}
+
+.mdcat-performance__section {
+    padding: 18px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.mdcat-performance__section h3 {
+    margin: 0 0 14px;
+}
+
+.mdcat-performance__table-wrap {
+    overflow-x: auto;
+}
+
+.mdcat-performance__table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+}
+
+.mdcat-performance__table th,
+.mdcat-performance__table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #dcdcde;
+    text-align: left;
+    vertical-align: top;
+}
+
+.mdcat-performance__table th {
+    background: #f6f7f7;
+    font-weight: 700;
+}
+
+.mdcat-performance__table tr:last-child td {
+    border-bottom: 0;
+}
+
+.mdcat-performance__label {
+    display: inline-block;
+    min-width: 72px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.mdcat-performance__label--strong {
+    background: #edfaef;
+    color: #0a6624;
+}
+
+.mdcat-performance__label--average {
+    background: #fff4e5;
+    color: #8a4b00;
+}
+
+.mdcat-performance__label--weak {
+    background: #fcf0f1;
+    color: #b32d2e;
+}

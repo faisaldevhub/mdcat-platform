@@ -150,7 +150,9 @@ class MDCAT_Platform_Database {
             PRIMARY KEY (id),
             KEY user_id (user_id),
             KEY collection_id (collection_id),
-            KEY status (status)
+            KEY status (status),
+            KEY user_status (user_id, status),
+            KEY completed_at (completed_at)
 
         ) $charset_collate;";
 
@@ -174,7 +176,8 @@ class MDCAT_Platform_Database {
             PRIMARY KEY (id),
             KEY attempt_id (attempt_id),
             KEY question_id (question_id),
-            KEY is_correct (is_correct)
+            KEY is_correct (is_correct),
+            KEY attempt_question (attempt_id, question_id)
 
         ) $charset_collate;";
 

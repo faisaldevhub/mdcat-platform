@@ -799,6 +799,172 @@
         }
     }
 
+    class MDCATPerformanceController {
+        constructor(root) {
+            this.root = root;
+            this.elements = {
+                loading: root.querySelector('.mdcat-performance__loading'),
+                message: root.querySelector('.mdcat-performance__message'),
+                content: root.querySelector('.mdcat-performance__content'),
+                subjectBody: root.querySelector('.mdcat-performance__subject-table tbody'),
+                chapterBody: root.querySelector('.mdcat-performance__chapter-table tbody')
+            };
+
+            this.fetchPerformanceAnalytics();
+        }
+
+        async fetchPerformanceAnalytics() {
+            this.setLoading(true);
+            this.hideMessage();
+
+            const response = await this.request('mdcat_get_performance_analytics', {});
+
+            this.setLoading(false);
+
+            if (!response || !response.success || !response.data) {
+                this.showMessage(this.getErrorMessage(response), 'error');
+                return;
+            }
+
+            this.renderPerformanceAnalytics(response.data);
+        }
+
+        renderPerformanceAnalytics(data) {
+            const subjects = Array.isArray(data.subject_performance) ? data.subject_performance : [];
+            const chapters = Array.isArray(data.chapter_performance) ? data.chapter_performance : [];
+
+            if (!subjects.length && !chapters.length) {
+                this.hide(this.elements.content);
+                this.showMessage(this.t('analytics_empty'), 'empty');
+                return;
+            }
+
+            this.renderSubjectPerformance(subjects);
+            this.renderChapterPerformance(chapters);
+            this.show(this.elements.content);
+        }
+
+        renderSubjectPerformance(items) {
+            this.elements.subjectBody.innerHTML = '';
+
+            items.forEach((item) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${this.escapeHtml(item.subject_title || '')}</td>
+                    <td>${this.escapeHtml(item.accuracy_percentage || 0)}%</td>
+                    <td>${this.escapeHtml(item.correct_answers || 0)}</td>
+                    <td>${this.escapeHtml(item.wrong_answers || 0)}</td>
+                    <td>${this.escapeHtml(item.total_questions || 0)}</td>
+                `;
+                this.elements.subjectBody.appendChild(row);
+            });
+        }
+
+        renderChapterPerformance(items) {
+            this.elements.chapterBody.innerHTML = '';
+
+            items.forEach((item) => {
+                const label = item.performance_label || 'Weak';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${this.escapeHtml(item.subject_title || '')}</td>
+                    <td>${this.escapeHtml(item.chapter_title || '')}</td>
+                    <td>${this.escapeHtml(item.accuracy_percentage || 0)}%</td>
+                    <td><span class="mdcat-performance__label mdcat-performance__label--${this.escapeAttribute(label.toLowerCase())}">${this.escapeHtml(label)}</span></td>
+                `;
+                this.elements.chapterBody.appendChild(row);
+            });
+        }
+
+        async request(action, payload) {
+            if (!window.MDCATQuiz || !MDCATQuiz.ajax_url) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('nonce', MDCATQuiz.nonce || '');
+
+            Object.keys(payload || {}).forEach((key) => {
+                formData.append(key, payload[key]);
+            });
+
+            try {
+                const response = await window.fetch(MDCATQuiz.ajax_url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    return this.errorResponse(this.t('request_failed'));
+                }
+
+                return await response.json();
+            } catch (error) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+        }
+
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.show(this.elements.loading);
+            } else {
+                this.hide(this.elements.loading);
+            }
+        }
+
+        showMessage(message, type) {
+            this.elements.message.textContent = message || '';
+            this.elements.message.dataset.type = type || '';
+            this.show(this.elements.message);
+        }
+
+        hideMessage() {
+            this.elements.message.textContent = '';
+            this.hide(this.elements.message);
+        }
+
+        getErrorMessage(response) {
+            return response && response.data && response.data.message ? response.data.message : this.t('request_failed');
+        }
+
+        errorResponse(message) {
+            return {
+                success: false,
+                data: {
+                    message: message || this.t('request_failed')
+                }
+            };
+        }
+
+        show(element) {
+            if (element) {
+                element.hidden = false;
+            }
+        }
+
+        hide(element) {
+            if (element) {
+                element.hidden = true;
+            }
+        }
+
+        t(key) {
+            return window.MDCATQuiz && MDCATQuiz.i18n && MDCATQuiz.i18n[key] ? MDCATQuiz.i18n[key] : key;
+        }
+
+        escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = String(value);
+            return div.innerHTML;
+        }
+
+        escapeAttribute(value) {
+            return String(value).replace(/[^a-z0-9_-]/gi, '');
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.mdcat-quiz').forEach((root) => {
             new MDCATQuizController(root);
@@ -806,6 +972,10 @@
 
         document.querySelectorAll('.mdcat-attempt-history').forEach((root) => {
             new MDCATAttemptHistoryController(root);
+        });
+
+        document.querySelectorAll('.mdcat-performance').forEach((root) => {
+            new MDCATPerformanceController(root);
         });
     });
 }());
