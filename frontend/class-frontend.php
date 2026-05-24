@@ -56,6 +56,11 @@ class MDCAT_Platform_Frontend {
                     'request_failed'    => __('Something went wrong. Please try again.', 'mdcat-platform'),
                     'question_of'       => __('Question %1$d of %2$d', 'mdcat-platform'),
                     'history_empty'     => __('No completed attempts found.', 'mdcat-platform'),
+                    'review_answers'    => __('Review Answers', 'mdcat-platform'),
+                    'review_title'      => __('Answer Review', 'mdcat-platform'),
+                    'your_answer'       => __('Your answer', 'mdcat-platform'),
+                    'correct_answer'    => __('Correct answer', 'mdcat-platform'),
+                    'explanation'       => __('Explanation', 'mdcat-platform'),
                 ],
             ]
         );

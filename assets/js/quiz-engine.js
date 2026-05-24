@@ -273,10 +273,123 @@
                         <span>${this.escapeHtml(this.t('correct'))}: ${this.escapeHtml(correct)}</span>
                         <span>${this.escapeHtml(this.t('wrong'))}: ${this.escapeHtml(wrong)}</span>
                     </div>
+                    <button type="button" class="mdcat-quiz__review-button">${this.escapeHtml(this.t('review_answers'))}</button>
                 </div>
             `;
 
+            const reviewButton = this.elements.result.querySelector('.mdcat-quiz__review-button');
+
+            if (reviewButton) {
+                reviewButton.addEventListener('click', () => this.fetchAttemptReview());
+            }
+
             this.clearPersistedState();
+        }
+
+        async fetchAttemptReview() {
+            if (!this.state.attemptId || this.state.isBusy) {
+                return;
+            }
+
+            this.setBusy(true, this.t('loading'));
+
+            const response = await this.request('mdcat_get_attempt_review', {
+                attempt_id: this.state.attemptId
+            });
+
+            this.setBusy(false);
+
+            if (!this.isValidResponse(response)) {
+                this.failRequest(response);
+                return;
+            }
+
+            this.renderReviewScreen(response.data);
+        }
+
+        renderReviewScreen(review) {
+            const questions = Array.isArray(review.questions) ? review.questions : [];
+            const score = review.score || {};
+            const collection = review.collection || {};
+
+            this.hide(this.elements.question);
+            this.show(this.elements.result);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mdcat-review';
+
+            const heading = document.createElement('div');
+            heading.className = 'mdcat-review__header';
+            heading.innerHTML = `
+                <h3>${this.escapeHtml(this.t('review_title'))}</h3>
+                <p>${this.escapeHtml(collection.subject_title || '')} ${collection.chapter_title ? ' / ' + this.escapeHtml(collection.chapter_title) : ''} ${collection.collection_title ? ' / ' + this.escapeHtml(collection.collection_title) : ''}</p>
+                <div class="mdcat-review__score">${this.escapeHtml(score.score || 0)} / ${this.escapeHtml(score.total_questions || 0)}</div>
+            `;
+
+            wrapper.appendChild(heading);
+
+            questions.forEach((question, index) => {
+                wrapper.appendChild(this.createReviewQuestion(question, index));
+            });
+
+            this.elements.result.innerHTML = '';
+            this.elements.result.appendChild(wrapper);
+        }
+
+        createReviewQuestion(question, index) {
+            const card = document.createElement('article');
+            card.className = `mdcat-review__question ${question.is_correct ? 'is-correct' : 'is-wrong'}`;
+
+            const title = document.createElement('h4');
+            title.className = 'mdcat-review__question-title';
+            title.textContent = `${index + 1}. ${question.question || ''}`;
+            card.appendChild(title);
+
+            const options = document.createElement('div');
+            options.className = 'mdcat-review__options';
+
+            Object.keys(question.options || {}).forEach((key) => {
+                options.appendChild(this.createReviewOption(question, key));
+            });
+
+            card.appendChild(options);
+
+            const meta = document.createElement('div');
+            meta.className = 'mdcat-review__meta';
+            meta.innerHTML = `
+                <span>${this.escapeHtml(this.t('your_answer'))}: ${this.escapeHtml((question.selected_option || '').toUpperCase() || '-')}</span>
+                <span>${this.escapeHtml(this.t('correct_answer'))}: ${this.escapeHtml((question.correct_option || '').toUpperCase())}</span>
+            `;
+            card.appendChild(meta);
+
+            const explanation = document.createElement('div');
+            explanation.className = 'mdcat-review__explanation';
+            explanation.innerHTML = `<strong>${this.escapeHtml(this.t('explanation'))}:</strong> ${this.escapeHtml(question.explanation || '')}`;
+            card.appendChild(explanation);
+
+            return card;
+        }
+
+        createReviewOption(question, key) {
+            const option = document.createElement('div');
+            const selected = question.selected_option === key;
+            const correct = question.correct_option === key;
+            const classes = ['mdcat-review__option'];
+
+            if (selected && question.is_correct) {
+                classes.push('is-selected-correct');
+            } else if (selected) {
+                classes.push('is-selected-wrong');
+            }
+
+            if (correct) {
+                classes.push('is-correct-answer');
+            }
+
+            option.className = classes.join(' ');
+            option.textContent = `${key.toUpperCase()}. ${(question.options && question.options[key]) || ''}`;
+
+            return option;
         }
 
         startTimer() {

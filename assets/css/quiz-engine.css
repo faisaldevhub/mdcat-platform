@@ -150,6 +150,22 @@
     color: #50575e;
 }
 
+.mdcat-quiz__review-button {
+    margin-top: 16px;
+    padding: 10px 14px;
+    border: 1px solid #2271b1;
+    border-radius: 6px;
+    background: #2271b1;
+    color: #fff;
+    cursor: pointer;
+}
+
+.mdcat-quiz__review-button:hover,
+.mdcat-quiz__review-button:focus {
+    background: #135e96;
+    border-color: #135e96;
+}
+
 @media (max-width: 600px) {
     .mdcat-quiz {
         margin: 16px 0;
@@ -219,4 +235,90 @@
 
 .mdcat-attempt-history__table tr:last-child td {
     border-bottom: 0;
+}
+
+.mdcat-review {
+    display: grid;
+    gap: 16px;
+    text-align: left;
+}
+
+.mdcat-review__header {
+    padding: 18px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #f6f7f7;
+}
+
+.mdcat-review__header h3 {
+    margin: 0 0 8px;
+}
+
+.mdcat-review__score {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.mdcat-review__question {
+    padding: 16px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.mdcat-review__question.is-correct {
+    border-left: 4px solid #198754;
+}
+
+.mdcat-review__question.is-wrong {
+    border-left: 4px solid #dc3545;
+}
+
+.mdcat-review__question-title {
+    margin: 0 0 12px;
+    font-size: 18px;
+    line-height: 1.45;
+}
+
+.mdcat-review__options {
+    display: grid;
+    gap: 8px;
+}
+
+.mdcat-review__option {
+    padding: 10px 12px;
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.mdcat-review__option.is-selected-correct {
+    border-color: #198754;
+    background: #edfaef;
+}
+
+.mdcat-review__option.is-selected-wrong {
+    border-color: #dc3545;
+    background: #fcf0f1;
+}
+
+.mdcat-review__option.is-correct-answer {
+    border-color: #198754;
+    box-shadow: inset 4px 0 0 #198754;
+}
+
+.mdcat-review__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    color: #50575e;
+    font-size: 14px;
+}
+
+.mdcat-review__explanation {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 6px;
+    background: #f6f7f7;
 }
