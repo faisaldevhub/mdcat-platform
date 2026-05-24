@@ -20,6 +20,13 @@ class MDCAT_Platform_Frontend {
      */
     public static function register_assets() {
 
+        wp_register_style(
+            'mdcat-quiz-engine',
+            MDCAT_PLATFORM_URL . 'assets/css/quiz-engine.css',
+            [],
+            MDCAT_PLATFORM_VERSION
+        );
+
         wp_register_script(
             'mdcat-quiz-engine',
             MDCAT_PLATFORM_URL . 'assets/js/quiz-engine.js',
@@ -46,9 +53,14 @@ class MDCAT_Platform_Frontend {
                     'login_required'    => __('Please log in to start this quiz.', 'mdcat-platform'),
                     'missing_collection' => __('Quiz collection is not configured.', 'mdcat-platform'),
                     'request_failed'    => __('Something went wrong. Please try again.', 'mdcat-platform'),
+                    'question_of'       => __('Question %1$d of %2$d', 'mdcat-platform'),
                 ],
             ]
         );
+
+        if (self::page_has_quiz_shortcode()) {
+            self::enqueue_quiz_assets();
+        }
     }
 
     /**
@@ -69,7 +81,7 @@ class MDCAT_Platform_Frontend {
 
         $collection_id = absint($atts['collection_id']);
 
-        wp_enqueue_script('mdcat-quiz-engine');
+        self::enqueue_quiz_assets();
 
         ob_start();
         ?>
@@ -98,5 +110,30 @@ class MDCAT_Platform_Frontend {
         <?php
 
         return ob_get_clean();
+    }
+
+    /**
+     * Enqueue the quiz assets together.
+     */
+    private static function enqueue_quiz_assets() {
+
+        wp_enqueue_style('mdcat-quiz-engine');
+        wp_enqueue_script('mdcat-quiz-engine');
+    }
+
+    /**
+     * Detect shortcode usage early enough for styles to load in the document head.
+     *
+     * @return bool
+     */
+    private static function page_has_quiz_shortcode() {
+
+        global $post;
+
+        if (!$post || empty($post->post_content)) {
+            return false;
+        }
+
+        return has_shortcode($post->post_content, 'mdcat_quiz');
     }
 }
