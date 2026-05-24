@@ -19,6 +19,7 @@ class MDCAT_Platform_Quiz_Ajax {
         add_action('wp_ajax_mdcat_save_answer', [__CLASS__, 'save_answer']);
         add_action('wp_ajax_mdcat_complete_quiz', [__CLASS__, 'complete_quiz']);
         add_action('wp_ajax_mdcat_get_result', [__CLASS__, 'get_result']);
+        add_action('wp_ajax_mdcat_get_attempt_history', [__CLASS__, 'get_attempt_history']);
     }
 
     /**
@@ -176,6 +177,28 @@ class MDCAT_Platform_Quiz_Ajax {
         }
 
         wp_send_json_success(self::format_result($result));
+    }
+
+    /**
+     * Return completed attempt history for the current user.
+     */
+    public static function get_attempt_history() {
+
+        self::verify_request();
+
+        $history = MDCAT_Platform_Attempt_History::get_user_attempt_history(
+            get_current_user_id(),
+            [
+                'page'     => self::get_post_absint('page'),
+                'per_page' => self::get_post_absint('per_page'),
+            ]
+        );
+
+        if (is_wp_error($history)) {
+            self::send_wp_error($history);
+        }
+
+        wp_send_json_success($history);
     }
 
     /**

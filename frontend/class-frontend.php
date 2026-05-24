@@ -12,6 +12,7 @@ class MDCAT_Platform_Frontend {
     public static function init() {
 
         add_shortcode('mdcat_quiz', [__CLASS__, 'render_quiz_shortcode']);
+        add_shortcode('mdcat_attempt_history', [__CLASS__, 'render_attempt_history_shortcode']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
     }
 
@@ -54,6 +55,7 @@ class MDCAT_Platform_Frontend {
                     'missing_collection' => __('Quiz collection is not configured.', 'mdcat-platform'),
                     'request_failed'    => __('Something went wrong. Please try again.', 'mdcat-platform'),
                     'question_of'       => __('Question %1$d of %2$d', 'mdcat-platform'),
+                    'history_empty'     => __('No completed attempts found.', 'mdcat-platform'),
                 ],
             ]
         );
@@ -113,6 +115,55 @@ class MDCAT_Platform_Frontend {
     }
 
     /**
+     * Render the student attempt history container.
+     *
+     * @param array $atts Shortcode attributes.
+     * @return string
+     */
+    public static function render_attempt_history_shortcode( $atts ) {
+
+        $atts = shortcode_atts(
+            [
+                'per_page' => 20,
+            ],
+            $atts,
+            'mdcat_attempt_history'
+        );
+
+        self::enqueue_quiz_assets();
+
+        ob_start();
+        ?>
+        <div class="mdcat-attempt-history" data-per-page="<?php echo esc_attr(absint($atts['per_page'])); ?>">
+            <div class="mdcat-attempt-history__loading">
+                <?php esc_html_e('Loading...', 'mdcat-platform'); ?>
+            </div>
+
+            <div class="mdcat-attempt-history__message" hidden></div>
+
+            <div class="mdcat-attempt-history__table-wrap" hidden>
+                <table class="mdcat-attempt-history__table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><?php esc_html_e('Subject', 'mdcat-platform'); ?></th>
+                            <th scope="col"><?php esc_html_e('Chapter', 'mdcat-platform'); ?></th>
+                            <th scope="col"><?php esc_html_e('Collection', 'mdcat-platform'); ?></th>
+                            <th scope="col"><?php esc_html_e('Score', 'mdcat-platform'); ?></th>
+                            <th scope="col"><?php esc_html_e('Correct', 'mdcat-platform'); ?></th>
+                            <th scope="col"><?php esc_html_e('Wrong', 'mdcat-platform'); ?></th>
+                            <th scope="col"><?php esc_html_e('Date', 'mdcat-platform'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <?php
+
+        return ob_get_clean();
+    }
+
+    /**
      * Enqueue the quiz assets together.
      */
     private static function enqueue_quiz_assets() {
@@ -134,6 +185,6 @@ class MDCAT_Platform_Frontend {
             return false;
         }
 
-        return has_shortcode($post->post_content, 'mdcat_quiz');
+        return has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history');
     }
 }

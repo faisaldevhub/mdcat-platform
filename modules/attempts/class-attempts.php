@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once MDCAT_PLATFORM_PATH . 'modules/attempts/services/class-quiz-engine.php';
+require_once MDCAT_PLATFORM_PATH . 'modules/attempts/services/class-attempt-history.php';
 require_once MDCAT_PLATFORM_PATH . 'modules/attempts/ajax/class-quiz-ajax.php';
 
 class MDCAT_Platform_Attempts {

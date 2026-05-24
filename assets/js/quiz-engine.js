@@ -536,9 +536,163 @@
         }
     }
 
+    class MDCATAttemptHistoryController {
+        constructor(root) {
+            this.root = root;
+            this.page = 1;
+            this.perPage = this.parseInt(root.dataset.perPage) || 20;
+            this.elements = {
+                loading: root.querySelector('.mdcat-attempt-history__loading'),
+                message: root.querySelector('.mdcat-attempt-history__message'),
+                tableWrap: root.querySelector('.mdcat-attempt-history__table-wrap'),
+                tableBody: root.querySelector('tbody')
+            };
+
+            this.fetchAttemptHistory();
+        }
+
+        async fetchAttemptHistory() {
+            this.setLoading(true);
+            this.hideMessage();
+
+            const response = await this.request('mdcat_get_attempt_history', {
+                page: this.page,
+                per_page: this.perPage
+            });
+
+            this.setLoading(false);
+
+            if (!response || !response.success || !response.data) {
+                this.showMessage(this.getErrorMessage(response), 'error');
+                return;
+            }
+
+            this.renderAttemptHistory(response.data.items || []);
+        }
+
+        renderAttemptHistory(items) {
+            if (!Array.isArray(items) || !items.length) {
+                this.hide(this.elements.tableWrap);
+                this.showMessage(this.t('history_empty'), 'empty');
+                return;
+            }
+
+            this.elements.tableBody.innerHTML = '';
+
+            items.forEach((item) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${this.escapeHtml(item.subject_title || '')}</td>
+                    <td>${this.escapeHtml(item.chapter_title || '')}</td>
+                    <td>${this.escapeHtml(item.collection_title || '')}</td>
+                    <td>${this.escapeHtml(item.score || 0)} / ${this.escapeHtml(item.total_questions || 0)}</td>
+                    <td>${this.escapeHtml(item.correct_answers || 0)}</td>
+                    <td>${this.escapeHtml(item.wrong_answers || 0)}</td>
+                    <td>${this.escapeHtml(item.completed_at || '')}</td>
+                `;
+                this.elements.tableBody.appendChild(row);
+            });
+
+            this.show(this.elements.tableWrap);
+        }
+
+        async request(action, payload) {
+            if (!window.MDCATQuiz || !MDCATQuiz.ajax_url) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('nonce', MDCATQuiz.nonce || '');
+
+            Object.keys(payload || {}).forEach((key) => {
+                formData.append(key, payload[key]);
+            });
+
+            try {
+                const response = await window.fetch(MDCATQuiz.ajax_url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    return this.errorResponse(this.t('request_failed'));
+                }
+
+                return await response.json();
+            } catch (error) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+        }
+
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.show(this.elements.loading);
+            } else {
+                this.hide(this.elements.loading);
+            }
+        }
+
+        showMessage(message, type) {
+            this.elements.message.textContent = message || '';
+            this.elements.message.dataset.type = type || '';
+            this.show(this.elements.message);
+        }
+
+        hideMessage() {
+            this.elements.message.textContent = '';
+            this.hide(this.elements.message);
+        }
+
+        getErrorMessage(response) {
+            return response && response.data && response.data.message ? response.data.message : this.t('request_failed');
+        }
+
+        errorResponse(message) {
+            return {
+                success: false,
+                data: {
+                    message: message || this.t('request_failed')
+                }
+            };
+        }
+
+        show(element) {
+            if (element) {
+                element.hidden = false;
+            }
+        }
+
+        hide(element) {
+            if (element) {
+                element.hidden = true;
+            }
+        }
+
+        parseInt(value) {
+            const parsed = Number.parseInt(value, 10);
+            return Number.isFinite(parsed) ? parsed : 0;
+        }
+
+        t(key) {
+            return window.MDCATQuiz && MDCATQuiz.i18n && MDCATQuiz.i18n[key] ? MDCATQuiz.i18n[key] : key;
+        }
+
+        escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = String(value);
+            return div.innerHTML;
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.mdcat-quiz').forEach((root) => {
             new MDCATQuizController(root);
+        });
+
+        document.querySelectorAll('.mdcat-attempt-history').forEach((root) => {
+            new MDCATAttemptHistoryController(root);
         });
     });
 }());

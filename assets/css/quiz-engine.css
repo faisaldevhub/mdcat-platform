@@ -166,3 +166,57 @@
         width: 100%;
     }
 }
+
+.mdcat-attempt-history {
+    max-width: 980px;
+    margin: 24px auto;
+    color: #1d2327;
+}
+
+.mdcat-attempt-history__loading,
+.mdcat-attempt-history__message {
+    padding: 14px;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.mdcat-attempt-history__message[data-type="empty"] {
+    color: #50575e;
+}
+
+.mdcat-attempt-history__message[data-type="error"] {
+    border-color: #f0c2c4;
+    background: #fcf0f1;
+    color: #b32d2e;
+}
+
+.mdcat-attempt-history__table-wrap {
+    overflow-x: auto;
+    border: 1px solid #dcdcde;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.mdcat-attempt-history__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.mdcat-attempt-history__table th,
+.mdcat-attempt-history__table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #dcdcde;
+    text-align: left;
+    vertical-align: top;
+}
+
+.mdcat-attempt-history__table th {
+    background: #f6f7f7;
+    font-weight: 700;
+}
+
+.mdcat-attempt-history__table tr:last-child td {
+    border-bottom: 0;
+}
