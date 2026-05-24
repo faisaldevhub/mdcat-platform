@@ -426,6 +426,112 @@ class MDCAT_Platform_Quiz_Engine {
     }
 
     /**
+     * Get safe attempt context for controllers.
+     *
+     * This allows AJAX/REST layers to validate ownership and load questions
+     * without placing direct database logic outside the engine.
+     *
+     * @param int $attempt_id Attempt ID.
+     * @return array|WP_Error
+     */
+    public static function get_attempt_context( $attempt_id ) {
+
+        $attempt_id = absint($attempt_id);
+
+        if (!$attempt_id) {
+            return new WP_Error('invalid_attempt', __('A valid attempt is required.', 'mdcat-platform'));
+        }
+
+        $attempt = self::get_attempt($attempt_id);
+
+        if (!$attempt) {
+            return new WP_Error('invalid_attempt', __('The selected attempt does not exist.', 'mdcat-platform'));
+        }
+
+        return [
+            'attempt_id'      => absint($attempt->id),
+            'user_id'         => absint($attempt->user_id),
+            'collection_id'   => absint($attempt->collection_id),
+            'total_questions' => absint($attempt->total_questions),
+            'status'          => sanitize_key($attempt->status),
+            'started_at'      => $attempt->started_at,
+            'completed_at'    => $attempt->completed_at,
+        ];
+    }
+
+    /**
+     * Validate that a question can be answered for an attempt.
+     *
+     * @param int $attempt_id  Attempt ID.
+     * @param int $question_id Question ID.
+     * @return true|WP_Error
+     */
+    public static function validate_question_for_attempt( $attempt_id, $question_id ) {
+
+        $attempt_id  = absint($attempt_id);
+        $question_id = absint($question_id);
+
+        if (!$attempt_id || !$question_id) {
+            return new WP_Error('invalid_question_context', __('A valid attempt and question are required.', 'mdcat-platform'));
+        }
+
+        $attempt = self::get_attempt($attempt_id);
+
+        if (!$attempt) {
+            return new WP_Error('invalid_attempt', __('The selected attempt does not exist.', 'mdcat-platform'));
+        }
+
+        $question = self::get_question($question_id);
+
+        if (!$question) {
+            return new WP_Error('invalid_question', __('The selected question does not exist.', 'mdcat-platform'));
+        }
+
+        if (!self::question_belongs_to_attempt($question, $attempt)) {
+            return new WP_Error('question_collection_mismatch', __('This question does not belong to the attempt collection.', 'mdcat-platform'));
+        }
+
+        return true;
+    }
+
+    /**
+     * Get safe result data for an attempt.
+     *
+     * @param int $attempt_id Attempt ID.
+     * @return array|WP_Error
+     */
+    public static function get_attempt_result( $attempt_id ) {
+
+        $attempt_id = absint($attempt_id);
+
+        if (!$attempt_id) {
+            return new WP_Error('invalid_attempt', __('A valid attempt is required.', 'mdcat-platform'));
+        }
+
+        $attempt = self::get_attempt($attempt_id);
+
+        if (!$attempt) {
+            return new WP_Error('invalid_attempt', __('The selected attempt does not exist.', 'mdcat-platform'));
+        }
+
+        $score_data = self::calculate_score($attempt_id);
+
+        if (is_wp_error($score_data)) {
+            return $score_data;
+        }
+
+        return array_merge(
+            $score_data,
+            [
+                'status'       => sanitize_key($attempt->status),
+                'time_taken'   => absint($attempt->time_taken),
+                'started_at'   => $attempt->started_at,
+                'completed_at' => $attempt->completed_at,
+            ]
+        );
+    }
+
+    /**
      * Get the attempts table name.
      *
      * @return string
