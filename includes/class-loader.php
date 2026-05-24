@@ -44,6 +44,8 @@ class MDCAT_Platform_Loader {
          * Load Public Files
          */
 
-        // Future frontend files
+        require_once MDCAT_PLATFORM_PATH . 'frontend/class-frontend.php';
+
+        MDCAT_Platform_Frontend::init();
     }
 }
