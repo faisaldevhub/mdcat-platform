@@ -50,6 +50,10 @@ class MDCAT_Platform_Loader {
 
         MDCAT_Platform_Dashboard::init();
 
+        require_once MDCAT_PLATFORM_PATH . 'modules/gamification/class-gamification.php';
+
+        MDCAT_Platform_Gamification::init();
+
         /**
          * Load Public Files
          */

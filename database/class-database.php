@@ -206,5 +206,33 @@ class MDCAT_Platform_Database {
 
         dbDelta($sql_bookmarks);
 
+        /**
+         * Daily Activity Table (Gamification)
+         *
+         * Stores one row per user per calendar date. The unique constraint
+         * on (user_id, activity_date) enables safe INSERT ... ON DUPLICATE
+         * KEY UPDATE operations for atomic activity recording.
+         */
+
+        $daily_activity_table = $wpdb->prefix . 'mdcat_daily_activity';
+
+        $sql_daily_activity = "CREATE TABLE $daily_activity_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT UNSIGNED NOT NULL,
+            activity_date DATE NOT NULL,
+            attempts_count INT UNSIGNED DEFAULT 1,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id),
+            UNIQUE KEY user_date (user_id, activity_date),
+            KEY user_id (user_id),
+            KEY activity_date (activity_date)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_daily_activity);
+
     }
 }

@@ -1235,6 +1235,7 @@
                 message: root.querySelector('.mdcat-dashboard__message'),
                 content: root.querySelector('.mdcat-dashboard__content'),
                 statsGrid: root.querySelector('.mdcat-dashboard__stats-grid'),
+                streakSection: root.querySelector('.mdcat-dashboard__streak'),
                 snapshot: root.querySelector('.mdcat-dashboard__snapshot'),
                 actionsGrid: root.querySelector('.mdcat-dashboard__actions-grid'),
                 activity: root.querySelector('.mdcat-dashboard__activity')
@@ -1263,6 +1264,7 @@
             const stats = data.stats || {};
             const recentActivity = Array.isArray(data.recent_activity) ? data.recent_activity : [];
             const snapshot = data.performance_snapshot || {};
+            const streak = data.streak || {};
 
             if (!stats.total_attempts && !recentActivity.length) {
                 this.hide(this.elements.content);
@@ -1271,6 +1273,7 @@
             }
 
             this.renderStatsCards(stats);
+            this.renderStreakSection(streak);
             this.renderPerformanceSnapshot(snapshot);
             this.renderQuickActions();
             this.renderRecentActivity(recentActivity);
@@ -1323,6 +1326,87 @@
                 `;
                 this.elements.statsGrid.appendChild(element);
             });
+        }
+
+        renderStreakSection(streak) {
+            if (!this.elements.streakSection) {
+                return;
+            }
+
+            this.elements.streakSection.innerHTML = '';
+
+            const cards = [
+                {
+                    label: this.t('streak_current'),
+                    value: this.escapeHtml(streak.current_streak || 0),
+                    suffix: this.t('streak_days'),
+                    icon: '🔥',
+                    modifier: 'current'
+                },
+                {
+                    label: this.t('streak_longest'),
+                    value: this.escapeHtml(streak.longest_streak || 0),
+                    suffix: this.t('streak_days'),
+                    icon: '🏆',
+                    modifier: 'longest'
+                },
+                {
+                    label: this.t('streak_total_days'),
+                    value: this.escapeHtml(streak.total_active_days || 0),
+                    suffix: this.t('streak_days'),
+                    icon: '📅',
+                    modifier: 'total'
+                },
+                {
+                    label: this.t('streak_last_active'),
+                    value: this.formatLastActive(streak.last_active_date),
+                    suffix: '',
+                    icon: '⏰',
+                    modifier: 'last-active'
+                }
+            ];
+
+            const grid = document.createElement('div');
+            grid.className = 'mdcat-streak__cards-grid';
+
+            cards.forEach((card) => {
+                const element = document.createElement('div');
+                element.className = `mdcat-streak__card mdcat-streak__card--${this.escapeAttribute(card.modifier)}`;
+                element.innerHTML = `
+                    <div class="mdcat-streak__card-icon">${card.icon}</div>
+                    <div class="mdcat-streak__card-value">${card.value}</div>
+                    ${card.suffix ? `<div class="mdcat-streak__card-suffix">${this.escapeHtml(card.suffix)}</div>` : ''}
+                    <div class="mdcat-streak__card-label">${this.escapeHtml(card.label)}</div>
+                `;
+                grid.appendChild(element);
+            });
+
+            this.elements.streakSection.appendChild(grid);
+        }
+
+        formatLastActive(dateString) {
+            if (!dateString) {
+                return this.t('streak_never');
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const active = new Date(dateString + 'T00:00:00');
+            active.setHours(0, 0, 0, 0);
+
+            const diffMs = today.getTime() - active.getTime();
+            const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) {
+                return this.t('streak_today');
+            }
+
+            if (diffDays === 1) {
+                return this.t('streak_yesterday');
+            }
+
+            return this.formatDate(dateString);
         }
 
         renderPerformanceSnapshot(snapshot) {
@@ -1582,9 +1666,219 @@
         }
     }
 
+    class MDCATStreakController {
+        constructor(root) {
+            this.root = root;
+            this.elements = {
+                loading: root.querySelector('.mdcat-streak__loading'),
+                message: root.querySelector('.mdcat-streak__message'),
+                content: root.querySelector('.mdcat-streak__content'),
+                cardsGrid: root.querySelector('.mdcat-streak__cards-grid')
+            };
+
+            this.fetchStreakSummary();
+        }
+
+        async fetchStreakSummary() {
+            this.setLoading(true);
+            this.hideMessage();
+
+            const response = await this.request('mdcat_get_streak_summary', {});
+
+            this.setLoading(false);
+
+            if (!response || !response.success || !response.data) {
+                this.showMessage(this.getErrorMessage(response), 'error');
+                return;
+            }
+
+            this.renderStreakWidget(response.data);
+        }
+
+        renderStreakWidget(data) {
+            const cards = [
+                {
+                    label: this.t('streak_current'),
+                    value: this.escapeHtml(data.current_streak || 0),
+                    suffix: this.t('streak_days'),
+                    icon: '🔥',
+                    modifier: 'current'
+                },
+                {
+                    label: this.t('streak_longest'),
+                    value: this.escapeHtml(data.longest_streak || 0),
+                    suffix: this.t('streak_days'),
+                    icon: '🏆',
+                    modifier: 'longest'
+                },
+                {
+                    label: this.t('streak_total_days'),
+                    value: this.escapeHtml(data.total_active_days || 0),
+                    suffix: this.t('streak_days'),
+                    icon: '📅',
+                    modifier: 'total'
+                },
+                {
+                    label: this.t('streak_last_active'),
+                    value: this.formatLastActive(data.last_active_date),
+                    suffix: '',
+                    icon: '⏰',
+                    modifier: 'last-active'
+                }
+            ];
+
+            this.elements.cardsGrid.innerHTML = '';
+
+            cards.forEach((card) => {
+                const element = document.createElement('div');
+                element.className = `mdcat-streak__card mdcat-streak__card--${this.escapeAttribute(card.modifier)}`;
+                element.innerHTML = `
+                    <div class="mdcat-streak__card-icon">${card.icon}</div>
+                    <div class="mdcat-streak__card-value">${card.value}</div>
+                    ${card.suffix ? `<div class="mdcat-streak__card-suffix">${this.escapeHtml(card.suffix)}</div>` : ''}
+                    <div class="mdcat-streak__card-label">${this.escapeHtml(card.label)}</div>
+                `;
+                this.elements.cardsGrid.appendChild(element);
+            });
+
+            this.show(this.elements.content);
+        }
+
+        formatLastActive(dateString) {
+            if (!dateString) {
+                return this.t('streak_never');
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const active = new Date(dateString + 'T00:00:00');
+            active.setHours(0, 0, 0, 0);
+
+            const diffMs = today.getTime() - active.getTime();
+            const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) {
+                return this.t('streak_today');
+            }
+
+            if (diffDays === 1) {
+                return this.t('streak_yesterday');
+            }
+
+            try {
+                const date = new Date(dateString);
+
+                if (Number.isNaN(date.getTime())) {
+                    return dateString;
+                }
+
+                return date.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (error) {
+                return dateString;
+            }
+        }
+
+        async request(action, payload) {
+            if (!window.MDCATQuiz || !MDCATQuiz.ajax_url) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('nonce', MDCATQuiz.nonce || '');
+
+            Object.keys(payload || {}).forEach((key) => {
+                formData.append(key, payload[key]);
+            });
+
+            try {
+                const response = await window.fetch(MDCATQuiz.ajax_url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    return this.errorResponse(this.t('request_failed'));
+                }
+
+                return await response.json();
+            } catch (error) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+        }
+
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.show(this.elements.loading);
+            } else {
+                this.hide(this.elements.loading);
+            }
+        }
+
+        showMessage(message, type) {
+            this.elements.message.textContent = message || '';
+            this.elements.message.dataset.type = type || '';
+            this.show(this.elements.message);
+        }
+
+        hideMessage() {
+            this.elements.message.textContent = '';
+            this.hide(this.elements.message);
+        }
+
+        getErrorMessage(response) {
+            return response && response.data && response.data.message ? response.data.message : this.t('request_failed');
+        }
+
+        errorResponse(message) {
+            return {
+                success: false,
+                data: {
+                    message: message || this.t('request_failed')
+                }
+            };
+        }
+
+        show(element) {
+            if (element) {
+                element.hidden = false;
+            }
+        }
+
+        hide(element) {
+            if (element) {
+                element.hidden = true;
+            }
+        }
+
+        t(key) {
+            return window.MDCATQuiz && MDCATQuiz.i18n && MDCATQuiz.i18n[key] ? MDCATQuiz.i18n[key] : key;
+        }
+
+        escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = String(value);
+            return div.innerHTML;
+        }
+
+        escapeAttribute(value) {
+            return String(value).replace(/[^a-z0-9_-]/gi, '');
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.mdcat-dashboard').forEach((root) => {
             new MDCATDashboardController(root);
+        });
+
+        document.querySelectorAll('.mdcat-streak').forEach((root) => {
+            new MDCATStreakController(root);
         });
 
         document.querySelectorAll('.mdcat-quiz').forEach((root) => {

@@ -12,6 +12,7 @@ class MDCAT_Platform_Frontend {
     public static function init() {
 
         add_shortcode('mdcat_dashboard', [__CLASS__, 'render_dashboard_shortcode']);
+        add_shortcode('mdcat_streak', [__CLASS__, 'render_streak_shortcode']);
         add_shortcode('mdcat_quiz', [__CLASS__, 'render_quiz_shortcode']);
         add_shortcode('mdcat_attempt_history', [__CLASS__, 'render_attempt_history_shortcode']);
         add_shortcode('mdcat_performance', [__CLASS__, 'render_performance_shortcode']);
@@ -96,6 +97,16 @@ class MDCAT_Platform_Frontend {
                     'dashboard_quiz'            => __('Quiz', 'mdcat-platform'),
                     'dashboard_score'           => __('Score', 'mdcat-platform'),
                     'dashboard_date'            => __('Date', 'mdcat-platform'),
+                    'streak_title'              => __('Study Streak', 'mdcat-platform'),
+                    'streak_current'            => __('Current Streak', 'mdcat-platform'),
+                    'streak_longest'            => __('Longest Streak', 'mdcat-platform'),
+                    'streak_last_active'        => __('Last Active', 'mdcat-platform'),
+                    'streak_total_days'         => __('Total Active Days', 'mdcat-platform'),
+                    'streak_days'               => __('days', 'mdcat-platform'),
+                    'streak_empty'              => __('Complete a quiz to start your streak!', 'mdcat-platform'),
+                    'streak_today'              => __('Today', 'mdcat-platform'),
+                    'streak_yesterday'          => __('Yesterday', 'mdcat-platform'),
+                    'streak_never'              => __('No activity yet', 'mdcat-platform'),
                 ],
             ]
         );
@@ -132,6 +143,11 @@ class MDCAT_Platform_Frontend {
                     <div class="mdcat-dashboard__stats-grid"></div>
                 </section>
 
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--streak">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Study Streak', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__streak"></div>
+                </section>
+
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--snapshot">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Performance Snapshot', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__snapshot"></div>
@@ -147,6 +163,36 @@ class MDCAT_Platform_Frontend {
                     <div class="mdcat-dashboard__activity"></div>
                 </section>
 
+            </div>
+        </div>
+        <?php
+
+        return ob_get_clean();
+    }
+
+    /**
+     * Render the standalone streak widget.
+     *
+     * Provides a self-contained streak display that can be placed on any page.
+     * The JavaScript controller fetches data independently from the dashboard.
+     *
+     * @return string
+     */
+    public static function render_streak_shortcode() {
+
+        self::enqueue_quiz_assets();
+
+        ob_start();
+        ?>
+        <div class="mdcat-streak">
+            <div class="mdcat-streak__loading">
+                <?php esc_html_e('Loading streak data...', 'mdcat-platform'); ?>
+            </div>
+
+            <div class="mdcat-streak__message" hidden></div>
+
+            <div class="mdcat-streak__content" hidden>
+                <div class="mdcat-streak__cards-grid"></div>
             </div>
         </div>
         <?php
@@ -382,6 +428,6 @@ class MDCAT_Platform_Frontend {
             return false;
         }
 
-        return has_shortcode($post->post_content, 'mdcat_dashboard') || has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions');
+        return has_shortcode($post->post_content, 'mdcat_dashboard') || has_shortcode($post->post_content, 'mdcat_streak') || has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions');
     }
 }

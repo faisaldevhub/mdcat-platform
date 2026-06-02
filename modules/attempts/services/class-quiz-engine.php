@@ -415,6 +415,17 @@ class MDCAT_Platform_Quiz_Engine {
             return new WP_Error('attempt_complete_failed', __('Unable to complete attempt.', 'mdcat-platform'));
         }
 
+        /**
+         * Fires after a quiz attempt is successfully completed.
+         *
+         * Other modules (gamification, analytics) can listen to this hook
+         * to perform post-completion actions without coupling to the quiz engine.
+         *
+         * @param int $user_id    WordPress user ID who completed the attempt.
+         * @param int $attempt_id The completed attempt ID.
+         */
+        do_action('mdcat_quiz_completed', absint($attempt->user_id), $attempt_id);
+
         return array_merge(
             $score_data,
             [
