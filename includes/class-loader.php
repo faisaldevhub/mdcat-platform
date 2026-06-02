@@ -39,10 +39,12 @@ class MDCAT_Platform_Loader {
         require_once MDCAT_PLATFORM_PATH . 'modules/attempts/class-attempts.php';
         require_once MDCAT_PLATFORM_PATH . 'modules/reviews/class-reviews.php';
         require_once MDCAT_PLATFORM_PATH . 'modules/analytics/class-analytics.php';
+        require_once MDCAT_PLATFORM_PATH . 'modules/revision/class-revision.php';
 
         MDCAT_Platform_Attempts::init();
         MDCAT_Platform_Reviews::init();
         MDCAT_Platform_Analytics::init();
+        MDCAT_Platform_Revision::init();
 
         /**
          * Load Public Files

@@ -183,5 +183,28 @@ class MDCAT_Platform_Database {
 
         dbDelta($sql_attempt_answers);
 
+        /**
+         * Bookmarks Table
+         */
+
+        $bookmarks_table = $wpdb->prefix . 'mdcat_bookmarks';
+
+        $sql_bookmarks = "CREATE TABLE $bookmarks_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT UNSIGNED NOT NULL,
+            question_id BIGINT UNSIGNED NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id),
+            UNIQUE KEY user_question (user_id, question_id),
+            KEY user_id (user_id),
+            KEY question_id (question_id),
+            KEY created_at (created_at)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_bookmarks);
+
     }
 }

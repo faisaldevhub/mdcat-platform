@@ -31,7 +31,8 @@
                 isBusy: false,
                 isSubmitting: false,
                 isCompleting: false,
-                isCompleted: false
+                isCompleted: false,
+                bookmarks: {}
             };
         }
 
@@ -124,9 +125,31 @@
             this.hide(this.elements.startWrap);
             this.hide(this.elements.result);
             this.show(this.elements.question);
+            await this.loadBookmarkStates();
             this.startTimer();
             this.persistState();
             this.renderQuestion();
+        }
+
+        async loadBookmarkStates() {
+            const response = await this.request('mdcat_get_bookmarks', {});
+
+            if (!this.isValidResponse(response) || !response.data || !Array.isArray(response.data.questions)) {
+                return;
+            }
+
+            const availableQuestionIds = this.state.questions.reduce((ids, question) => {
+                ids[this.parseInt(question.id)] = true;
+                return ids;
+            }, {});
+
+            response.data.questions.forEach((question) => {
+                const questionId = this.parseInt(question.question_id);
+
+                if (availableQuestionIds[questionId]) {
+                    this.state.bookmarks[questionId] = true;
+                }
+            });
         }
 
         renderQuestion() {
@@ -144,6 +167,10 @@
             const card = document.createElement('div');
             card.className = 'mdcat-quiz__question-card';
 
+            const actions = document.createElement('div');
+            actions.className = 'mdcat-quiz__question-actions';
+            actions.appendChild(this.createBookmarkButton(question.id));
+
             const title = document.createElement('h3');
             title.className = 'mdcat-quiz__question-text';
             title.textContent = question.question || '';
@@ -155,10 +182,58 @@
                 options.appendChild(this.createOptionButton(question.id, key, question.options[key]));
             });
 
+            card.appendChild(actions);
             card.appendChild(title);
             card.appendChild(options);
             this.elements.question.appendChild(card);
             this.persistState();
+        }
+
+        createBookmarkButton(questionId) {
+            const button = document.createElement('button');
+            const isBookmarked = Boolean(this.state.bookmarks[questionId]);
+
+            button.type = 'button';
+            button.className = `mdcat-quiz__bookmark${isBookmarked ? ' is-active' : ''}`;
+            button.dataset.questionId = questionId;
+            button.textContent = isBookmarked ? this.t('bookmarked') : this.t('bookmark');
+            button.addEventListener('click', () => this.toggleBookmark(questionId, button));
+
+            return button;
+        }
+
+        async toggleBookmark(questionId, button) {
+            if (!questionId || button.disabled) {
+                return;
+            }
+
+            const previousState = Boolean(this.state.bookmarks[questionId]);
+            const optimisticState = !previousState;
+
+            button.disabled = true;
+            this.setBookmarkButtonState(button, optimisticState);
+            this.state.bookmarks[questionId] = optimisticState;
+
+            const response = await this.request('mdcat_toggle_bookmark', {
+                question_id: questionId
+            });
+
+            if (!this.isValidResponse(response)) {
+                this.state.bookmarks[questionId] = previousState;
+                this.setBookmarkButtonState(button, previousState);
+                button.disabled = false;
+                this.handleError(response);
+                return;
+            }
+
+            this.state.bookmarks[questionId] = Boolean(response.data.is_bookmarked);
+            this.setBookmarkButtonState(button, this.state.bookmarks[questionId]);
+            button.disabled = false;
+        }
+
+        setBookmarkButtonState(button, isBookmarked) {
+            button.classList.toggle('is-active', isBookmarked);
+            button.textContent = isBookmarked ? this.t('bookmarked') : this.t('bookmark');
         }
 
         createOptionButton(questionId, optionKey, optionText) {
@@ -799,6 +874,193 @@
         }
     }
 
+    class MDCATRevisionListController {
+        constructor(root) {
+            this.root = root;
+            this.type = root.dataset.revisionType || 'bookmarks';
+            this.elements = {
+                loading: root.querySelector('.mdcat-revision-list__loading'),
+                message: root.querySelector('.mdcat-revision-list__message'),
+                items: root.querySelector('.mdcat-revision-list__items')
+            };
+
+            if (this.type === 'wrong') {
+                this.fetchWrongQuestions();
+            } else {
+                this.fetchBookmarks();
+            }
+        }
+
+        async fetchBookmarks() {
+            const response = await this.fetchRevisionDataset('mdcat_get_bookmarks');
+            this.renderRevisionQuestions(response, 'bookmarks_empty');
+        }
+
+        async fetchWrongQuestions() {
+            const response = await this.fetchRevisionDataset('mdcat_get_wrong_questions');
+            this.renderRevisionQuestions(response, 'wrong_empty');
+        }
+
+        async fetchRevisionDataset(action) {
+            this.setLoading(true);
+            this.hideMessage();
+
+            const response = await this.request(action, {});
+
+            this.setLoading(false);
+
+            return response;
+        }
+
+        renderRevisionQuestions(response, emptyKey) {
+            if (!response || !response.success || !response.data || !Array.isArray(response.data.questions)) {
+                this.showMessage(this.getErrorMessage(response), 'error');
+                return;
+            }
+
+            const questions = response.data.questions;
+
+            if (!questions.length) {
+                this.hide(this.elements.items);
+                this.showMessage(this.t(emptyKey), 'empty');
+                return;
+            }
+
+            this.elements.items.innerHTML = '';
+
+            questions.forEach((question) => {
+                this.elements.items.appendChild(this.createRevisionCard(question));
+            });
+
+            this.show(this.elements.items);
+        }
+
+        createRevisionCard(question) {
+            const card = document.createElement('article');
+            card.className = 'mdcat-revision-card';
+
+            const title = document.createElement('h3');
+            title.className = 'mdcat-revision-card__title';
+            title.textContent = question.question || '';
+            card.appendChild(title);
+
+            const meta = document.createElement('div');
+            meta.className = 'mdcat-revision-card__meta';
+            meta.textContent = [question.subject_title, question.chapter_title, question.collection_title].filter(Boolean).join(' / ');
+            card.appendChild(meta);
+
+            const options = document.createElement('div');
+            options.className = 'mdcat-revision-card__options';
+
+            Object.keys(question.options || {}).forEach((key) => {
+                const option = document.createElement('div');
+                option.className = `mdcat-revision-card__option${question.correct_option === key ? ' is-correct-answer' : ''}`;
+                option.textContent = `${key.toUpperCase()}. ${question.options[key] || ''}`;
+                options.appendChild(option);
+            });
+
+            card.appendChild(options);
+
+            const explanation = document.createElement('div');
+            explanation.className = 'mdcat-revision-card__explanation';
+            explanation.innerHTML = `<strong>${this.escapeHtml(this.t('explanation'))}:</strong> ${this.escapeHtml(question.explanation || '')}`;
+            card.appendChild(explanation);
+
+            if (question.wrong_count) {
+                const wrongCount = document.createElement('div');
+                wrongCount.className = 'mdcat-revision-card__wrong-count';
+                wrongCount.textContent = `${this.t('wrong')}: ${question.wrong_count}`;
+                card.appendChild(wrongCount);
+            }
+
+            return card;
+        }
+
+        async request(action, payload) {
+            if (!window.MDCATQuiz || !MDCATQuiz.ajax_url) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('nonce', MDCATQuiz.nonce || '');
+
+            Object.keys(payload || {}).forEach((key) => {
+                formData.append(key, payload[key]);
+            });
+
+            try {
+                const response = await window.fetch(MDCATQuiz.ajax_url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    return this.errorResponse(this.t('request_failed'));
+                }
+
+                return await response.json();
+            } catch (error) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+        }
+
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.show(this.elements.loading);
+            } else {
+                this.hide(this.elements.loading);
+            }
+        }
+
+        showMessage(message, type) {
+            this.elements.message.textContent = message || '';
+            this.elements.message.dataset.type = type || '';
+            this.show(this.elements.message);
+        }
+
+        hideMessage() {
+            this.elements.message.textContent = '';
+            this.hide(this.elements.message);
+        }
+
+        getErrorMessage(response) {
+            return response && response.data && response.data.message ? response.data.message : this.t('request_failed');
+        }
+
+        errorResponse(message) {
+            return {
+                success: false,
+                data: {
+                    message: message || this.t('request_failed')
+                }
+            };
+        }
+
+        show(element) {
+            if (element) {
+                element.hidden = false;
+            }
+        }
+
+        hide(element) {
+            if (element) {
+                element.hidden = true;
+            }
+        }
+
+        t(key) {
+            return window.MDCATQuiz && MDCATQuiz.i18n && MDCATQuiz.i18n[key] ? MDCATQuiz.i18n[key] : key;
+        }
+
+        escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = String(value);
+            return div.innerHTML;
+        }
+    }
+
     class MDCATPerformanceController {
         constructor(root) {
             this.root = root;
@@ -976,6 +1238,10 @@
 
         document.querySelectorAll('.mdcat-performance').forEach((root) => {
             new MDCATPerformanceController(root);
+        });
+
+        document.querySelectorAll('.mdcat-revision-list').forEach((root) => {
+            new MDCATRevisionListController(root);
         });
     });
 }());

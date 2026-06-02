@@ -14,6 +14,8 @@ class MDCAT_Platform_Frontend {
         add_shortcode('mdcat_quiz', [__CLASS__, 'render_quiz_shortcode']);
         add_shortcode('mdcat_attempt_history', [__CLASS__, 'render_attempt_history_shortcode']);
         add_shortcode('mdcat_performance', [__CLASS__, 'render_performance_shortcode']);
+        add_shortcode('mdcat_bookmarks', [__CLASS__, 'render_bookmarks_shortcode']);
+        add_shortcode('mdcat_wrong_questions', [__CLASS__, 'render_wrong_questions_shortcode']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
     }
 
@@ -63,6 +65,10 @@ class MDCAT_Platform_Frontend {
                     'correct_answer'    => __('Correct answer', 'mdcat-platform'),
                     'explanation'       => __('Explanation', 'mdcat-platform'),
                     'analytics_empty'   => __('No performance data available yet.', 'mdcat-platform'),
+                    'bookmark'          => __('Bookmark', 'mdcat-platform'),
+                    'bookmarked'        => __('Bookmarked', 'mdcat-platform'),
+                    'bookmarks_empty'   => __('No bookmarked questions yet.', 'mdcat-platform'),
+                    'wrong_empty'       => __('No wrong questions found yet.', 'mdcat-platform'),
                 ],
             ]
         );
@@ -231,12 +237,60 @@ class MDCAT_Platform_Frontend {
     }
 
     /**
+     * Render bookmarked questions revision container.
+     *
+     * @return string
+     */
+    public static function render_bookmarks_shortcode() {
+
+        return self::render_revision_list('bookmarks');
+    }
+
+    /**
+     * Render wrong questions revision container.
+     *
+     * @return string
+     */
+    public static function render_wrong_questions_shortcode() {
+
+        return self::render_revision_list('wrong');
+    }
+
+    /**
      * Enqueue the quiz assets together.
      */
     private static function enqueue_quiz_assets() {
 
         wp_enqueue_style('mdcat-quiz-engine');
         wp_enqueue_script('mdcat-quiz-engine');
+    }
+
+    /**
+     * Render a revision question list container.
+     *
+     * @param string $type Revision list type.
+     * @return string
+     */
+    private static function render_revision_list( $type ) {
+
+        $type = sanitize_key($type);
+
+        self::enqueue_quiz_assets();
+
+        ob_start();
+        ?>
+        <div class="mdcat-revision-list" data-revision-type="<?php echo esc_attr($type); ?>">
+            <div class="mdcat-revision-list__loading">
+                <?php esc_html_e('Loading...', 'mdcat-platform'); ?>
+            </div>
+
+            <div class="mdcat-revision-list__message" hidden></div>
+
+            <div class="mdcat-revision-list__items" hidden></div>
+        </div>
+        <?php
+
+        return ob_get_clean();
     }
 
     /**
@@ -252,6 +306,6 @@ class MDCAT_Platform_Frontend {
             return false;
         }
 
-        return has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance');
+        return has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions');
     }
 }
