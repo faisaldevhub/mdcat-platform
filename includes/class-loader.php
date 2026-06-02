@@ -46,6 +46,10 @@ class MDCAT_Platform_Loader {
         MDCAT_Platform_Analytics::init();
         MDCAT_Platform_Revision::init();
 
+        require_once MDCAT_PLATFORM_PATH . 'modules/dashboard/class-dashboard.php';
+
+        MDCAT_Platform_Dashboard::init();
+
         /**
          * Load Public Files
          */

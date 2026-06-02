@@ -1227,7 +1227,366 @@
         }
     }
 
+    class MDCATDashboardController {
+        constructor(root) {
+            this.root = root;
+            this.elements = {
+                loading: root.querySelector('.mdcat-dashboard__loading'),
+                message: root.querySelector('.mdcat-dashboard__message'),
+                content: root.querySelector('.mdcat-dashboard__content'),
+                statsGrid: root.querySelector('.mdcat-dashboard__stats-grid'),
+                snapshot: root.querySelector('.mdcat-dashboard__snapshot'),
+                actionsGrid: root.querySelector('.mdcat-dashboard__actions-grid'),
+                activity: root.querySelector('.mdcat-dashboard__activity')
+            };
+
+            this.fetchStudentDashboard();
+        }
+
+        async fetchStudentDashboard() {
+            this.setLoading(true);
+            this.hideMessage();
+
+            const response = await this.request('mdcat_get_student_dashboard', {});
+
+            this.setLoading(false);
+
+            if (!response || !response.success || !response.data) {
+                this.showMessage(this.getErrorMessage(response), 'error');
+                return;
+            }
+
+            this.renderStudentDashboard(response.data);
+        }
+
+        renderStudentDashboard(data) {
+            const stats = data.stats || {};
+            const recentActivity = Array.isArray(data.recent_activity) ? data.recent_activity : [];
+            const snapshot = data.performance_snapshot || {};
+
+            if (!stats.total_attempts && !recentActivity.length) {
+                this.hide(this.elements.content);
+                this.showMessage(this.t('dashboard_empty'), 'empty');
+                return;
+            }
+
+            this.renderStatsCards(stats);
+            this.renderPerformanceSnapshot(snapshot);
+            this.renderQuickActions();
+            this.renderRecentActivity(recentActivity);
+            this.show(this.elements.content);
+        }
+
+        renderStatsCards(stats) {
+            const cards = [
+                {
+                    label: this.t('dashboard_total_attempts'),
+                    value: this.escapeHtml(stats.total_attempts || 0),
+                    icon: '📝',
+                    modifier: 'attempts'
+                },
+                {
+                    label: this.t('dashboard_accuracy'),
+                    value: this.escapeHtml(stats.overall_accuracy || 0) + '%',
+                    icon: '🎯',
+                    modifier: 'accuracy'
+                },
+                {
+                    label: this.t('dashboard_correct'),
+                    value: this.escapeHtml(stats.total_correct_answers || 0),
+                    icon: '✅',
+                    modifier: 'correct'
+                },
+                {
+                    label: this.t('dashboard_wrong'),
+                    value: this.escapeHtml(stats.total_wrong_answers || 0),
+                    icon: '❌',
+                    modifier: 'wrong'
+                },
+                {
+                    label: this.t('dashboard_bookmarks'),
+                    value: this.escapeHtml(stats.bookmarked_questions_count || 0),
+                    icon: '🔖',
+                    modifier: 'bookmarks'
+                }
+            ];
+
+            this.elements.statsGrid.innerHTML = '';
+
+            cards.forEach((card) => {
+                const element = document.createElement('div');
+                element.className = `mdcat-dashboard__stat-card mdcat-dashboard__stat-card--${this.escapeAttribute(card.modifier)}`;
+                element.innerHTML = `
+                    <div class="mdcat-dashboard__stat-icon">${card.icon}</div>
+                    <div class="mdcat-dashboard__stat-value">${card.value}</div>
+                    <div class="mdcat-dashboard__stat-label">${this.escapeHtml(card.label)}</div>
+                `;
+                this.elements.statsGrid.appendChild(element);
+            });
+        }
+
+        renderPerformanceSnapshot(snapshot) {
+            const strong = Array.isArray(snapshot.strong_subjects) ? snapshot.strong_subjects : [];
+            const weak = Array.isArray(snapshot.weak_subjects) ? snapshot.weak_subjects : [];
+
+            this.elements.snapshot.innerHTML = '';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mdcat-dashboard__snapshot-grid';
+
+            wrapper.appendChild(this.createSubjectList(this.t('dashboard_strong'), strong, 'strong', this.t('dashboard_no_strong')));
+            wrapper.appendChild(this.createSubjectList(this.t('dashboard_weak'), weak, 'weak', this.t('dashboard_no_weak')));
+
+            this.elements.snapshot.appendChild(wrapper);
+        }
+
+        createSubjectList(title, subjects, modifier, emptyText) {
+            const container = document.createElement('div');
+            container.className = `mdcat-dashboard__subject-list mdcat-dashboard__subject-list--${this.escapeAttribute(modifier)}`;
+
+            const heading = document.createElement('h3');
+            heading.className = 'mdcat-dashboard__subject-heading';
+            heading.textContent = title;
+            container.appendChild(heading);
+
+            if (!subjects.length) {
+                const empty = document.createElement('p');
+                empty.className = 'mdcat-dashboard__subject-empty';
+                empty.textContent = emptyText;
+                container.appendChild(empty);
+                return container;
+            }
+
+            const list = document.createElement('ul');
+            list.className = 'mdcat-dashboard__subject-items';
+
+            subjects.forEach((subject) => {
+                const item = document.createElement('li');
+                item.className = 'mdcat-dashboard__subject-item';
+                item.innerHTML = `
+                    <span class="mdcat-dashboard__subject-name">${this.escapeHtml(subject.subject_title || '')}</span>
+                    <span class="mdcat-dashboard__subject-accuracy">${this.escapeHtml(subject.accuracy_percentage || 0)}%</span>
+                `;
+                list.appendChild(item);
+            });
+
+            container.appendChild(list);
+            return container;
+        }
+
+        renderQuickActions() {
+            const actions = [
+                {
+                    label: this.t('dashboard_continue'),
+                    icon: '▶️',
+                    modifier: 'continue',
+                    href: '#'
+                },
+                {
+                    label: this.t('dashboard_my_bookmarks'),
+                    icon: '🔖',
+                    modifier: 'bookmarks',
+                    href: '#'
+                },
+                {
+                    label: this.t('dashboard_wrong_questions'),
+                    icon: '❌',
+                    modifier: 'wrong',
+                    href: '#'
+                },
+                {
+                    label: this.t('dashboard_attempt_history'),
+                    icon: '📋',
+                    modifier: 'history',
+                    href: '#'
+                },
+                {
+                    label: this.t('dashboard_analytics'),
+                    icon: '📊',
+                    modifier: 'analytics',
+                    href: '#'
+                }
+            ];
+
+            this.elements.actionsGrid.innerHTML = '';
+
+            actions.forEach((action) => {
+                const card = document.createElement('a');
+                card.className = `mdcat-dashboard__action-card mdcat-dashboard__action-card--${this.escapeAttribute(action.modifier)}`;
+                card.href = action.href;
+                card.dataset.action = action.modifier;
+                card.innerHTML = `
+                    <span class="mdcat-dashboard__action-icon">${action.icon}</span>
+                    <span class="mdcat-dashboard__action-label">${this.escapeHtml(action.label)}</span>
+                `;
+                this.elements.actionsGrid.appendChild(card);
+            });
+        }
+
+        renderRecentActivity(items) {
+            this.elements.activity.innerHTML = '';
+
+            if (!items.length) {
+                const empty = document.createElement('p');
+                empty.className = 'mdcat-dashboard__activity-empty';
+                empty.textContent = this.t('dashboard_no_activity');
+                this.elements.activity.appendChild(empty);
+                return;
+            }
+
+            const tableWrap = document.createElement('div');
+            tableWrap.className = 'mdcat-dashboard__activity-table-wrap';
+
+            const table = document.createElement('table');
+            table.className = 'mdcat-dashboard__activity-table';
+
+            const thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th scope="col">${this.escapeHtml(this.t('dashboard_subject'))}</th>
+                    <th scope="col">${this.escapeHtml(this.t('dashboard_chapter'))}</th>
+                    <th scope="col">${this.escapeHtml(this.t('dashboard_quiz'))}</th>
+                    <th scope="col">${this.escapeHtml(this.t('dashboard_score'))}</th>
+                    <th scope="col">${this.escapeHtml(this.t('dashboard_date'))}</th>
+                </tr>
+            `;
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+
+            items.forEach((item) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${this.escapeHtml(item.subject_title || '')}</td>
+                    <td>${this.escapeHtml(item.chapter_title || '')}</td>
+                    <td>${this.escapeHtml(item.collection_title || '')}</td>
+                    <td><strong>${this.escapeHtml(item.score || 0)}</strong> / ${this.escapeHtml(item.total_questions || 0)}</td>
+                    <td>${this.escapeHtml(this.formatDate(item.completed_at))}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            tableWrap.appendChild(table);
+            this.elements.activity.appendChild(tableWrap);
+        }
+
+        formatDate(dateString) {
+            if (!dateString) {
+                return '-';
+            }
+
+            try {
+                const date = new Date(dateString);
+
+                if (Number.isNaN(date.getTime())) {
+                    return dateString;
+                }
+
+                return date.toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (error) {
+                return dateString;
+            }
+        }
+
+        async request(action, payload) {
+            if (!window.MDCATQuiz || !MDCATQuiz.ajax_url) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('nonce', MDCATQuiz.nonce || '');
+
+            Object.keys(payload || {}).forEach((key) => {
+                formData.append(key, payload[key]);
+            });
+
+            try {
+                const response = await window.fetch(MDCATQuiz.ajax_url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    return this.errorResponse(this.t('request_failed'));
+                }
+
+                return await response.json();
+            } catch (error) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+        }
+
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.show(this.elements.loading);
+            } else {
+                this.hide(this.elements.loading);
+            }
+        }
+
+        showMessage(message, type) {
+            this.elements.message.textContent = message || '';
+            this.elements.message.dataset.type = type || '';
+            this.show(this.elements.message);
+        }
+
+        hideMessage() {
+            this.elements.message.textContent = '';
+            this.hide(this.elements.message);
+        }
+
+        getErrorMessage(response) {
+            return response && response.data && response.data.message ? response.data.message : this.t('request_failed');
+        }
+
+        errorResponse(message) {
+            return {
+                success: false,
+                data: {
+                    message: message || this.t('request_failed')
+                }
+            };
+        }
+
+        show(element) {
+            if (element) {
+                element.hidden = false;
+            }
+        }
+
+        hide(element) {
+            if (element) {
+                element.hidden = true;
+            }
+        }
+
+        t(key) {
+            return window.MDCATQuiz && MDCATQuiz.i18n && MDCATQuiz.i18n[key] ? MDCATQuiz.i18n[key] : key;
+        }
+
+        escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = String(value);
+            return div.innerHTML;
+        }
+
+        escapeAttribute(value) {
+            return String(value).replace(/[^a-z0-9_-]/gi, '');
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.mdcat-dashboard').forEach((root) => {
+            new MDCATDashboardController(root);
+        });
+
         document.querySelectorAll('.mdcat-quiz').forEach((root) => {
             new MDCATQuizController(root);
         });

@@ -11,6 +11,7 @@ class MDCAT_Platform_Frontend {
      */
     public static function init() {
 
+        add_shortcode('mdcat_dashboard', [__CLASS__, 'render_dashboard_shortcode']);
         add_shortcode('mdcat_quiz', [__CLASS__, 'render_quiz_shortcode']);
         add_shortcode('mdcat_attempt_history', [__CLASS__, 'render_attempt_history_shortcode']);
         add_shortcode('mdcat_performance', [__CLASS__, 'render_performance_shortcode']);
@@ -69,6 +70,32 @@ class MDCAT_Platform_Frontend {
                     'bookmarked'        => __('Bookmarked', 'mdcat-platform'),
                     'bookmarks_empty'   => __('No bookmarked questions yet.', 'mdcat-platform'),
                     'wrong_empty'       => __('No wrong questions found yet.', 'mdcat-platform'),
+                    'dashboard_welcome'         => __('Welcome back!', 'mdcat-platform'),
+                    'dashboard_empty'           => __('No dashboard data available yet. Start practicing to see your progress!', 'mdcat-platform'),
+                    'dashboard_total_attempts'  => __('Total Attempts', 'mdcat-platform'),
+                    'dashboard_accuracy'        => __('Accuracy', 'mdcat-platform'),
+                    'dashboard_correct'         => __('Correct Answers', 'mdcat-platform'),
+                    'dashboard_wrong'           => __('Wrong Answers', 'mdcat-platform'),
+                    'dashboard_bookmarks'       => __('Bookmarks', 'mdcat-platform'),
+                    'dashboard_weak_topics'     => __('Weak Topics', 'mdcat-platform'),
+                    'dashboard_performance'     => __('Performance Snapshot', 'mdcat-platform'),
+                    'dashboard_strong'          => __('Strong Subjects', 'mdcat-platform'),
+                    'dashboard_weak'            => __('Weak Subjects', 'mdcat-platform'),
+                    'dashboard_no_strong'       => __('Keep practicing to build strong subjects.', 'mdcat-platform'),
+                    'dashboard_no_weak'         => __('Great job! No weak subjects detected.', 'mdcat-platform'),
+                    'dashboard_quick_actions'   => __('Quick Actions', 'mdcat-platform'),
+                    'dashboard_continue'        => __('Continue Practice', 'mdcat-platform'),
+                    'dashboard_my_bookmarks'    => __('My Bookmarks', 'mdcat-platform'),
+                    'dashboard_wrong_questions' => __('Wrong Questions', 'mdcat-platform'),
+                    'dashboard_attempt_history' => __('Attempt History', 'mdcat-platform'),
+                    'dashboard_analytics'       => __('Performance Analytics', 'mdcat-platform'),
+                    'dashboard_recent'          => __('Recent Activity', 'mdcat-platform'),
+                    'dashboard_no_activity'     => __('No recent activity yet.', 'mdcat-platform'),
+                    'dashboard_subject'         => __('Subject', 'mdcat-platform'),
+                    'dashboard_chapter'         => __('Chapter', 'mdcat-platform'),
+                    'dashboard_quiz'            => __('Quiz', 'mdcat-platform'),
+                    'dashboard_score'           => __('Score', 'mdcat-platform'),
+                    'dashboard_date'            => __('Date', 'mdcat-platform'),
                 ],
             ]
         );
@@ -76,6 +103,55 @@ class MDCAT_Platform_Frontend {
         if (self::page_has_quiz_shortcode()) {
             self::enqueue_quiz_assets();
         }
+    }
+
+    /**
+     * Render the student dashboard container.
+     *
+     * The HTML shell provides mounting points for all four dashboard sections.
+     * The JavaScript controller populates these with live data via AJAX.
+     *
+     * @return string
+     */
+    public static function render_dashboard_shortcode() {
+
+        self::enqueue_quiz_assets();
+
+        ob_start();
+        ?>
+        <div class="mdcat-dashboard">
+            <div class="mdcat-dashboard__loading">
+                <?php esc_html_e('Loading your dashboard...', 'mdcat-platform'); ?>
+            </div>
+
+            <div class="mdcat-dashboard__message" hidden></div>
+
+            <div class="mdcat-dashboard__content" hidden>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--stats">
+                    <div class="mdcat-dashboard__stats-grid"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--snapshot">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Performance Snapshot', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__snapshot"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--actions">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Quick Actions', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__actions-grid"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--activity">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Recent Activity', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__activity"></div>
+                </section>
+
+            </div>
+        </div>
+        <?php
+
+        return ob_get_clean();
     }
 
     /**
@@ -306,6 +382,6 @@ class MDCAT_Platform_Frontend {
             return false;
         }
 
-        return has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions');
+        return has_shortcode($post->post_content, 'mdcat_dashboard') || has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions');
     }
 }
