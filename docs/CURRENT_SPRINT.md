@@ -34,7 +34,7 @@ progress intelligence systems.
 
 [x] Subject Completion Tracking
 [x] Chapter Completion Tracking
-[ ] Collection Completion Tracking
+[x] Collection Completion Tracking
 [ ] Overall Completion Tracking
 
 ## Dashboard Integration
