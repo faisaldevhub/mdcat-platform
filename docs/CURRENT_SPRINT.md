@@ -9,7 +9,7 @@ Sprint Goal:
 Build curriculum completion and learning progress tracking systems.
 
 Status:
-Active
+Completed
 
 ---
 
