@@ -168,13 +168,27 @@ class MDCAT_Platform_Frontend {
 
             <div class="mdcat-dashboard__content" hidden>
 
-                <section class="mdcat-dashboard__section mdcat-dashboard__section--overall-progress">
-                    <div class="mdcat-dashboard__overall-progress"></div>
-                </section>
+                <div class="mdcat-dashboard__progress-hub">
 
-                <section class="mdcat-dashboard__section mdcat-dashboard__section--continue-learning">
-                    <div class="mdcat-dashboard__continue-learning"></div>
-                </section>
+                    <section class="mdcat-dashboard__section mdcat-dashboard__section--overall-progress">
+                        <div class="mdcat-dashboard__overall-progress"></div>
+                    </section>
+
+                    <section class="mdcat-dashboard__section mdcat-dashboard__section--continue-learning">
+                        <div class="mdcat-dashboard__continue-learning"></div>
+                    </section>
+
+                    <section class="mdcat-dashboard__section mdcat-dashboard__section--progress">
+                        <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Subject Progress', 'mdcat-platform'); ?></h2>
+                        <div class="mdcat-dashboard__progress"></div>
+                    </section>
+
+                    <section class="mdcat-dashboard__section mdcat-dashboard__section--chapter-progress">
+                        <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Chapter Progress', 'mdcat-platform'); ?></h2>
+                        <div class="mdcat-dashboard__chapter-progress"></div>
+                    </section>
+
+                </div>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--stats">
                     <div class="mdcat-dashboard__stats-grid"></div>
@@ -183,16 +197,6 @@ class MDCAT_Platform_Frontend {
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--streak">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Study Streak', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__streak"></div>
-                </section>
-
-                <section class="mdcat-dashboard__section mdcat-dashboard__section--progress">
-                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Subject Progress', 'mdcat-platform'); ?></h2>
-                    <div class="mdcat-dashboard__progress"></div>
-                </section>
-
-                <section class="mdcat-dashboard__section mdcat-dashboard__section--chapter-progress">
-                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Chapter Progress', 'mdcat-platform'); ?></h2>
-                    <div class="mdcat-dashboard__chapter-progress"></div>
                 </section>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--snapshot">

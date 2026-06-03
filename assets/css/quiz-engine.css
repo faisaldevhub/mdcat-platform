@@ -602,6 +602,44 @@
 }
 
 /* =============================================
+   Progress Hub Container
+   ============================================= */
+
+.mdcat-dashboard__progress-hub {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.mdcat-dashboard__progress-hub > .mdcat-dashboard__section {
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.mdcat-dashboard__progress-hub > .mdcat-dashboard__section:last-child {
+    border-bottom: none;
+}
+
+/* Override individual section backgrounds within the hub */
+.mdcat-dashboard__progress-hub .mdcat-dashboard__section--overall-progress {
+    background: linear-gradient(180deg, #f8f5fc, #fff);
+    border-bottom-color: #e8eaed;
+}
+
+.mdcat-dashboard__progress-hub .mdcat-dashboard__section--continue-learning {
+    background: #fff;
+    border-bottom-color: #e8eaed;
+}
+
+/* Responsive hub */
+@media (max-width: 600px) {
+    .mdcat-dashboard__progress-hub {
+        border-radius: 12px;
+    }
+}
+
+/* =============================================
    Stats Cards Grid
    ============================================= */
 
@@ -1182,7 +1220,6 @@
 .mdcat-dashboard__section--overall-progress {
     padding: 32px 24px;
     background: linear-gradient(180deg, #fafbfc, #fff);
-    border-bottom: 1px solid #e8eaed;
 }
 
 /* =============================================
@@ -1338,6 +1375,13 @@
     padding: 24px;
 }
 
+/* Inside hub: flatten continue learning card */
+.mdcat-dashboard__progress-hub .mdcat-continue-learning {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+}
+
 /* =============================================
    Continue Learning Responsive
    ============================================= */
@@ -1466,6 +1510,15 @@
     border-color: #e8eaed;
 }
 
+/* Inside hub: flatten subject cards */
+.mdcat-dashboard__progress-hub .mdcat-progress__subject {
+    border-radius: 8px;
+}
+
+.mdcat-dashboard__progress-hub .mdcat-progress__list {
+    gap: 16px;
+}
+
 /* =============================================
    Subject Progress Responsive
    ============================================= */
@@ -1584,6 +1637,15 @@
 /* Dashboard chapter progress section spacing */
 .mdcat-dashboard__section--chapter-progress {
     padding: 24px;
+}
+
+/* Inside hub: flatten chapter groups */
+.mdcat-dashboard__progress-hub .mdcat-chapter-progress__groups {
+    gap: 20px;
+}
+
+.mdcat-dashboard__progress-hub .mdcat-chapter-progress__group {
+    border-radius: 8px;
 }
 
 /* =============================================
