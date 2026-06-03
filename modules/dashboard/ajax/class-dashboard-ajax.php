@@ -54,12 +54,19 @@ class MDCAT_Platform_Dashboard_Ajax {
             self::send_wp_error($streak);
         }
 
+        $subject_progress = MDCAT_Platform_Dashboard_Service::get_subject_progress($user_id);
+
+        if (is_wp_error($subject_progress)) {
+            self::send_wp_error($subject_progress);
+        }
+
         wp_send_json_success(
             [
                 'stats'                => $stats,
                 'recent_activity'      => $recent_activity,
                 'performance_snapshot' => $performance_snapshot,
                 'streak'               => $streak,
+                'subject_progress'     => $subject_progress,
             ]
         );
     }

@@ -1282,6 +1282,7 @@
                 content: root.querySelector('.mdcat-dashboard__content'),
                 statsGrid: root.querySelector('.mdcat-dashboard__stats-grid'),
                 streakSection: root.querySelector('.mdcat-dashboard__streak'),
+                progressSection: root.querySelector('.mdcat-dashboard__progress'),
                 snapshot: root.querySelector('.mdcat-dashboard__snapshot'),
                 actionsGrid: root.querySelector('.mdcat-dashboard__actions-grid'),
                 activity: root.querySelector('.mdcat-dashboard__activity')
@@ -1320,6 +1321,7 @@
 
             this.renderStatsCards(stats);
             this.renderStreakSection(streak);
+            this.renderSubjectProgress(data.subject_progress);
             this.renderPerformanceSnapshot(snapshot);
             this.renderQuickActions();
             this.renderRecentActivity(recentActivity);
@@ -1453,6 +1455,51 @@
             }
 
             return this.formatDate(dateString);
+        }
+
+        renderSubjectProgress(subjects) {
+            if (!this.elements.progressSection) {
+                return;
+            }
+
+            this.elements.progressSection.innerHTML = '';
+
+            const list = Array.isArray(subjects) ? subjects : [];
+
+            if (!list.length) {
+                const empty = document.createElement('p');
+                empty.className = 'mdcat-progress__empty';
+                empty.textContent = this.t('progress_empty');
+                this.elements.progressSection.appendChild(empty);
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.className = 'mdcat-progress__list';
+
+            list.forEach((subject) => {
+                const percentage = parseFloat(subject.completion_percentage) || 0;
+                const completed = parseInt(subject.completed_collections, 10) || 0;
+                const total = parseInt(subject.total_collections, 10) || 0;
+
+                const row = document.createElement('div');
+                row.className = 'mdcat-progress__subject';
+
+                row.innerHTML = `
+                    <div class="mdcat-progress__subject-header">
+                        <span class="mdcat-progress__subject-name">${this.escapeHtml(subject.subject_name)}</span>
+                        <span class="mdcat-progress__subject-stat">${completed} ${this.t('progress_of')} ${total} ${this.t('progress_collections')}</span>
+                    </div>
+                    <div class="mdcat-progress__bar-track">
+                        <div class="mdcat-progress__bar-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+                    </div>
+                    <div class="mdcat-progress__subject-percentage">${percentage}% ${this.t('progress_completed')}</div>
+                `;
+
+                container.appendChild(row);
+            });
+
+            this.elements.progressSection.appendChild(container);
         }
 
         renderPerformanceSnapshot(snapshot) {
@@ -1918,6 +1965,155 @@
         }
     }
 
+    class MDCATSubjectProgressController {
+        constructor(root) {
+            this.root = root;
+            this.elements = {
+                loading: root.querySelector('.mdcat-subject-progress__loading'),
+                message: root.querySelector('.mdcat-subject-progress__message'),
+                content: root.querySelector('.mdcat-subject-progress__content'),
+                list: root.querySelector('.mdcat-subject-progress__list')
+            };
+
+            this.fetchSubjectProgress();
+        }
+
+        async fetchSubjectProgress() {
+            this.setLoading(true);
+            this.hideMessage();
+
+            const response = await this.request('mdcat_get_subject_progress', {});
+
+            this.setLoading(false);
+
+            if (!response || !response.success || !response.data) {
+                this.showMessage(this.getErrorMessage(response), 'error');
+                return;
+            }
+
+            this.renderProgressList(response.data);
+        }
+
+        renderProgressList(subjects) {
+            const list = Array.isArray(subjects) ? subjects : [];
+
+            if (!list.length) {
+                this.showMessage(this.t('progress_empty'), 'empty');
+                return;
+            }
+
+            this.elements.list.innerHTML = '';
+
+            list.forEach((subject) => {
+                const percentage = parseFloat(subject.completion_percentage) || 0;
+                const completed = parseInt(subject.completed_collections, 10) || 0;
+                const total = parseInt(subject.total_collections, 10) || 0;
+
+                const row = document.createElement('div');
+                row.className = 'mdcat-progress__subject';
+
+                row.innerHTML = `
+                    <div class="mdcat-progress__subject-header">
+                        <span class="mdcat-progress__subject-name">${this.escapeHtml(subject.subject_name)}</span>
+                        <span class="mdcat-progress__subject-stat">${completed} ${this.t('progress_of')} ${total} ${this.t('progress_collections')}</span>
+                    </div>
+                    <div class="mdcat-progress__bar-track">
+                        <div class="mdcat-progress__bar-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+                    </div>
+                    <div class="mdcat-progress__subject-percentage">${percentage}% ${this.t('progress_completed')}</div>
+                `;
+
+                this.elements.list.appendChild(row);
+            });
+
+            this.show(this.elements.content);
+        }
+
+        async request(action, payload) {
+            if (!window.MDCATQuiz || !MDCATQuiz.ajax_url) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('nonce', MDCATQuiz.nonce || '');
+
+            Object.keys(payload || {}).forEach((key) => {
+                formData.append(key, payload[key]);
+            });
+
+            try {
+                const response = await window.fetch(MDCATQuiz.ajax_url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    return this.errorResponse(this.t('request_failed'));
+                }
+
+                return await response.json();
+            } catch (error) {
+                return this.errorResponse(this.t('request_failed'));
+            }
+        }
+
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.show(this.elements.loading);
+            } else {
+                this.hide(this.elements.loading);
+            }
+        }
+
+        showMessage(message, type) {
+            this.elements.message.textContent = message || '';
+            this.elements.message.dataset.type = type || '';
+            this.show(this.elements.message);
+        }
+
+        hideMessage() {
+            this.elements.message.textContent = '';
+            this.hide(this.elements.message);
+        }
+
+        getErrorMessage(response) {
+            return response && response.data && response.data.message ? response.data.message : this.t('request_failed');
+        }
+
+        errorResponse(message) {
+            return {
+                success: false,
+                data: {
+                    message: message || this.t('request_failed')
+                }
+            };
+        }
+
+        show(element) {
+            if (element) {
+                element.hidden = false;
+            }
+        }
+
+        hide(element) {
+            if (element) {
+                element.hidden = true;
+            }
+        }
+
+        t(key) {
+            return window.MDCATQuiz && MDCATQuiz.i18n && MDCATQuiz.i18n[key] ? MDCATQuiz.i18n[key] : key;
+        }
+
+        escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = String(value);
+            return div.innerHTML;
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.mdcat-dashboard').forEach((root) => {
             new MDCATDashboardController(root);
@@ -1925,6 +2121,10 @@
 
         document.querySelectorAll('.mdcat-streak').forEach((root) => {
             new MDCATStreakController(root);
+        });
+
+        document.querySelectorAll('.mdcat-subject-progress').forEach((root) => {
+            new MDCATSubjectProgressController(root);
         });
 
         document.querySelectorAll('.mdcat-quiz').forEach((root) => {

@@ -18,6 +18,7 @@ class MDCAT_Platform_Frontend {
         add_shortcode('mdcat_performance', [__CLASS__, 'render_performance_shortcode']);
         add_shortcode('mdcat_bookmarks', [__CLASS__, 'render_bookmarks_shortcode']);
         add_shortcode('mdcat_wrong_questions', [__CLASS__, 'render_wrong_questions_shortcode']);
+        add_shortcode('mdcat_subject_progress', [__CLASS__, 'render_subject_progress_shortcode']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
     }
 
@@ -112,6 +113,11 @@ class MDCAT_Platform_Frontend {
                     'access_login_message'      => __('Please log in to access this content.', 'mdcat-platform'),
                     'access_login_button'       => __('Log In', 'mdcat-platform'),
                     'access_denied'             => __('Access Restricted', 'mdcat-platform'),
+                    'progress_title'            => __('Subject Progress', 'mdcat-platform'),
+                    'progress_empty'            => __('No subjects available yet.', 'mdcat-platform'),
+                    'progress_completed'        => __('completed', 'mdcat-platform'),
+                    'progress_collections'      => __('collections', 'mdcat-platform'),
+                    'progress_of'               => __('of', 'mdcat-platform'),
                 ],
             ]
         );
@@ -157,6 +163,11 @@ class MDCAT_Platform_Frontend {
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--streak">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Study Streak', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__streak"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--progress">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Subject Progress', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__progress"></div>
                 </section>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--snapshot">
@@ -426,6 +437,42 @@ class MDCAT_Platform_Frontend {
     }
 
     /**
+     * Render the standalone subject progress container.
+     *
+     * Shows completion percentages per subject with progress bars.
+     * The JavaScript controller fetches data independently via AJAX.
+     *
+     * @return string
+     */
+    public static function render_subject_progress_shortcode() {
+
+        $guard = MDCAT_Platform_Access_Middleware::require_login();
+
+        if (true !== $guard) {
+            return $guard;
+        }
+
+        self::enqueue_quiz_assets();
+
+        ob_start();
+        ?>
+        <div class="mdcat-subject-progress">
+            <div class="mdcat-subject-progress__loading">
+                <?php esc_html_e('Loading progress data...', 'mdcat-platform'); ?>
+            </div>
+
+            <div class="mdcat-subject-progress__message" hidden></div>
+
+            <div class="mdcat-subject-progress__content" hidden>
+                <div class="mdcat-subject-progress__list"></div>
+            </div>
+        </div>
+        <?php
+
+        return ob_get_clean();
+    }
+
+    /**
      * Enqueue the quiz assets together.
      */
     private static function enqueue_quiz_assets() {
@@ -475,6 +522,6 @@ class MDCAT_Platform_Frontend {
             return false;
         }
 
-        return has_shortcode($post->post_content, 'mdcat_dashboard') || has_shortcode($post->post_content, 'mdcat_streak') || has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions');
+        return has_shortcode($post->post_content, 'mdcat_dashboard') || has_shortcode($post->post_content, 'mdcat_streak') || has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions') || has_shortcode($post->post_content, 'mdcat_subject_progress');
     }
 }

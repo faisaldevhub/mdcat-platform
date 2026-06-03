@@ -58,6 +58,10 @@ class MDCAT_Platform_Loader {
 
         MDCAT_Platform_Gamification::init();
 
+        require_once MDCAT_PLATFORM_PATH . 'modules/progress/class-progress.php';
+
+        MDCAT_Platform_Progress::init();
+
         /**
          * Load Public Files
          */
