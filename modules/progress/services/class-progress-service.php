@@ -108,6 +108,68 @@ class MDCAT_Platform_Progress_Service {
     }
 
     /**
+     * Calculate overall curriculum completion for a student.
+     *
+     * Returns a single aggregate: the ratio of all unique completed
+     * collections to all active collections across the entire curriculum.
+     * This gives a single "how far along am I?" number.
+     *
+     * Unlike subject/chapter methods which return arrays grouped by entity,
+     * this returns a single associative array since there is only one
+     * overall completion number per student.
+     *
+     * Implementation details:
+     * - No GROUP BY needed — single global aggregate.
+     * - Uses COUNT(DISTINCT) so repeated attempts don't inflate completion.
+     * - Only counts active collections to avoid inflating totals with drafts.
+     * - LEFT JOIN ensures uncompleted collections count toward the total.
+     * - Returns 0% if no collections exist (safe denominator handling).
+     *
+     * @param int $user_id WordPress user ID.
+     * @return array|WP_Error Associative array with total, completed, and percentage.
+     */
+    public static function get_overall_completion( $user_id ) {
+
+        global $wpdb;
+
+        $user_id = absint($user_id);
+
+        if (!$user_id) {
+            return new WP_Error('invalid_user', __('A valid user is required.', 'mdcat-platform'));
+        }
+
+        $tables = self::get_tables();
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT
+                    COUNT(DISTINCT collections.id) AS total_collections,
+                    COUNT(DISTINCT CASE WHEN attempts.id IS NOT NULL THEN collections.id END) AS completed_collections
+                FROM {$tables['collections']} AS collections
+                INNER JOIN {$tables['chapters']} AS chapters
+                    ON chapters.id = collections.chapter_id
+                INNER JOIN {$tables['subjects']} AS subjects
+                    ON subjects.id = chapters.subject_id
+                LEFT JOIN {$tables['attempts']} AS attempts
+                    ON attempts.collection_id = collections.id
+                    AND attempts.user_id = %d
+                    AND attempts.status = 'completed'
+                WHERE collections.status = 'active'",
+                $user_id
+            )
+        );
+
+        $total     = $row ? absint($row->total_collections) : 0;
+        $completed = $row ? absint($row->completed_collections) : 0;
+
+        return [
+            'total_collections'     => $total,
+            'completed_collections' => $completed,
+            'completion_percentage' => self::calculate_percentage($completed, $total),
+        ];
+    }
+
+    /**
      * Calculate chapter-level completion for a student.
      *
      * Returns every chapter across all subjects with the number of

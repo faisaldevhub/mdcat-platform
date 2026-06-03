@@ -1281,6 +1281,7 @@
                 message: root.querySelector('.mdcat-dashboard__message'),
                 content: root.querySelector('.mdcat-dashboard__content'),
                 statsGrid: root.querySelector('.mdcat-dashboard__stats-grid'),
+                overallProgressSection: root.querySelector('.mdcat-dashboard__overall-progress'),
                 streakSection: root.querySelector('.mdcat-dashboard__streak'),
                 progressSection: root.querySelector('.mdcat-dashboard__progress'),
                 chapterProgressSection: root.querySelector('.mdcat-dashboard__chapter-progress'),
@@ -1320,6 +1321,7 @@
                 return;
             }
 
+            this.renderOverallProgress(data.overall_progress);
             this.renderStatsCards(stats);
             this.renderStreakSection(streak);
             this.renderSubjectProgress(data.subject_progress);
@@ -1328,6 +1330,42 @@
             this.renderQuickActions();
             this.renderRecentActivity(recentActivity);
             this.show(this.elements.content);
+        }
+
+        renderOverallProgress(overall) {
+            if (!this.elements.overallProgressSection) {
+                return;
+            }
+
+            this.elements.overallProgressSection.innerHTML = '';
+
+            const data = overall || {};
+            const percentage = parseFloat(data.completion_percentage) || 0;
+            const completed = parseInt(data.completed_collections, 10) || 0;
+            const total = parseInt(data.total_collections, 10) || 0;
+
+            const widget = document.createElement('div');
+            widget.className = 'mdcat-overall-progress';
+
+            widget.innerHTML = `
+                <div class="mdcat-overall-progress__header">
+                    <h2 class="mdcat-overall-progress__title">${this.t('overall_progress_title')}</h2>
+                </div>
+                <div class="mdcat-overall-progress__body">
+                    <div class="mdcat-overall-progress__percentage-display">
+                        <span class="mdcat-overall-progress__percentage-value">${percentage}%</span>
+                        <span class="mdcat-overall-progress__percentage-label">${this.t('overall_progress_label')}</span>
+                    </div>
+                    <div class="mdcat-overall-progress__bar-wrapper">
+                        <div class="mdcat-progress__bar-track mdcat-progress__bar-track--overall">
+                            <div class="mdcat-progress__bar-fill mdcat-progress__bar-fill--overall" style="width: ${Math.min(percentage, 100)}%"></div>
+                        </div>
+                        <div class="mdcat-overall-progress__count">${completed} ${this.t('progress_of')} ${total} ${this.t('progress_collections')}</div>
+                    </div>
+                </div>
+            `;
+
+            this.elements.overallProgressSection.appendChild(widget);
         }
 
         renderStatsCards(stats) {

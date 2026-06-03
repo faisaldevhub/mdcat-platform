@@ -120,6 +120,8 @@ class MDCAT_Platform_Frontend {
                     'progress_of'               => __('of', 'mdcat-platform'),
                     'chapter_progress_title'    => __('Chapter Progress', 'mdcat-platform'),
                     'chapter_progress_empty'    => __('No chapters available yet.', 'mdcat-platform'),
+                    'overall_progress_title'    => __('Overall Progress', 'mdcat-platform'),
+                    'overall_progress_label'    => __('Curriculum Completed', 'mdcat-platform'),
                 ],
             ]
         );
@@ -157,6 +159,10 @@ class MDCAT_Platform_Frontend {
             <div class="mdcat-dashboard__message" hidden></div>
 
             <div class="mdcat-dashboard__content" hidden>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--overall-progress">
+                    <div class="mdcat-dashboard__overall-progress"></div>
+                </section>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--stats">
                     <div class="mdcat-dashboard__stats-grid"></div>
