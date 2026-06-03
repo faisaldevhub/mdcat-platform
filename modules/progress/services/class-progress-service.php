@@ -170,6 +170,102 @@ class MDCAT_Platform_Progress_Service {
     }
 
     /**
+     * Determine the next collection a student should work on.
+     *
+     * Finds the first active collection in curriculum order that the
+     * student has NOT yet completed. "Curriculum order" is defined as:
+     * subjects.name ASC → chapters.name ASC → collections.sort_order ASC.
+     *
+     * Implementation details:
+     * - Uses LEFT JOIN + IS NULL anti-join pattern to find uncompleted collections.
+     *   This is more efficient than a NOT IN subquery for large datasets.
+     * - LIMIT 1 ensures only the first uncompleted collection is returned.
+     * - Returns overall completion percentage for context display.
+     * - Returns a curriculum_completed flag when no uncompleted collections remain.
+     *
+     * @param int $user_id WordPress user ID.
+     * @return array|WP_Error Continue learning recommendation data.
+     */
+    public static function get_continue_learning( $user_id ) {
+
+        global $wpdb;
+
+        $user_id = absint($user_id);
+
+        if (!$user_id) {
+            return new WP_Error('invalid_user', __('A valid user is required.', 'mdcat-platform'));
+        }
+
+        $tables = self::get_tables();
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT
+                    collections.id AS collection_id,
+                    collections.title AS collection_title,
+                    chapters.id AS chapter_id,
+                    chapters.name AS chapter_name,
+                    subjects.id AS subject_id,
+                    subjects.name AS subject_name
+                FROM {$tables['collections']} AS collections
+                INNER JOIN {$tables['chapters']} AS chapters
+                    ON chapters.id = collections.chapter_id
+                INNER JOIN {$tables['subjects']} AS subjects
+                    ON subjects.id = chapters.subject_id
+                LEFT JOIN {$tables['attempts']} AS attempts
+                    ON attempts.collection_id = collections.id
+                    AND attempts.user_id = %d
+                    AND attempts.status = 'completed'
+                WHERE collections.status = 'active'
+                    AND attempts.id IS NULL
+                ORDER BY subjects.name ASC, chapters.name ASC, collections.sort_order ASC
+                LIMIT 1",
+                $user_id
+            )
+        );
+
+        $overall = self::get_overall_completion($user_id);
+
+        if (is_wp_error($overall)) {
+            $overall = [
+                'total_collections'     => 0,
+                'completed_collections' => 0,
+                'completion_percentage' => 0,
+            ];
+        }
+
+        if (!$row) {
+            return [
+                'curriculum_completed'  => true,
+                'collection_id'         => null,
+                'collection_title'      => null,
+                'chapter_id'            => null,
+                'chapter_title'         => null,
+                'subject_id'            => null,
+                'subject_title'         => null,
+                'completion_percentage' => $overall['completion_percentage'],
+                'recommendation_message' => __('Congratulations! You have completed the entire curriculum.', 'mdcat-platform'),
+            ];
+        }
+
+        return [
+            'curriculum_completed'  => false,
+            'collection_id'         => absint($row->collection_id),
+            'collection_title'      => $row->collection_title,
+            'chapter_id'            => absint($row->chapter_id),
+            'chapter_title'         => $row->chapter_name,
+            'subject_id'            => absint($row->subject_id),
+            'subject_title'         => $row->subject_name,
+            'completion_percentage' => $overall['completion_percentage'],
+            'recommendation_message' => sprintf(
+                /* translators: %s: collection title */
+                __('Continue with: %s', 'mdcat-platform'),
+                $row->collection_title
+            ),
+        ];
+    }
+
+    /**
      * Calculate chapter-level completion for a student.
      *
      * Returns every chapter across all subjects with the number of

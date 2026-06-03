@@ -310,4 +310,24 @@ class MDCAT_Platform_Dashboard_Service {
 
         return MDCAT_Platform_Progress_Service::get_overall_completion($user_id);
     }
+
+    /**
+     * Fetch continue learning recommendation for the dashboard display.
+     *
+     * Delegates entirely to the Progress Service to avoid duplicating
+     * progress logic inside the dashboard layer.
+     *
+     * @param int $user_id WordPress user ID.
+     * @return array|WP_Error
+     */
+    public static function get_continue_learning( $user_id ) {
+
+        $user_id = absint($user_id);
+
+        if (!$user_id) {
+            return new WP_Error('invalid_user', __('A valid user is required.', 'mdcat-platform'));
+        }
+
+        return MDCAT_Platform_Progress_Service::get_continue_learning($user_id);
+    }
 }

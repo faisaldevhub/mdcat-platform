@@ -122,6 +122,14 @@ class MDCAT_Platform_Frontend {
                     'chapter_progress_empty'    => __('No chapters available yet.', 'mdcat-platform'),
                     'overall_progress_title'    => __('Overall Progress', 'mdcat-platform'),
                     'overall_progress_label'    => __('Curriculum Completed', 'mdcat-platform'),
+                    'continue_title'            => __('Continue Learning', 'mdcat-platform'),
+                    'continue_subject'          => __('Subject', 'mdcat-platform'),
+                    'continue_chapter'          => __('Chapter', 'mdcat-platform'),
+                    'continue_next'             => __('Next Quiz', 'mdcat-platform'),
+                    'continue_resume'           => __('Resume Learning', 'mdcat-platform'),
+                    'continue_completed'        => __('Curriculum Completed', 'mdcat-platform'),
+                    'continue_completed_msg'    => __('Congratulations! You have completed the entire curriculum.', 'mdcat-platform'),
+                    'continue_review'           => __('Review Quizzes', 'mdcat-platform'),
                 ],
             ]
         );
@@ -162,6 +170,10 @@ class MDCAT_Platform_Frontend {
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--overall-progress">
                     <div class="mdcat-dashboard__overall-progress"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--continue-learning">
+                    <div class="mdcat-dashboard__continue-learning"></div>
                 </section>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--stats">

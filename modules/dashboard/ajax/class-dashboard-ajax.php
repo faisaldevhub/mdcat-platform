@@ -72,6 +72,12 @@ class MDCAT_Platform_Dashboard_Ajax {
             self::send_wp_error($overall_progress);
         }
 
+        $continue_learning = MDCAT_Platform_Dashboard_Service::get_continue_learning($user_id);
+
+        if (is_wp_error($continue_learning)) {
+            self::send_wp_error($continue_learning);
+        }
+
         wp_send_json_success(
             [
                 'stats'                => $stats,
@@ -81,6 +87,7 @@ class MDCAT_Platform_Dashboard_Ajax {
                 'subject_progress'     => $subject_progress,
                 'chapter_progress'     => $chapter_progress,
                 'overall_progress'     => $overall_progress,
+                'continue_learning'    => $continue_learning,
             ]
         );
     }

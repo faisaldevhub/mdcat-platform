@@ -1282,6 +1282,7 @@
                 content: root.querySelector('.mdcat-dashboard__content'),
                 statsGrid: root.querySelector('.mdcat-dashboard__stats-grid'),
                 overallProgressSection: root.querySelector('.mdcat-dashboard__overall-progress'),
+                continueLearningSection: root.querySelector('.mdcat-dashboard__continue-learning'),
                 streakSection: root.querySelector('.mdcat-dashboard__streak'),
                 progressSection: root.querySelector('.mdcat-dashboard__progress'),
                 chapterProgressSection: root.querySelector('.mdcat-dashboard__chapter-progress'),
@@ -1322,6 +1323,7 @@
             }
 
             this.renderOverallProgress(data.overall_progress);
+            this.renderContinueLearning(data.continue_learning);
             this.renderStatsCards(stats);
             this.renderStreakSection(streak);
             this.renderSubjectProgress(data.subject_progress);
@@ -1366,6 +1368,62 @@
             `;
 
             this.elements.overallProgressSection.appendChild(widget);
+        }
+
+        renderContinueLearning(data) {
+            if (!this.elements.continueLearningSection) {
+                return;
+            }
+
+            this.elements.continueLearningSection.innerHTML = '';
+
+            const info = data || {};
+            const isCompleted = !!info.curriculum_completed;
+
+            const card = document.createElement('div');
+            card.className = 'mdcat-continue-learning';
+
+            if (isCompleted) {
+                card.classList.add('mdcat-continue-learning--completed');
+                card.innerHTML = `
+                    <div class="mdcat-continue-learning__icon">🎉</div>
+                    <h3 class="mdcat-continue-learning__heading">${this.t('continue_completed')}</h3>
+                    <p class="mdcat-continue-learning__message">${this.t('continue_completed_msg')}</p>
+                `;
+            } else {
+                const collectionTitle = this.escapeHtml(info.collection_title || '');
+                const chapterTitle = this.escapeHtml(info.chapter_title || '');
+                const subjectTitle = this.escapeHtml(info.subject_title || '');
+                const percentage = parseFloat(info.completion_percentage) || 0;
+
+                card.innerHTML = `
+                    <div class="mdcat-continue-learning__header">
+                        <h3 class="mdcat-continue-learning__heading">${this.t('continue_title')}</h3>
+                        <span class="mdcat-continue-learning__progress-badge">${percentage}%</span>
+                    </div>
+                    <div class="mdcat-continue-learning__breadcrumb">
+                        <span class="mdcat-continue-learning__breadcrumb-item">
+                            <span class="mdcat-continue-learning__breadcrumb-label">${this.t('continue_subject')}</span>
+                            <span class="mdcat-continue-learning__breadcrumb-value">${subjectTitle}</span>
+                        </span>
+                        <span class="mdcat-continue-learning__breadcrumb-separator">›</span>
+                        <span class="mdcat-continue-learning__breadcrumb-item">
+                            <span class="mdcat-continue-learning__breadcrumb-label">${this.t('continue_chapter')}</span>
+                            <span class="mdcat-continue-learning__breadcrumb-value">${chapterTitle}</span>
+                        </span>
+                        <span class="mdcat-continue-learning__breadcrumb-separator">›</span>
+                        <span class="mdcat-continue-learning__breadcrumb-item">
+                            <span class="mdcat-continue-learning__breadcrumb-label">${this.t('continue_next')}</span>
+                            <span class="mdcat-continue-learning__breadcrumb-value mdcat-continue-learning__breadcrumb-value--highlight">${collectionTitle}</span>
+                        </span>
+                    </div>
+                    <button class="mdcat-continue-learning__resume-btn" data-collection-id="${info.collection_id}">
+                        ${this.t('continue_resume')} →
+                    </button>
+                `;
+            }
+
+            this.elements.continueLearningSection.appendChild(card);
         }
 
         renderStatsCards(stats) {

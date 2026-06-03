@@ -1204,6 +1204,174 @@
 }
 
 /* =============================================
+   Continue Learning Card
+   ============================================= */
+
+.mdcat-continue-learning {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.mdcat-continue-learning__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 12px;
+}
+
+.mdcat-continue-learning__heading {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1d2327;
+    margin: 0;
+}
+
+.mdcat-continue-learning__progress-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #7b1fa2, #512da8);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.mdcat-continue-learning__breadcrumb {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.mdcat-continue-learning__breadcrumb-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mdcat-continue-learning__breadcrumb-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #757575;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mdcat-continue-learning__breadcrumb-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1d2327;
+}
+
+.mdcat-continue-learning__breadcrumb-value--highlight {
+    font-weight: 700;
+    color: #2271b1;
+}
+
+.mdcat-continue-learning__breadcrumb-separator {
+    font-size: 18px;
+    color: #c3c4c7;
+    font-weight: 300;
+    line-height: 1;
+    padding-top: 12px;
+}
+
+.mdcat-continue-learning__resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.mdcat-continue-learning__resume-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.mdcat-continue-learning__resume-btn:active {
+    transform: translateY(0);
+}
+
+/* Completed state */
+.mdcat-continue-learning--completed {
+    text-align: center;
+    background: linear-gradient(180deg, #f1f8e9, #fff);
+    border-color: #c5e1a5;
+}
+
+.mdcat-continue-learning__icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.mdcat-continue-learning--completed .mdcat-continue-learning__heading {
+    color: #2e7d32;
+    margin-bottom: 8px;
+}
+
+.mdcat-continue-learning__message {
+    font-size: 14px;
+    color: #50575e;
+    margin: 0;
+}
+
+/* Dashboard continue learning section */
+.mdcat-dashboard__section--continue-learning {
+    padding: 24px;
+}
+
+/* =============================================
+   Continue Learning Responsive
+   ============================================= */
+
+@media (max-width: 600px) {
+    .mdcat-continue-learning {
+        padding: 16px;
+    }
+
+    .mdcat-continue-learning__heading {
+        font-size: 16px;
+    }
+
+    .mdcat-continue-learning__breadcrumb {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .mdcat-continue-learning__breadcrumb-separator {
+        display: none;
+    }
+
+    .mdcat-continue-learning__resume-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .mdcat-dashboard__section--continue-learning {
+        padding: 16px;
+    }
+}
+
+/* =============================================
    Subject Progress Tracking
    ============================================= */
 
