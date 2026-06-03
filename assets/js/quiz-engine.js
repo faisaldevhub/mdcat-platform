@@ -1283,6 +1283,7 @@
                 statsGrid: root.querySelector('.mdcat-dashboard__stats-grid'),
                 streakSection: root.querySelector('.mdcat-dashboard__streak'),
                 progressSection: root.querySelector('.mdcat-dashboard__progress'),
+                chapterProgressSection: root.querySelector('.mdcat-dashboard__chapter-progress'),
                 snapshot: root.querySelector('.mdcat-dashboard__snapshot'),
                 actionsGrid: root.querySelector('.mdcat-dashboard__actions-grid'),
                 activity: root.querySelector('.mdcat-dashboard__activity')
@@ -1322,6 +1323,7 @@
             this.renderStatsCards(stats);
             this.renderStreakSection(streak);
             this.renderSubjectProgress(data.subject_progress);
+            this.renderChapterProgress(data.chapter_progress);
             this.renderPerformanceSnapshot(snapshot);
             this.renderQuickActions();
             this.renderRecentActivity(recentActivity);
@@ -1500,6 +1502,81 @@
             });
 
             this.elements.progressSection.appendChild(container);
+        }
+
+        renderChapterProgress(chapters) {
+            if (!this.elements.chapterProgressSection) {
+                return;
+            }
+
+            this.elements.chapterProgressSection.innerHTML = '';
+
+            const list = Array.isArray(chapters) ? chapters : [];
+
+            if (!list.length) {
+                const empty = document.createElement('p');
+                empty.className = 'mdcat-progress__empty';
+                empty.textContent = this.t('chapter_progress_empty');
+                this.elements.chapterProgressSection.appendChild(empty);
+                return;
+            }
+
+            const grouped = {};
+
+            list.forEach((chapter) => {
+                const subjectName = chapter.subject_name || 'Unknown';
+
+                if (!grouped[subjectName]) {
+                    grouped[subjectName] = [];
+                }
+
+                grouped[subjectName].push(chapter);
+            });
+
+            const container = document.createElement('div');
+            container.className = 'mdcat-chapter-progress__groups';
+
+            Object.keys(grouped).forEach((subjectName) => {
+                const subjectChapters = grouped[subjectName];
+
+                const group = document.createElement('div');
+                group.className = 'mdcat-chapter-progress__group';
+
+                const header = document.createElement('div');
+                header.className = 'mdcat-chapter-progress__group-header';
+                header.innerHTML = `<span class="mdcat-chapter-progress__group-name">${this.escapeHtml(subjectName)}</span><span class="mdcat-chapter-progress__group-count">${subjectChapters.length} ${this.t('dashboard_chapter')}s</span>`;
+                group.appendChild(header);
+
+                const chapterList = document.createElement('div');
+                chapterList.className = 'mdcat-chapter-progress__chapter-list';
+
+                subjectChapters.forEach((chapter) => {
+                    const percentage = parseFloat(chapter.completion_percentage) || 0;
+                    const completed = parseInt(chapter.completed_collections, 10) || 0;
+                    const total = parseInt(chapter.total_collections, 10) || 0;
+
+                    const row = document.createElement('div');
+                    row.className = 'mdcat-chapter-progress__chapter';
+
+                    row.innerHTML = `
+                        <div class="mdcat-chapter-progress__chapter-header">
+                            <span class="mdcat-chapter-progress__chapter-name">${this.escapeHtml(chapter.chapter_name)}</span>
+                            <span class="mdcat-chapter-progress__chapter-stat">${completed} ${this.t('progress_of')} ${total}</span>
+                        </div>
+                        <div class="mdcat-progress__bar-track">
+                            <div class="mdcat-progress__bar-fill mdcat-progress__bar-fill--chapter" style="width: ${Math.min(percentage, 100)}%"></div>
+                        </div>
+                        <div class="mdcat-chapter-progress__chapter-percentage">${percentage}% ${this.t('progress_completed')}</div>
+                    `;
+
+                    chapterList.appendChild(row);
+                });
+
+                group.appendChild(chapterList);
+                container.appendChild(group);
+            });
+
+            this.elements.chapterProgressSection.appendChild(container);
         }
 
         renderPerformanceSnapshot(snapshot) {

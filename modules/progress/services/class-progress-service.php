@@ -108,6 +108,93 @@ class MDCAT_Platform_Progress_Service {
     }
 
     /**
+     * Calculate chapter-level completion for a student.
+     *
+     * Returns every chapter across all subjects with the number of
+     * completed collections vs total active collections. The query
+     * structure mirrors get_subject_completion() but groups at the
+     * chapter level and includes the parent subject name for display.
+     *
+     * Implementation details:
+     * - Uses LEFT JOIN so chapters with zero completed attempts appear at 0%.
+     * - Uses COUNT(DISTINCT) so repeating a quiz doesn't inflate completion.
+     * - Single query with GROUP BY — no PHP loops for counting.
+     * - Only counts active collections to avoid inflating totals with drafts.
+     * - Ordered by subject name, then chapter name for consistent grouping.
+     *
+     * @param int $user_id WordPress user ID.
+     * @return array|WP_Error Array of chapter completion data, or WP_Error on failure.
+     */
+    public static function get_chapter_completion( $user_id ) {
+
+        global $wpdb;
+
+        $user_id = absint($user_id);
+
+        if (!$user_id) {
+            return new WP_Error('invalid_user', __('A valid user is required.', 'mdcat-platform'));
+        }
+
+        $tables = self::get_tables();
+
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT
+                    chapters.id AS chapter_id,
+                    chapters.name AS chapter_name,
+                    subjects.id AS subject_id,
+                    subjects.name AS subject_name,
+                    COUNT(DISTINCT collections.id) AS total_collections,
+                    COUNT(DISTINCT CASE WHEN attempts.id IS NOT NULL THEN collections.id END) AS completed_collections
+                FROM {$tables['chapters']} AS chapters
+                INNER JOIN {$tables['subjects']} AS subjects
+                    ON subjects.id = chapters.subject_id
+                INNER JOIN {$tables['collections']} AS collections
+                    ON collections.chapter_id = chapters.id
+                    AND collections.status = 'active'
+                LEFT JOIN {$tables['attempts']} AS attempts
+                    ON attempts.collection_id = collections.id
+                    AND attempts.user_id = %d
+                    AND attempts.status = 'completed'
+                GROUP BY chapters.id, chapters.name, subjects.id, subjects.name
+                ORDER BY subjects.name ASC, chapters.name ASC",
+                $user_id
+            )
+        );
+
+        return self::format_chapter_rows($rows);
+    }
+
+    /**
+     * Format raw database rows into structured chapter completion data.
+     *
+     * @param array $rows Raw database result rows.
+     * @return array Formatted chapter completion array.
+     */
+    private static function format_chapter_rows( $rows ) {
+
+        $chapters = [];
+
+        foreach ((array) $rows as $row) {
+
+            $total     = absint($row->total_collections);
+            $completed = absint($row->completed_collections);
+
+            $chapters[] = [
+                'chapter_id'              => absint($row->chapter_id),
+                'chapter_name'            => $row->chapter_name,
+                'subject_id'              => absint($row->subject_id),
+                'subject_name'            => $row->subject_name,
+                'total_collections'       => $total,
+                'completed_collections'   => $completed,
+                'completion_percentage'   => self::calculate_percentage($completed, $total),
+            ];
+        }
+
+        return $chapters;
+    }
+
+    /**
      * Get table names used by progress queries.
      *
      * Reuses Attempts Handler for attempt table names to maintain

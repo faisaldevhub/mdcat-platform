@@ -118,6 +118,8 @@ class MDCAT_Platform_Frontend {
                     'progress_completed'        => __('completed', 'mdcat-platform'),
                     'progress_collections'      => __('collections', 'mdcat-platform'),
                     'progress_of'               => __('of', 'mdcat-platform'),
+                    'chapter_progress_title'    => __('Chapter Progress', 'mdcat-platform'),
+                    'chapter_progress_empty'    => __('No chapters available yet.', 'mdcat-platform'),
                 ],
             ]
         );
@@ -168,6 +170,11 @@ class MDCAT_Platform_Frontend {
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--progress">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Subject Progress', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__progress"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--chapter-progress">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Chapter Progress', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__chapter-progress"></div>
                 </section>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--snapshot">

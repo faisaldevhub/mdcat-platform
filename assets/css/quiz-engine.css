@@ -1227,6 +1227,130 @@
 }
 
 /* =============================================
+   Chapter Progress Tracking
+   ============================================= */
+
+.mdcat-chapter-progress__groups {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.mdcat-chapter-progress__group {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.mdcat-chapter-progress__group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e2e4e7;
+    gap: 12px;
+}
+
+.mdcat-chapter-progress__group-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.mdcat-chapter-progress__group-count {
+    font-size: 13px;
+    color: #757575;
+    white-space: nowrap;
+}
+
+.mdcat-chapter-progress__chapter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.mdcat-chapter-progress__chapter {
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0f0f1;
+    transition: background 200ms ease;
+}
+
+.mdcat-chapter-progress__chapter:last-child {
+    border-bottom: none;
+}
+
+.mdcat-chapter-progress__chapter:hover {
+    background: #fafbfc;
+}
+
+.mdcat-chapter-progress__chapter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 12px;
+}
+
+.mdcat-chapter-progress__chapter-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1d2327;
+}
+
+.mdcat-chapter-progress__chapter-stat {
+    font-size: 12px;
+    color: #757575;
+    white-space: nowrap;
+}
+
+.mdcat-chapter-progress__chapter-percentage {
+    font-size: 12px;
+    font-weight: 500;
+    color: #50575e;
+    margin-top: 4px;
+}
+
+/* Chapter bars use teal gradient to distinguish from subject bars */
+.mdcat-progress__bar-fill--chapter {
+    background: linear-gradient(135deg, #00897b, #00695c);
+}
+
+/* Dashboard chapter progress section spacing */
+.mdcat-dashboard__section--chapter-progress {
+    padding: 24px;
+}
+
+/* =============================================
+   Chapter Progress Responsive
+   ============================================= */
+
+@media (max-width: 600px) {
+    .mdcat-chapter-progress__group-header {
+        padding: 12px 16px;
+    }
+
+    .mdcat-chapter-progress__chapter {
+        padding: 12px 16px;
+    }
+
+    .mdcat-chapter-progress__chapter-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .mdcat-chapter-progress__group-name {
+        font-size: 14px;
+    }
+
+    .mdcat-dashboard__section--chapter-progress {
+        padding: 16px;
+    }
+}
+
+/* =============================================
    Access Gate (Login Required / Access Denied)
    ============================================= */
 

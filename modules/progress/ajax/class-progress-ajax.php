@@ -15,6 +15,7 @@ class MDCAT_Platform_Progress_Ajax {
     public static function init() {
 
         add_action('wp_ajax_mdcat_get_subject_progress', [__CLASS__, 'get_subject_progress']);
+        add_action('wp_ajax_mdcat_get_chapter_progress', [__CLASS__, 'get_chapter_progress']);
     }
 
     /**
@@ -36,6 +37,27 @@ class MDCAT_Platform_Progress_Ajax {
         }
 
         wp_send_json_success($subjects);
+    }
+
+    /**
+     * Return chapter completion data for the current student.
+     *
+     * Thin AJAX handler — verifies security, calls the service,
+     * and formats the response.
+     */
+    public static function get_chapter_progress() {
+
+        self::verify_request();
+
+        $user_id = get_current_user_id();
+
+        $chapters = MDCAT_Platform_Progress_Service::get_chapter_completion($user_id);
+
+        if (is_wp_error($chapters)) {
+            self::send_wp_error($chapters);
+        }
+
+        wp_send_json_success($chapters);
     }
 
     /**
