@@ -49,6 +49,7 @@ class MDCAT_Platform_Frontend {
                 'nonce'           => wp_create_nonce('mdcat_quiz_nonce'),
                 'current_user_id' => get_current_user_id(),
                 'is_logged_in'    => is_user_logged_in(),
+                'login_url'       => wp_login_url(),
                 'i18n'            => [
                     'start_quiz'        => __('Start Quiz', 'mdcat-platform'),
                     'loading'           => __('Loading...', 'mdcat-platform'),
@@ -107,6 +108,10 @@ class MDCAT_Platform_Frontend {
                     'streak_today'              => __('Today', 'mdcat-platform'),
                     'streak_yesterday'          => __('Yesterday', 'mdcat-platform'),
                     'streak_never'              => __('No activity yet', 'mdcat-platform'),
+                    'access_login_required'     => __('Login Required', 'mdcat-platform'),
+                    'access_login_message'      => __('Please log in to access this content.', 'mdcat-platform'),
+                    'access_login_button'       => __('Log In', 'mdcat-platform'),
+                    'access_denied'             => __('Access Restricted', 'mdcat-platform'),
                 ],
             ]
         );
@@ -125,6 +130,12 @@ class MDCAT_Platform_Frontend {
      * @return string
      */
     public static function render_dashboard_shortcode() {
+
+        $guard = MDCAT_Platform_Access_Middleware::require_login();
+
+        if (true !== $guard) {
+            return $guard;
+        }
 
         self::enqueue_quiz_assets();
 
@@ -180,6 +191,12 @@ class MDCAT_Platform_Frontend {
      */
     public static function render_streak_shortcode() {
 
+        $guard = MDCAT_Platform_Access_Middleware::require_login();
+
+        if (true !== $guard) {
+            return $guard;
+        }
+
         self::enqueue_quiz_assets();
 
         ob_start();
@@ -217,6 +234,12 @@ class MDCAT_Platform_Frontend {
         );
 
         $collection_id = absint($atts['collection_id']);
+
+        $guard = MDCAT_Platform_Access_Middleware::require_quiz_access($collection_id);
+
+        if (true !== $guard) {
+            return $guard;
+        }
 
         self::enqueue_quiz_assets();
 
@@ -256,6 +279,12 @@ class MDCAT_Platform_Frontend {
      * @return string
      */
     public static function render_attempt_history_shortcode( $atts ) {
+
+        $guard = MDCAT_Platform_Access_Middleware::require_login();
+
+        if (true !== $guard) {
+            return $guard;
+        }
 
         $atts = shortcode_atts(
             [
@@ -304,6 +333,12 @@ class MDCAT_Platform_Frontend {
      * @return string
      */
     public static function render_performance_shortcode() {
+
+        $guard = MDCAT_Platform_Access_Middleware::require_login();
+
+        if (true !== $guard) {
+            return $guard;
+        }
 
         self::enqueue_quiz_assets();
 
@@ -365,6 +400,12 @@ class MDCAT_Platform_Frontend {
      */
     public static function render_bookmarks_shortcode() {
 
+        $guard = MDCAT_Platform_Access_Middleware::require_login();
+
+        if (true !== $guard) {
+            return $guard;
+        }
+
         return self::render_revision_list('bookmarks');
     }
 
@@ -374,6 +415,12 @@ class MDCAT_Platform_Frontend {
      * @return string
      */
     public static function render_wrong_questions_shortcode() {
+
+        $guard = MDCAT_Platform_Access_Middleware::require_login();
+
+        if (true !== $guard) {
+            return $guard;
+        }
 
         return self::render_revision_list('wrong');
     }

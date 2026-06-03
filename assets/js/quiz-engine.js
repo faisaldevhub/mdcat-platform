@@ -6,6 +6,52 @@
     const FEEDBACK_DELAY = 700;
     const REQUEST_TIMEOUT = 20000;
 
+    class MDCATAccessGuard {
+
+        static isLoggedIn() {
+            return !!(window.MDCATQuiz && MDCATQuiz.is_logged_in);
+        }
+
+        static getLoginUrl() {
+            return window.MDCATQuiz && MDCATQuiz.login_url ? MDCATQuiz.login_url : '/wp-login.php';
+        }
+
+        static t(key) {
+            return window.MDCATQuiz && MDCATQuiz.i18n && MDCATQuiz.i18n[key] ? MDCATQuiz.i18n[key] : key;
+        }
+
+        static renderLoginRequired(container) {
+            if (!container) {
+                return;
+            }
+
+            const loginUrl = MDCATAccessGuard.getLoginUrl();
+
+            container.innerHTML = `
+                <div class="mdcat-access-gate mdcat-access-gate--login">
+                    <div class="mdcat-access-gate__icon">🔒</div>
+                    <h3 class="mdcat-access-gate__title">${MDCATAccessGuard.t('access_login_required')}</h3>
+                    <p class="mdcat-access-gate__message">${MDCATAccessGuard.t('access_login_message')}</p>
+                    <a href="${loginUrl}" class="mdcat-access-gate__button">${MDCATAccessGuard.t('access_login_button')}</a>
+                </div>
+            `;
+        }
+
+        static renderAccessDenied(container, message) {
+            if (!container) {
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="mdcat-access-gate mdcat-access-gate--denied">
+                    <div class="mdcat-access-gate__icon">🚫</div>
+                    <h3 class="mdcat-access-gate__title">${MDCATAccessGuard.t('access_denied')}</h3>
+                    <p class="mdcat-access-gate__message">${message || MDCATAccessGuard.t('access_denied')}</p>
+                </div>
+            `;
+        }
+    }
+
     class MDCATQuizController {
         constructor(root) {
             this.root = root;

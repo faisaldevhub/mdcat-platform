@@ -1106,3 +1106,107 @@
         padding: 16px;
     }
 }
+
+/* =============================================
+   Access Gate (Login Required / Access Denied)
+   ============================================= */
+
+.mdcat-access-gate {
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 40px 32px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.mdcat-access-gate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+}
+
+.mdcat-access-gate__icon {
+    font-size: 48px;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.mdcat-access-gate__title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1d2327;
+    margin: 0 0 10px 0;
+    line-height: 1.3;
+}
+
+.mdcat-access-gate__message {
+    font-size: 15px;
+    color: #50575e;
+    margin: 0 0 24px 0;
+    line-height: 1.6;
+}
+
+.mdcat-access-gate__button {
+    display: inline-block;
+    padding: 12px 36px;
+    background: linear-gradient(135deg, #2271b1, #135e96);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+    box-shadow: 0 2px 8px rgba(34, 113, 177, 0.25);
+}
+
+.mdcat-access-gate__button:hover {
+    background: linear-gradient(135deg, #135e96, #0a4b78);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(34, 113, 177, 0.35);
+}
+
+.mdcat-access-gate__button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(34, 113, 177, 0.20);
+}
+
+.mdcat-access-gate--denied {
+    border-color: #f0c2c4;
+    background: #fff;
+}
+
+.mdcat-access-gate--denied .mdcat-access-gate__title {
+    color: #8a2424;
+}
+
+.mdcat-access-gate--denied .mdcat-access-gate__message {
+    margin-bottom: 0;
+}
+
+/* =============================================
+   Access Gate Responsive
+   ============================================= */
+
+@media (max-width: 600px) {
+    .mdcat-access-gate {
+        margin: 20px 0;
+        padding: 28px 20px;
+    }
+
+    .mdcat-access-gate__icon {
+        font-size: 36px;
+    }
+
+    .mdcat-access-gate__title {
+        font-size: 18px;
+    }
+
+    .mdcat-access-gate__button {
+        display: block;
+        padding: 12px 20px;
+    }
+}

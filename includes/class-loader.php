@@ -35,6 +35,10 @@ class MDCAT_Platform_Loader {
          * Load Backend Modules
          */
 
+        require_once MDCAT_PLATFORM_PATH . 'modules/access/class-access.php';
+
+        MDCAT_Platform_Access::init();
+
         require_once MDCAT_PLATFORM_PATH . 'modules/attempts/class-attempts-handler.php';
         require_once MDCAT_PLATFORM_PATH . 'modules/attempts/class-attempts.php';
         require_once MDCAT_PLATFORM_PATH . 'modules/reviews/class-reviews.php';
