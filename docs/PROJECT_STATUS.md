@@ -89,7 +89,7 @@ Last Updated:
 Tasks:
 
 * Subject Completion Tracking ✅
-* Chapter Completion Tracking
+* Chapter Completion Tracking ✅
 * Collection Completion Tracking
 * Overall Completion Tracking
 * Continue Learning System
