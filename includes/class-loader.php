@@ -29,6 +29,9 @@ class MDCAT_Platform_Loader {
             MDCAT_Platform_Chapters::init();
             MDCAT_Platform_Collections::init();
             MDCAT_Platform_Questions::init();
+
+            require_once MDCAT_PLATFORM_PATH . 'modules/admin-reports/class-admin-reports.php';
+            MDCAT_Platform_Admin_Reports::init();
         }
 
         /**

@@ -1,0 +1,394 @@
+/**
+ * MDCAT Platform — Admin Reports Dashboard Styles
+ *
+ * Namespaced under .mdcat-admin-reports to avoid collisions
+ * with WordPress admin styles. Only loaded on the admin
+ * dashboard page via the view's enqueue_assets() method.
+ */
+
+/* ============================================================
+   Variables
+   ============================================================ */
+
+.mdcat-admin-reports {
+    --admin-primary: #4f46e5;
+    --admin-primary-light: #eef2ff;
+    --admin-success: #059669;
+    --admin-success-light: #ecfdf5;
+    --admin-warning: #d97706;
+    --admin-warning-light: #fffbeb;
+    --admin-danger: #dc2626;
+    --admin-danger-light: #fef2f2;
+    --admin-text: #1e293b;
+    --admin-text-secondary: #64748b;
+    --admin-border: #e2e8f0;
+    --admin-bg: #f8fafc;
+    --admin-card-bg: #ffffff;
+    --admin-radius: 8px;
+    --admin-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --admin-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================================
+   Page Layout
+   ============================================================ */
+
+.mdcat-admin-reports {
+    max-width: 1400px;
+    padding: 10px 0 40px;
+}
+
+.mdcat-admin-reports__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--admin-text);
+    margin-bottom: 4px;
+}
+
+.mdcat-admin-reports__subtitle {
+    font-size: 14px;
+    color: var(--admin-text-secondary);
+    margin: 0 0 24px;
+}
+
+/* ============================================================
+   Sections
+   ============================================================ */
+
+.mdcat-admin-reports__section {
+    margin-bottom: 24px;
+}
+
+.mdcat-admin-reports__section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--admin-text);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--admin-primary);
+    display: inline-block;
+}
+
+.mdcat-admin-reports__section-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* ============================================================
+   Panels (Cards)
+   ============================================================ */
+
+.mdcat-admin-reports__panel {
+    background: var(--admin-card-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: 20px;
+    box-shadow: var(--admin-shadow);
+}
+
+.mdcat-admin-reports__panel-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--admin-text);
+    margin: 0 0 12px;
+}
+
+/* ============================================================
+   Loading States
+   ============================================================ */
+
+.mdcat-admin-reports__stats-loading,
+.mdcat-admin-reports__panel-loading {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--admin-text-secondary);
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* ============================================================
+   Stats Cards Grid
+   ============================================================ */
+
+.mdcat-admin-reports__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.mdcat-admin-reports__stat-card {
+    background: var(--admin-card-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+    padding: 20px;
+    box-shadow: var(--admin-shadow);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    text-align: center;
+}
+
+.mdcat-admin-reports__stat-card:hover {
+    box-shadow: var(--admin-shadow-md);
+    transform: translateY(-2px);
+}
+
+.mdcat-admin-reports__stat-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.mdcat-admin-reports__stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--admin-text);
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.mdcat-admin-reports__stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--admin-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Card accent colors */
+.mdcat-admin-reports__stat-card--students {
+    border-top: 3px solid var(--admin-primary);
+}
+
+.mdcat-admin-reports__stat-card--subjects {
+    border-top: 3px solid #8b5cf6;
+}
+
+.mdcat-admin-reports__stat-card--chapters {
+    border-top: 3px solid #06b6d4;
+}
+
+.mdcat-admin-reports__stat-card--collections {
+    border-top: 3px solid #f59e0b;
+}
+
+.mdcat-admin-reports__stat-card--questions {
+    border-top: 3px solid var(--admin-success);
+}
+
+.mdcat-admin-reports__stat-card--attempts {
+    border-top: 3px solid #ec4899;
+}
+
+.mdcat-admin-reports__stat-card--accuracy {
+    border-top: 3px solid #10b981;
+}
+
+.mdcat-admin-reports__stat-card--streak {
+    border-top: 3px solid #f97316;
+}
+
+/* ============================================================
+   Data Tables
+   ============================================================ */
+
+.mdcat-admin-reports__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mdcat-admin-reports__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.mdcat-admin-reports__table thead th {
+    background: var(--admin-bg);
+    border-bottom: 2px solid var(--admin-border);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--admin-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.mdcat-admin-reports__table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--admin-border);
+    color: var(--admin-text);
+    vertical-align: middle;
+}
+
+.mdcat-admin-reports__table tbody tr:hover {
+    background: var(--admin-bg);
+}
+
+.mdcat-admin-reports__table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ============================================================
+   Performance Labels
+   ============================================================ */
+
+.mdcat-admin-reports__label {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mdcat-admin-reports__label--strong {
+    background: var(--admin-success-light);
+    color: var(--admin-success);
+}
+
+.mdcat-admin-reports__label--average {
+    background: var(--admin-warning-light);
+    color: var(--admin-warning);
+}
+
+.mdcat-admin-reports__label--weak {
+    background: var(--admin-danger-light);
+    color: var(--admin-danger);
+}
+
+/* ============================================================
+   Accuracy Value Coloring
+   ============================================================ */
+
+.mdcat-admin-reports__accuracy--strong {
+    color: var(--admin-success);
+    font-weight: 600;
+}
+
+.mdcat-admin-reports__accuracy--average {
+    color: var(--admin-warning);
+    font-weight: 600;
+}
+
+.mdcat-admin-reports__accuracy--weak {
+    color: var(--admin-danger);
+    font-weight: 600;
+}
+
+/* ============================================================
+   Subject Highlight Lists (Strongest / Weakest)
+   ============================================================ */
+
+.mdcat-admin-reports__highlight-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mdcat-admin-reports__highlight-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.mdcat-admin-reports__highlight-item:last-child {
+    border-bottom: none;
+}
+
+.mdcat-admin-reports__highlight-name {
+    font-weight: 500;
+    color: var(--admin-text);
+    font-size: 13px;
+}
+
+.mdcat-admin-reports__highlight-accuracy {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* ============================================================
+   Rank Badge
+   ============================================================ */
+
+.mdcat-admin-reports__rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--admin-primary-light);
+    color: var(--admin-primary);
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   Empty States
+   ============================================================ */
+
+.mdcat-admin-reports__empty {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--admin-text-secondary);
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* ============================================================
+   Activity Feed Date
+   ============================================================ */
+
+.mdcat-admin-reports__date {
+    font-size: 12px;
+    color: var(--admin-text-secondary);
+    white-space: nowrap;
+}
+
+/* ============================================================
+   Score Badge
+   ============================================================ */
+
+.mdcat-admin-reports__score {
+    font-weight: 600;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1200px) {
+
+    .mdcat-admin-reports__stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 782px) {
+
+    .mdcat-admin-reports__section-row {
+        grid-template-columns: 1fr;
+    }
+
+    .mdcat-admin-reports__stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mdcat-admin-reports__stat-value {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .mdcat-admin-reports__stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

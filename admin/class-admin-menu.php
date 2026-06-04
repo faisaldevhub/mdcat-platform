@@ -84,10 +84,11 @@ class MDCAT_Platform_Admin_Menu {
 
     public static function dashboard_page() {
 
-        echo '<div class="wrap">';
-        echo '<h1>MDCAT Platform Dashboard</h1>';
-        echo '<p>Welcome to your custom LMS system.</p>';
-        echo '</div>';
+        if (!class_exists('MDCAT_Platform_Admin_Reports_View')) {
+            wp_die(esc_html__('Admin Reports module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Admin_Reports_View::render();
     }
 
     /**
