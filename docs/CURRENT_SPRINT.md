@@ -3,55 +3,70 @@
 # Active Sprint
 
 Sprint Name:
-Progress Tracking Foundation
+Admin Dashboard & Reporting System
 
 Sprint Goal:
-Build curriculum completion and learning progress tracking systems.
+Build a centralized admin control center that provides platform-wide statistics, student insights, performance reports, and activity monitoring.
 
 Status:
-Completed
+In Progress
 
 ---
 
 # Sprint Objectives
 
-The platform should now understand:
+The platform administrator should be able to understand:
 
-* what student completed
-* what student has not completed
-* learning coverage progress
-* curriculum completion percentages
-* continue-learning flow
+* total platform usage
+* student engagement
+* performance trends
+* subject strengths and weaknesses
+* recent platform activity
+* top-performing students
 
 This sprint focuses ONLY on:
-progress intelligence systems.
+admin reporting and management visibility.
 
 ---
 
 # Current Tasks
 
-## Progress Tracking
+## Admin Overview Statistics
 
-[x] Subject Completion Tracking
-[x] Chapter Completion Tracking
-[ ] Collection Completion Tracking
-[x] Overall Completion Tracking
+[ ] Total Students
+[ ] Total Subjects
+[ ] Total Chapters
+[ ] Total Collections
+[ ] Total Questions
+[ ] Total Attempts
+[ ] Average Accuracy
+[ ] Active Streak Users
 
-## Dashboard Integration
+## Student Reporting
 
-[ ] Progress Widget
-[ ] Completion Cards
-[ ] Continue Learning Section
+[ ] Student Statistics
+[ ] Most Active Students
+[ ] Student Performance Summary
 
-## Learning Flow
+## Performance Reporting
 
-[ ] Resume Learning Logic
-[ ] Next Recommended Collection
+[ ] Subject Performance Report
+[ ] Strongest Subjects
+[ ] Weakest Subjects
+[ ] Accuracy Metrics
 
-## Analytics Integration
+## Activity Monitoring
 
-[ ] Completion Percentages
-[ ] Progress Aggregation
+[ ] Recent Activity Feed
+[ ] Recent Quiz Attempts
+[ ] Platform Usage Summary
+
+## Dashboard UI
+
+[ ] Admin Dashboard Layout
+[ ] Statistics Cards
+[ ] Reporting Tables
+[ ] Responsive Design
 
 ---
 
@@ -62,22 +77,25 @@ Rules:
 * Do not modify unrelated modules
 * Reuse existing services whenever possible
 * Maintain modular architecture
-* Keep progress logic separated from analytics logic
+* Keep reporting logic separated from student-facing logic
 * Keep frontend controllers modular
-* Do not introduce unnecessary database tables
-* Prefer derived intelligence from existing data
+* Avoid unnecessary database queries
+* Prefer aggregated reporting over duplicate calculations
 
 ---
 
 # Technical Direction
 
-Progress tracking should derive from:
+Reporting should derive from:
 
+* users
 * attempts
-* completed quizzes
-* collections
-* chapters
+* analytics
+* progress data
+* streak data
 * subjects
+* chapters
+* collections
 
 Avoid duplicate data storage whenever possible.
 
@@ -90,13 +108,14 @@ Use:
 * service layer
 * modular AJAX handlers
 * frontend rendering separation
-* reusable dashboard integration
+* reusable reporting services
 
 Do NOT:
 
-* tightly couple progress tracking to dashboard
-* duplicate analytics queries
-* create heavy frontend calculations
+* tightly couple reports to existing student dashboard modules
+* duplicate analytics calculations
+* create unnecessary database tables
+* introduce heavy frontend computations
 
 ---
 
@@ -104,11 +123,11 @@ Do NOT:
 
 Sprint is complete when:
 
-* students can view progress percentages
-* dashboard shows curriculum completion
-* continue learning works
-* subject/chapter progress works
-* progress calculations are optimized
+* admin can view platform statistics
+* admin can view student activity
+* admin can view subject performance reports
+* admin can identify top performers
+* reports are optimized and scalable
 * frontend is responsive
 * no security regressions exist
 
@@ -123,8 +142,8 @@ Do NOT build:
 * notifications
 * badges
 * XP systems
-* advanced charts
-* institution systems
+* advanced charting
+* institution management
 
 Only:
-Progress Tracking Foundation.
+Admin Dashboard & Reporting System.
