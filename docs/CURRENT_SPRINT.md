@@ -3,82 +3,83 @@
 # Active Sprint
 
 Sprint Name:
-Admin Dashboard & Reporting System
+Payments & Subscription System
 
 Sprint Goal:
-Build a centralized admin control center that provides platform-wide statistics, student insights, performance reports, and activity monitoring.
+Build a complete monetization system that supports free and premium access, subscriptions, enrollment management, and payment integrations.
 
 Status:
-Completed
+Planning
 
 ---
 
 # Sprint Objectives
 
-The platform administrator should be able to understand:
+The platform should be able to:
 
-* total platform usage
-* student engagement
-* performance trends
-* subject strengths and weaknesses
-* recent platform activity
-* top-performing students
+* sell premium access
+* restrict protected content
+* manage subscriptions
+* support monthly plans
+* support lifetime plans
+* prepare for local payment gateways
+* integrate with the existing access control system
 
 This sprint focuses ONLY on:
-admin reporting and management visibility.
+payments, subscriptions, and monetization.
 
 ---
 
 # Current Tasks
 
-## Admin Overview Statistics
+## Subscription Architecture
 
-[x] Total Students
-[x] Total Subjects
-[x] Total Chapters
-[x] Total Collections
-[x] Total Questions
-[x] Total Attempts
-[x] Average Accuracy
-[x] Active Streak Users
+[ ] Subscription Plans
+[ ] Monthly Plans
+[ ] Lifetime Plans
+[ ] Plan Management
 
-## Student Reporting
+## Access Management
 
-[x] Student Statistics
-[x] Most Active Students
-[x] Student Performance Summary
+[ ] Premium Access Rules
+[ ] Collection Protection
+[ ] Quiz Protection
+[ ] Subscription Validation
+[ ] Access Middleware Integration
 
-## Performance Reporting
+## Enrollment System
 
-[x] Subject Performance Report
-[x] Strongest Subjects
-[x] Weakest Subjects
-[x] Accuracy Metrics
+[ ] Student Enrollment Logic
+[ ] Active Subscription Tracking
+[ ] Subscription Expiry Handling
+[ ] Enrollment Status Management
 
-## Activity Monitoring
+## Payment Foundation
 
-[x] Recent Activity Feed
-[x] Recent Quiz Attempts
-[x] Platform Usage Summary
+[ ] Payment Architecture
+[ ] Transaction Records
+[ ] Payment Verification Flow
+[ ] Payment Status Management
 
-## Dashboard UI
+## Payment Gateway Preparation
 
-[x] Admin Dashboard Layout
-[x] Statistics Cards
-[x] Reporting Tables
-[x] Responsive Design
+[ ] JazzCash Integration Design
+[ ] EasyPaisa Integration Design
+[ ] Gateway Abstraction Layer
 
----
+## Admin Management
 
-# Remaining Work
+[ ] Subscription Management
+[ ] Payment Monitoring
+[ ] Enrollment Reports
+[ ] Revenue Tracking Foundation
 
-* Manual Testing
-* Security Validation
-* Responsive Validation
-* Performance Validation
-* Final Review
-* Documentation Update
-* Git Push
+## Frontend Experience
+
+[ ] Pricing Page Architecture
+[ ] Upgrade Flow
+[ ] Access Restriction Messages
+[ ] Subscription Status Display
 
 ---
 
@@ -86,13 +87,47 @@ admin reporting and management visibility.
 
 Rules:
 
-* Do not modify unrelated modules
-* Reuse existing services whenever possible
+* Reuse the existing Access Control module
 * Maintain modular architecture
-* Keep reporting logic separated from student-facing logic
-* Keep frontend controllers modular
-* Avoid unnecessary database queries
-* Prefer aggregated reporting over duplicate calculations
+* Keep payment logic separated from content logic
+* Do not modify quiz engine behavior
+* Keep payment gateways abstracted
+* Design for future gateway expansion
+* Prefer extensibility over quick hacks
+
+---
+
+# Technical Direction
+
+The payment system should integrate with:
+
+* Access Control Module
+* Student Accounts
+* Collections
+* Quizzes
+* Dashboard
+* Enrollment Logic
+
+Avoid duplicate user-access tracking whenever possible.
+
+---
+
+# Architecture Requirements
+
+Use:
+
+* service layer
+* modular AJAX handlers
+* payment abstraction layer
+* reusable access middleware
+* subscription validation services
+
+Do NOT:
+
+* tightly couple payment gateways to business logic
+* hardcode JazzCash or EasyPaisa into core modules
+* duplicate access control functionality
+* create unnecessary complexity
 
 ---
 
@@ -100,26 +135,42 @@ Rules:
 
 Sprint is complete when:
 
-* admin can view platform statistics
-* admin can view student activity
-* admin can view subject performance reports
-* admin can identify top performers
-* reports are optimized and scalable
-* frontend is responsive
+* free and premium access works
+* protected content is enforced
+* subscriptions can be managed
+* enrollment status is tracked
+* payment architecture is extensible
+* access control remains centralized
 * no security regressions exist
+
+---
+
+# Not Included In This Sprint
+
+Do NOT build:
+
+* AI systems
+* badges
+* XP systems
+* notifications
+* advanced analytics
+* mobile applications
+
+Only:
+Payments & Subscription System.
 
 ---
 
 # Sprint Completion Status
 
 Implementation:
-✅ Complete
+⏳ Not Started
 
 Testing:
-🚧 In Progress
+⏳ Not Started
 
 Documentation:
-🚧 In Progress
+⏳ Not Started
 
 Deployment:
-🚧 Pending
+⏳ Not Started
