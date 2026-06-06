@@ -3,10 +3,10 @@
 # Active Sprint
 
 Sprint Name:
-Payments & Subscription System
+Student Enrollment & Approval System
 
 Sprint Goal:
-Build a complete monetization system that supports free and premium access, subscriptions, enrollment management, and payment integrations.
+Build a complete student enrollment workflow where students submit enrollment requests, upload payment proof, and receive platform access after admin approval.
 
 Status:
 Planning
@@ -17,69 +17,67 @@ Planning
 
 The platform should be able to:
 
-* sell premium access
-* restrict protected content
-* manage subscriptions
-* support monthly plans
-* support lifetime plans
-* prepare for local payment gateways
-* integrate with the existing access control system
+* collect student enrollment requests
+* accept payment screenshot uploads
+* allow admin review and approval
+* generate WordPress student accounts
+* email login credentials automatically
+* integrate with existing access control
 
 This sprint focuses ONLY on:
-payments, subscriptions, and monetization.
+student enrollment, approval workflow, and access provisioning.
 
 ---
 
 # Current Tasks
 
-## Subscription Architecture
+## Enrollment Requests
 
-[ ] Subscription Plans
-[ ] Monthly Plans
-[ ] Lifetime Plans
-[ ] Plan Management
+[ ] Enrollment Request Form
+[ ] Payment Screenshot Upload
+[ ] Form Validation
+[ ] Duplicate Email Handling
 
-## Access Management
+## Approval Workflow
 
-[ ] Premium Access Rules
-[ ] Collection Protection
-[ ] Quiz Protection
-[ ] Subscription Validation
+[ ] Pending Requests
+[ ] Approve Request
+[ ] Reject Request
+[ ] Rejection Reason Support
+
+## User Provisioning
+
+[ ] Create WordPress User
+[ ] Use Email As Username
+[ ] Generate Secure Password
+[ ] Assign Student Role
+
+## Email Automation
+
+[ ] Approval Email
+[ ] Credentials Email
+[ ] Rejection Email
+
+## Access Control Integration
+
 [ ] Access Middleware Integration
-
-## Enrollment System
-
-[ ] Student Enrollment Logic
-[ ] Active Subscription Tracking
-[ ] Subscription Expiry Handling
-[ ] Enrollment Status Management
-
-## Payment Foundation
-
-[ ] Payment Architecture
-[ ] Transaction Records
-[ ] Payment Verification Flow
-[ ] Payment Status Management
-
-## Payment Gateway Preparation
-
-[ ] JazzCash Integration Design
-[ ] EasyPaisa Integration Design
-[ ] Gateway Abstraction Layer
+[ ] Guest Redirect Flow
+[ ] Login Enforcement
+[ ] Enrollment Status Handling
 
 ## Admin Management
 
-[ ] Subscription Management
-[ ] Payment Monitoring
-[ ] Enrollment Reports
-[ ] Revenue Tracking Foundation
+[ ] Enrollment Requests Dashboard
+[ ] Screenshot Viewer
+[ ] Enrollment Filters
+[ ] Enrollment Status Tracking
 
 ## Frontend Experience
 
-[ ] Pricing Page Architecture
-[ ] Upgrade Flow
-[ ] Access Restriction Messages
-[ ] Subscription Status Display
+[ ] Enrollment Page
+[ ] Enrollment Shortcode
+[ ] Success Messages
+[ ] Status Messages
 
 ---
 
@@ -87,28 +85,27 @@ payments, subscriptions, and monetization.
 
 Rules:
 
-* Reuse the existing Access Control module
+* Reuse existing Access Control module
 * Maintain modular architecture
-* Keep payment logic separated from content logic
-* Do not modify quiz engine behavior
-* Keep payment gateways abstracted
-* Design for future gateway expansion
-* Prefer extensibility over quick hacks
+* Do not modify quiz engine logic
+* Keep enrollment logic isolated
+* Use WordPress user management APIs
+* Follow existing service-layer patterns
+* Minimize database complexity
 
 ---
 
 # Technical Direction
 
-The payment system should integrate with:
+The enrollment system should integrate with:
 
 * Access Control Module
-* Student Accounts
-* Collections
-* Quizzes
+* WordPress Users
+* Email System
 * Dashboard
-* Enrollment Logic
+* Authentication System
 
-Avoid duplicate user-access tracking whenever possible.
+Avoid duplicating user data already stored in WordPress.
 
 ---
 
@@ -117,17 +114,17 @@ Avoid duplicate user-access tracking whenever possible.
 Use:
 
 * service layer
-* modular AJAX handlers
-* payment abstraction layer
-* reusable access middleware
-* subscription validation services
+* AJAX handlers
+* shortcode rendering
+* WordPress user APIs
+* email services
 
 Do NOT:
 
-* tightly couple payment gateways to business logic
-* hardcode JazzCash or EasyPaisa into core modules
-* duplicate access control functionality
-* create unnecessary complexity
+* build payment gateways
+* build subscription systems
+* duplicate WordPress user functionality
+* tightly couple enrollment to quiz logic
 
 ---
 
@@ -135,12 +132,13 @@ Do NOT:
 
 Sprint is complete when:
 
-* free and premium access works
-* protected content is enforced
-* subscriptions can be managed
-* enrollment status is tracked
-* payment architecture is extensible
-* access control remains centralized
+* students can submit enrollment requests
+* screenshots upload successfully
+* admins can approve or reject requests
+* WordPress users are created automatically
+* credentials are emailed automatically
+* approved students can access quizzes
+* rejected students can re-apply
 * no security regressions exist
 
 ---
@@ -149,15 +147,16 @@ Sprint is complete when:
 
 Do NOT build:
 
+* subscriptions
+* JazzCash APIs
+* EasyPaisa APIs
+* recurring billing
 * AI systems
 * badges
-* XP systems
 * notifications
-* advanced analytics
-* mobile applications
 
 Only:
-Payments & Subscription System.
+Student Enrollment & Approval System.
 
 ---
 
