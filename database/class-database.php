@@ -121,7 +121,8 @@ class MDCAT_Platform_Database {
             status VARCHAR(20) DEFAULT 'active',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-            PRIMARY KEY (id)
+            PRIMARY KEY (id),
+            KEY collection_id (collection_id)
 
         ) $charset_collate;";
 

@@ -76,6 +76,15 @@ class MDCAT_Platform_Admin_Menu {
             'mdcat-questions',
             [__CLASS__, 'questions_page']
         );
+
+        add_submenu_page(
+            'mdcat-platform',
+            'Import Questions',
+            'Import Questions',
+            'manage_options',
+            'mdcat-import-questions',
+            [__CLASS__, 'import_questions_page']
+        );
     }
 
     /**
@@ -152,5 +161,18 @@ class MDCAT_Platform_Admin_Menu {
         }
 
         MDCAT_Platform_Questions::render_page();
+    }
+
+    /**
+     * Import Questions Page
+     */
+
+    public static function import_questions_page() {
+
+        if (!class_exists('MDCAT_Platform_Bulk_Import_View')) {
+            wp_die(esc_html__('Bulk Import module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Bulk_Import_View::render();
     }
 }

@@ -1,0 +1,357 @@
+/**
+ * MDCAT Platform — Bulk Import Styles
+ *
+ * Namespaced under .mdcat-bulk-import to avoid collisions
+ * with WordPress admin styles.
+ */
+
+/* ============================================================
+   Variables
+   ============================================================ */
+
+.mdcat-bulk-import {
+    --import-primary: #4f46e5;
+    --import-primary-hover: #4338ca;
+    --import-success: #059669;
+    --import-success-light: #ecfdf5;
+    --import-warning: #d97706;
+    --import-warning-light: #fffbeb;
+    --import-danger: #dc2626;
+    --import-danger-light: #fef2f2;
+    --import-text: #1e293b;
+    --import-text-secondary: #64748b;
+    --import-border: #e2e8f0;
+    --import-bg: #f8fafc;
+    --import-card-bg: #ffffff;
+    --import-radius: 8px;
+    --import-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================================
+   Page Layout
+   ============================================================ */
+
+.mdcat-bulk-import {
+    max-width: 900px;
+    padding: 10px 0 40px;
+}
+
+.mdcat-bulk-import__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--import-text);
+    margin-bottom: 4px;
+}
+
+.mdcat-bulk-import__subtitle {
+    font-size: 14px;
+    color: var(--import-text-secondary);
+    margin: 0 0 20px;
+}
+
+/* ============================================================
+   Template Download
+   ============================================================ */
+
+.mdcat-bulk-import__template {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mdcat-bulk-import__template-hint {
+    font-size: 13px;
+    color: var(--import-text-secondary);
+}
+
+/* ============================================================
+   Upload Zone
+   ============================================================ */
+
+.mdcat-bulk-import__upload-zone {
+    border: 2px dashed var(--import-border);
+    border-radius: var(--import-radius);
+    background: var(--import-card-bg);
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.mdcat-bulk-import__upload-zone:hover,
+.mdcat-bulk-import__upload-zone--dragover {
+    border-color: var(--import-primary);
+    background: var(--import-bg);
+}
+
+.mdcat-bulk-import__upload-icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.mdcat-bulk-import__upload-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--import-text);
+    margin: 0 0 4px;
+}
+
+.mdcat-bulk-import__upload-hint {
+    font-size: 12px;
+    color: var(--import-text-secondary);
+    margin: 0;
+}
+
+.mdcat-bulk-import__file-input {
+    display: none;
+}
+
+/* ============================================================
+   File Info
+   ============================================================ */
+
+.mdcat-bulk-import__file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px 16px;
+    background: var(--import-bg);
+    border: 1px solid var(--import-border);
+    border-radius: var(--import-radius);
+}
+
+.mdcat-bulk-import__file-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--import-text);
+    flex: 1;
+}
+
+/* ============================================================
+   Import Options
+   ============================================================ */
+
+.mdcat-bulk-import__options {
+    margin-top: 20px;
+    background: var(--import-card-bg);
+    border: 1px solid var(--import-border);
+    border-radius: var(--import-radius);
+    padding: 20px;
+    box-shadow: var(--import-shadow);
+}
+
+.mdcat-bulk-import__options-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--import-text);
+    margin: 0 0 12px;
+}
+
+.mdcat-bulk-import__options-table {
+    margin-bottom: 16px;
+}
+
+.mdcat-bulk-import__start-btn {
+    margin-top: 8px;
+}
+
+/* ============================================================
+   Progress Bar
+   ============================================================ */
+
+.mdcat-bulk-import__progress {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.mdcat-bulk-import__progress-bar-wrap {
+    width: 100%;
+    height: 24px;
+    background: var(--import-bg);
+    border: 1px solid var(--import-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.mdcat-bulk-import__progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--import-primary), #818cf8);
+    border-radius: 12px;
+    transition: width 0.4s ease;
+    background-size: 30px 30px;
+    animation: mdcat-progress-stripe 1s linear infinite;
+}
+
+@keyframes mdcat-progress-stripe {
+    0% { background-position: 0 0; }
+    100% { background-position: 30px 0; }
+}
+
+.mdcat-bulk-import__progress-text {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--import-text-secondary);
+    font-style: italic;
+}
+
+/* ============================================================
+   Results
+   ============================================================ */
+
+.mdcat-bulk-import__results {
+    margin-top: 24px;
+}
+
+.mdcat-bulk-import__results-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--import-text);
+    margin: 0 0 16px;
+}
+
+.mdcat-bulk-import__results-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.mdcat-bulk-import__result-card {
+    background: var(--import-card-bg);
+    border: 1px solid var(--import-border);
+    border-radius: var(--import-radius);
+    padding: 16px;
+    text-align: center;
+    box-shadow: var(--import-shadow);
+}
+
+.mdcat-bulk-import__result-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 4px;
+}
+
+.mdcat-bulk-import__result-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--import-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mdcat-bulk-import__result-card--inserted .mdcat-bulk-import__result-value {
+    color: var(--import-success);
+}
+
+.mdcat-bulk-import__result-card--duplicates .mdcat-bulk-import__result-value {
+    color: var(--import-warning);
+}
+
+.mdcat-bulk-import__result-card--errors .mdcat-bulk-import__result-value {
+    color: var(--import-danger);
+}
+
+.mdcat-bulk-import__result-card--total .mdcat-bulk-import__result-value {
+    color: var(--import-primary);
+}
+
+/* ============================================================
+   Created Entities
+   ============================================================ */
+
+.mdcat-bulk-import__created {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--import-success-light);
+    border: 1px solid #a7f3d0;
+    border-radius: var(--import-radius);
+}
+
+.mdcat-bulk-import__created h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--import-success);
+}
+
+.mdcat-bulk-import__created-list {
+    font-size: 13px;
+    color: var(--import-text);
+    line-height: 1.6;
+}
+
+/* ============================================================
+   Error Details
+   ============================================================ */
+
+.mdcat-bulk-import__errors {
+    margin-bottom: 20px;
+}
+
+.mdcat-bulk-import__errors h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--import-danger);
+    margin: 0 0 8px;
+}
+
+.mdcat-bulk-import__error-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mdcat-bulk-import__error-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.mdcat-bulk-import__error-table thead th {
+    background: var(--import-danger-light);
+    border-bottom: 2px solid #fecaca;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--import-danger);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mdcat-bulk-import__error-table tbody td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--import-border);
+    color: var(--import-text);
+}
+
+.mdcat-bulk-import__error-table tbody tr:hover {
+    background: var(--import-bg);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 782px) {
+
+    .mdcat-bulk-import__results-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mdcat-bulk-import__template {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .mdcat-bulk-import__results-cards {
+        grid-template-columns: 1fr;
+    }
+}

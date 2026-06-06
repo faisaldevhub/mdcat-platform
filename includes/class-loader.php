@@ -32,6 +32,9 @@ class MDCAT_Platform_Loader {
 
             require_once MDCAT_PLATFORM_PATH . 'modules/admin-reports/class-admin-reports.php';
             MDCAT_Platform_Admin_Reports::init();
+
+            require_once MDCAT_PLATFORM_PATH . 'modules/bulk-import/class-bulk-import.php';
+            MDCAT_Platform_Bulk_Import::init();
         }
 
         /**
