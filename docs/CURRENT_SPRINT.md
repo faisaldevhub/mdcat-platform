@@ -3,10 +3,10 @@
 # Active Sprint
 
 Sprint Name:
-Student Enrollment & Approval System
+Student Management System
 
 Sprint Goal:
-Build a complete student enrollment workflow where students submit enrollment requests, upload payment proof, and receive platform access after admin approval.
+Build a centralized student management system that allows administrators to view, manage, monitor, and control student accounts, enrollment records, learning activity, and progress.
 
 Status:
 Planning
@@ -15,69 +15,64 @@ Planning
 
 # Sprint Objectives
 
-The platform should be able to:
+The platform administrator should be able to:
 
-* collect student enrollment requests
-* accept payment screenshot uploads
-* allow admin review and approval
-* generate WordPress student accounts
-* email login credentials automatically
-* integrate with existing access control
+* view all students
+* search and filter students
+* view student profiles
+* monitor learning activity
+* monitor progress and performance
+* manage student status
+* review enrollment history
 
 This sprint focuses ONLY on:
-student enrollment, approval workflow, and access provisioning.
+student management and administration.
 
 ---
 
 # Current Tasks
 
-## Enrollment Requests
+## Student Directory
 
-[ ] Enrollment Request Form
-[ ] Payment Screenshot Upload
-[ ] Form Validation
-[ ] Duplicate Email Handling
+[ ] Student Listing
+[ ] Search Students
+[ ] Filter Students
+[ ] Pagination
 
-## Approval Workflow
+## Student Profiles
 
-[ ] Pending Requests
-[ ] Approve Request
-[ ] Reject Request
-[ ] Rejection Reason Support
+[ ] Student Overview
+[ ] Enrollment Details
+[ ] Registration Information
+[ ] Last Activity Tracking
 
-## User Provisioning
+## Learning Analytics
 
-[ ] Create WordPress User
-[ ] Use Email As Username
-[ ] Generate Secure Password
-[ ] Assign Student Role
+[ ] Progress Overview
+[ ] Subject Completion
+[ ] Chapter Completion
+[ ] Overall Progress
+[ ] Accuracy Summary
 
-## Email Automation
+## Activity Monitoring
 
-[ ] Approval Email
-[ ] Credentials Email
-[ ] Rejection Email
+[ ] Recent Attempts
+[ ] Recent Scores
+[ ] Login Activity
+[ ] Learning History
 
-## Access Control Integration
+## Student Management
 
-[ ] Access Middleware Integration
-[ ] Guest Redirect Flow
-[ ] Login Enforcement
-[ ] Enrollment Status Handling
+[ ] Activate Student
+[ ] Suspend Student
+[ ] Student Status Management
+[ ] Enrollment Review Access
 
-## Admin Management
+## Admin Dashboard Integration
 
-[ ] Enrollment Requests Dashboard
-[ ] Screenshot Viewer
-[ ] Enrollment Filters
-[ ] Enrollment Status Tracking
-
-## Frontend Experience
-
-[ ] Enrollment Page
-[ ] Enrollment Shortcode
-[ ] Success Messages
-[ ] Status Messages
+[ ] Student Detail Links
+[ ] Student Quick Actions
+[ ] Reporting Integration
 
 ---
 
@@ -85,27 +80,29 @@ student enrollment, approval workflow, and access provisioning.
 
 Rules:
 
-* Reuse existing Access Control module
+* Reuse existing enrollment services
+* Reuse analytics services
+* Reuse progress services
+* Reuse reporting services
 * Maintain modular architecture
-* Do not modify quiz engine logic
-* Keep enrollment logic isolated
-* Use WordPress user management APIs
-* Follow existing service-layer patterns
-* Minimize database complexity
+* Keep admin functionality isolated
+* Avoid duplicate data storage
+* Minimize database queries
 
 ---
 
 # Technical Direction
 
-The enrollment system should integrate with:
+Student management should derive from:
 
-* Access Control Module
-* WordPress Users
-* Email System
-* Dashboard
-* Authentication System
+* WordPress users
+* enrollment requests
+* attempts
+* analytics
+* progress tracking
+* streak tracking
 
-Avoid duplicating user data already stored in WordPress.
+Avoid duplicating information already available in existing systems.
 
 ---
 
@@ -115,16 +112,16 @@ Use:
 
 * service layer
 * AJAX handlers
-* shortcode rendering
-* WordPress user APIs
-* email services
+* admin views
+* reusable reporting services
+* reusable progress services
 
 Do NOT:
 
-* build payment gateways
-* build subscription systems
-* duplicate WordPress user functionality
-* tightly couple enrollment to quiz logic
+* duplicate analytics calculations
+* duplicate enrollment data
+* create unnecessary tables
+* tightly couple modules
 
 ---
 
@@ -132,13 +129,13 @@ Do NOT:
 
 Sprint is complete when:
 
-* students can submit enrollment requests
-* screenshots upload successfully
-* admins can approve or reject requests
-* WordPress users are created automatically
-* credentials are emailed automatically
-* approved students can access quizzes
-* rejected students can re-apply
+* admin can view all students
+* admin can search and filter students
+* admin can view student profiles
+* admin can review student activity
+* admin can monitor progress
+* admin can suspend or activate students
+* frontend remains responsive
 * no security regressions exist
 
 ---
@@ -147,16 +144,15 @@ Sprint is complete when:
 
 Do NOT build:
 
-* subscriptions
-* JazzCash APIs
-* EasyPaisa APIs
-* recurring billing
+* payments
 * AI systems
 * badges
+* XP systems
 * notifications
+* leaderboards
 
 Only:
-Student Enrollment & Approval System.
+Student Management System.
 
 ---
 

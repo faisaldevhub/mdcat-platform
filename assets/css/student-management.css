@@ -1,0 +1,716 @@
+/**
+ * MDCAT Platform — Student Management Styles
+ *
+ * Namespaced under .mdcat-students to avoid collisions
+ * with WordPress admin styles. Only loaded on the student
+ * management admin page via the view's enqueue_assets() method.
+ */
+
+/* ============================================================
+   Variables
+   ============================================================ */
+
+.mdcat-students {
+    --sm-primary: #4f46e5;
+    --sm-primary-light: #eef2ff;
+    --sm-success: #059669;
+    --sm-success-light: #ecfdf5;
+    --sm-warning: #d97706;
+    --sm-warning-light: #fffbeb;
+    --sm-danger: #dc2626;
+    --sm-danger-light: #fef2f2;
+    --sm-text: #1e293b;
+    --sm-text-secondary: #64748b;
+    --sm-border: #e2e8f0;
+    --sm-bg: #f8fafc;
+    --sm-card-bg: #ffffff;
+    --sm-radius: 8px;
+    --sm-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    --sm-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================================
+   Page Layout
+   ============================================================ */
+
+.mdcat-students {
+    max-width: 1400px;
+    padding: 10px 0 40px;
+}
+
+.mdcat-students__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--sm-text);
+    margin-bottom: 4px;
+}
+
+.mdcat-students__subtitle {
+    font-size: 14px;
+    color: var(--sm-text-secondary);
+    margin: 0 0 24px;
+}
+
+/* ============================================================
+   Toolbar (Search + Filters)
+   ============================================================ */
+
+.mdcat-students__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.mdcat-students__search-wrap {
+    flex: 1;
+    min-width: 240px;
+}
+
+.mdcat-students__search {
+    width: 100%;
+    padding: 8px 14px;
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+    font-size: 13px;
+    color: var(--sm-text);
+    background: var(--sm-card-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mdcat-students__search:focus {
+    outline: none;
+    border-color: var(--sm-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.mdcat-students__filters {
+    display: flex;
+    gap: 8px;
+}
+
+.mdcat-students__filter {
+    padding: 8px 12px;
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+    font-size: 13px;
+    color: var(--sm-text);
+    background: var(--sm-card-bg);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.mdcat-students__filter:focus {
+    outline: none;
+    border-color: var(--sm-primary);
+}
+
+/* ============================================================
+   Loading States
+   ============================================================ */
+
+.mdcat-students__loading {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--sm-text-secondary);
+    font-size: 13px;
+    font-style: italic;
+}
+
+.mdcat-students__empty {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--sm-text-secondary);
+    font-size: 13px;
+    font-style: italic;
+    background: var(--sm-card-bg);
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+}
+
+/* ============================================================
+   Directory Table
+   ============================================================ */
+
+.mdcat-students__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: var(--sm-card-bg);
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+    box-shadow: var(--sm-shadow);
+}
+
+.mdcat-students__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.mdcat-students__table thead th {
+    background: var(--sm-bg);
+    border-bottom: 2px solid var(--sm-border);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--sm-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.mdcat-students__table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--sm-border);
+    color: var(--sm-text);
+    vertical-align: middle;
+}
+
+.mdcat-students__table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.mdcat-students__table tbody tr:hover {
+    background: var(--sm-bg);
+}
+
+.mdcat-students__table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.mdcat-students__student-link {
+    color: var(--sm-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+.mdcat-students__student-link:hover {
+    color: #3730a3;
+    text-decoration: underline;
+}
+
+.mdcat-students__email {
+    font-size: 12px;
+    color: var(--sm-text-secondary);
+}
+
+.mdcat-students__date {
+    font-size: 12px;
+    color: var(--sm-text-secondary);
+    white-space: nowrap;
+}
+
+/* ============================================================
+   Status Badges
+   ============================================================ */
+
+.mdcat-students__badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mdcat-students__badge--active {
+    background: var(--sm-success-light);
+    color: var(--sm-success);
+}
+
+.mdcat-students__badge--suspended {
+    background: var(--sm-danger-light);
+    color: var(--sm-danger);
+}
+
+/* ============================================================
+   Pagination
+   ============================================================ */
+
+.mdcat-students__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.mdcat-students__pagination-info {
+    font-size: 13px;
+    color: var(--sm-text-secondary);
+}
+
+.mdcat-students__pagination-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.mdcat-students__page-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--sm-border);
+    border-radius: 6px;
+    background: var(--sm-card-bg);
+    color: var(--sm-text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mdcat-students__page-btn:hover {
+    background: var(--sm-bg);
+    border-color: var(--sm-primary);
+}
+
+.mdcat-students__page-btn--active {
+    background: var(--sm-primary);
+    color: #ffffff;
+    border-color: var(--sm-primary);
+}
+
+.mdcat-students__page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   Profile Page — Back Link
+   ============================================================ */
+
+.mdcat-students__profile-header {
+    margin-bottom: 20px;
+}
+
+.mdcat-students__back-link {
+    color: var(--sm-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.15s ease;
+}
+
+.mdcat-students__back-link:hover {
+    color: #3730a3;
+}
+
+/* ============================================================
+   Profile Overview Card
+   ============================================================ */
+
+.mdcat-students__overview-card {
+    background: var(--sm-card-bg);
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+    padding: 24px;
+    box-shadow: var(--sm-shadow);
+    margin-bottom: 24px;
+}
+
+.mdcat-students__overview-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.mdcat-students__overview-main {
+    flex: 1;
+    min-width: 250px;
+}
+
+.mdcat-students__overview-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--sm-text);
+    margin: 0 0 4px;
+}
+
+.mdcat-students__overview-email {
+    font-size: 14px;
+    color: var(--sm-text-secondary);
+    margin: 0 0 12px;
+}
+
+.mdcat-students__overview-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.mdcat-students__overview-meta-item {
+    font-size: 13px;
+    color: var(--sm-text-secondary);
+}
+
+.mdcat-students__overview-meta-item strong {
+    color: var(--sm-text);
+}
+
+.mdcat-students__overview-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   Quick Stats Row
+   ============================================================ */
+
+.mdcat-students__quick-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.mdcat-students__quick-stat {
+    background: var(--sm-card-bg);
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+    padding: 16px;
+    text-align: center;
+    box-shadow: var(--sm-shadow);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.mdcat-students__quick-stat:hover {
+    box-shadow: var(--sm-shadow-md);
+    transform: translateY(-2px);
+}
+
+.mdcat-students__quick-stat-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.mdcat-students__quick-stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--sm-text);
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.mdcat-students__quick-stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--sm-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Quick stat accent colors */
+.mdcat-students__quick-stat--progress {
+    border-top: 3px solid var(--sm-primary);
+}
+
+.mdcat-students__quick-stat--streak {
+    border-top: 3px solid #f97316;
+}
+
+.mdcat-students__quick-stat--accuracy {
+    border-top: 3px solid var(--sm-success);
+}
+
+.mdcat-students__quick-stat--attempts {
+    border-top: 3px solid #ec4899;
+}
+
+/* ============================================================
+   Profile Tabs
+   ============================================================ */
+
+.mdcat-students__profile-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--sm-border);
+    margin-bottom: 20px;
+}
+
+.mdcat-students__tab {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--sm-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mdcat-students__tab:hover {
+    color: var(--sm-primary);
+}
+
+.mdcat-students__tab--active {
+    color: var(--sm-primary);
+    border-bottom-color: var(--sm-primary);
+}
+
+/* ============================================================
+   Tab Content
+   ============================================================ */
+
+.mdcat-students__tab-panel {
+    background: var(--sm-card-bg);
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+    padding: 24px;
+    box-shadow: var(--sm-shadow);
+}
+
+.mdcat-students__tab-panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--sm-text);
+    margin: 0 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--sm-primary);
+    display: inline-block;
+}
+
+/* ============================================================
+   Progress Bars
+   ============================================================ */
+
+.mdcat-students__progress-item {
+    margin-bottom: 14px;
+}
+
+.mdcat-students__progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.mdcat-students__progress-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--sm-text);
+}
+
+.mdcat-students__progress-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sm-primary);
+}
+
+.mdcat-students__progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--sm-bg);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.mdcat-students__progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--sm-primary), #818cf8);
+    transition: width 0.4s ease;
+}
+
+/* ============================================================
+   Performance Labels (Analytics)
+   ============================================================ */
+
+.mdcat-students__perf-label {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mdcat-students__perf-label--strong {
+    background: var(--sm-success-light);
+    color: var(--sm-success);
+}
+
+.mdcat-students__perf-label--average {
+    background: var(--sm-warning-light);
+    color: var(--sm-warning);
+}
+
+.mdcat-students__perf-label--weak {
+    background: var(--sm-danger-light);
+    color: var(--sm-danger);
+}
+
+.mdcat-students__accuracy--strong {
+    color: var(--sm-success);
+    font-weight: 600;
+}
+
+.mdcat-students__accuracy--average {
+    color: var(--sm-warning);
+    font-weight: 600;
+}
+
+.mdcat-students__accuracy--weak {
+    color: var(--sm-danger);
+    font-weight: 600;
+}
+
+/* ============================================================
+   Enrollment Section
+   ============================================================ */
+
+.mdcat-students__enrollment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.mdcat-students__enrollment-detail {
+    padding: 8px 0;
+}
+
+.mdcat-students__enrollment-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sm-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+}
+
+.mdcat-students__enrollment-value {
+    font-size: 14px;
+    color: var(--sm-text);
+}
+
+.mdcat-students__screenshot-wrap {
+    margin-top: 16px;
+}
+
+.mdcat-students__screenshot-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sm-text);
+    margin-bottom: 8px;
+}
+
+.mdcat-students__screenshot-img {
+    max-width: 400px;
+    width: 100%;
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius);
+    box-shadow: var(--sm-shadow);
+}
+
+/* ============================================================
+   Action Buttons
+   ============================================================ */
+
+.mdcat-students__btn {
+    padding: 8px 16px;
+    border: 1px solid var(--sm-border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.mdcat-students__btn--view {
+    background: var(--sm-primary-light);
+    color: var(--sm-primary);
+    border-color: var(--sm-primary);
+}
+
+.mdcat-students__btn--view:hover {
+    background: var(--sm-primary);
+    color: #ffffff;
+}
+
+.mdcat-students__btn--suspend {
+    background: var(--sm-danger-light);
+    color: var(--sm-danger);
+    border-color: var(--sm-danger);
+}
+
+.mdcat-students__btn--suspend:hover {
+    background: var(--sm-danger);
+    color: #ffffff;
+}
+
+.mdcat-students__btn--activate {
+    background: var(--sm-success-light);
+    color: var(--sm-success);
+    border-color: var(--sm-success);
+}
+
+.mdcat-students__btn--activate:hover {
+    background: var(--sm-success);
+    color: #ffffff;
+}
+
+.mdcat-students__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1200px) {
+
+    .mdcat-students__quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 782px) {
+
+    .mdcat-students__toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mdcat-students__filters {
+        flex-direction: column;
+    }
+
+    .mdcat-students__quick-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mdcat-students__overview-row {
+        flex-direction: column;
+    }
+
+    .mdcat-students__enrollment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mdcat-students__quick-stat-value {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .mdcat-students__quick-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .mdcat-students__profile-tabs {
+        overflow-x: auto;
+    }
+}

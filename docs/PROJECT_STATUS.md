@@ -100,6 +100,19 @@ Last Updated:
 * Import Security Controls
 * Large Dataset Processing
 
+## Student Enrollment & Approval Systems
+
+* Enrollment Request Form
+* Payment Screenshot Upload
+* Enrollment Request Management
+* Approval Workflow
+* Rejection Workflow
+* WordPress User Provisioning
+* Credentials Email Automation
+* Enrollment Dashboard
+* Enrollment Status Tracking
+* Access Control Integration
+
 ## Technical Foundations
 
 * Modular Architecture
@@ -115,31 +128,24 @@ Last Updated:
 
 # Current Active Sprint 🚧
 
-## Student Enrollment & Approval System
+## Student Management System
 
 Status:
 Planning
 
 Sprint Goal:
-Allow students to submit enrollment requests with payment proof, enable admin approval workflows, automatically create WordPress accounts, and grant access to the MDCAT platform.
+Build a centralized student management layer for administrators to manage students, monitor activity, review progress, and control account access.
 
 ---
 
 # Planned Systems 📋
 
-## Student Management
+## Student Administration
 
-* Enrollment Approval Workflow
 * Student Directory
 * Student Profiles
+* Student Activity Monitoring
 * Student Status Management
-
-## Monetization Support
-
-* Manual Payment Verification
-* Enrollment Requests
-* Payment Screenshot Management
-* Access Provisioning
 
 ## Engagement Systems
 
@@ -195,12 +201,16 @@ Operational reporting foundation completed.
 
 Bulk content import workflow completed.
 
+## Enrollment Layer
+
+Enrollment and approval workflow completed.
+
 ---
 
 # Current Completion Estimate
 
 Core Platform Foundation:
-~85–90% Complete
+~90–92% Complete
 
 Remaining Work:
-~10–15%
+~8–10%

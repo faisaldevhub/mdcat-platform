@@ -35,6 +35,9 @@ class MDCAT_Platform_Loader {
 
             require_once MDCAT_PLATFORM_PATH . 'modules/bulk-import/class-bulk-import.php';
             MDCAT_Platform_Bulk_Import::init();
+
+            require_once MDCAT_PLATFORM_PATH . 'modules/student-management/class-student-management.php';
+            MDCAT_Platform_Student_Management::init();
         }
 
         /**

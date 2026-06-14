@@ -94,6 +94,15 @@ class MDCAT_Platform_Admin_Menu {
             'mdcat-enrollment-requests',
             [__CLASS__, 'enrollment_page']
         );
+
+        add_submenu_page(
+            'mdcat-platform',
+            'Students',
+            'Students',
+            'manage_options',
+            'mdcat-students',
+            [__CLASS__, 'students_page']
+        );
     }
 
     /**
@@ -196,5 +205,18 @@ class MDCAT_Platform_Admin_Menu {
         }
 
         MDCAT_Platform_Enrollment_Admin_View::render();
+    }
+
+    /**
+     * Students Page
+     */
+
+    public static function students_page() {
+
+        if (!class_exists('MDCAT_Platform_Student_Management_View')) {
+            wp_die(esc_html__('Student Management module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Student_Management_View::render();
     }
 }
