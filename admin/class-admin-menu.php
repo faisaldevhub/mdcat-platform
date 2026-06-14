@@ -85,6 +85,15 @@ class MDCAT_Platform_Admin_Menu {
             'mdcat-import-questions',
             [__CLASS__, 'import_questions_page']
         );
+
+        add_submenu_page(
+            'mdcat-platform',
+            'Enrollment Requests',
+            'Enrollment Requests',
+            'manage_options',
+            'mdcat-enrollment-requests',
+            [__CLASS__, 'enrollment_page']
+        );
     }
 
     /**
@@ -174,5 +183,18 @@ class MDCAT_Platform_Admin_Menu {
         }
 
         MDCAT_Platform_Bulk_Import_View::render();
+    }
+
+    /**
+     * Enrollment Requests Page
+     */
+
+    public static function enrollment_page() {
+
+        if (!class_exists('MDCAT_Platform_Enrollment_Admin_View')) {
+            wp_die(esc_html__('Enrollment module is not available.', 'mdcat-platform'));
+        }
+
+        MDCAT_Platform_Enrollment_Admin_View::render();
     }
 }

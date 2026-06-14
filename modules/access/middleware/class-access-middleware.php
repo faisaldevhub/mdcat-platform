@@ -173,6 +173,16 @@ class MDCAT_Platform_Access_Middleware {
 
         $login_url = wp_login_url(self::get_current_page_url());
 
+        /**
+         * Filter the enrollment page URL shown on the access gate.
+         *
+         * Defaults to '/enrollment/' — override this if the enrollment
+         * form page uses a different slug.
+         *
+         * @param string $url Enrollment page URL.
+         */
+        $enrollment_url = apply_filters('mdcat_enrollment_page_url', home_url('/enrollment/'));
+
         ob_start();
         ?>
         <div class="mdcat-access-gate mdcat-access-gate--login">
@@ -186,6 +196,12 @@ class MDCAT_Platform_Access_Middleware {
             <a href="<?php echo esc_url($login_url); ?>" class="mdcat-access-gate__button">
                 <?php esc_html_e('Log In', 'mdcat-platform'); ?>
             </a>
+            <p class="mdcat-access-gate__enroll">
+                <?php esc_html_e("Don't have an account?", 'mdcat-platform'); ?>
+                <a href="<?php echo esc_url($enrollment_url); ?>" class="mdcat-access-gate__enroll-link">
+                    <?php esc_html_e('Enroll Now', 'mdcat-platform'); ?>
+                </a>
+            </p>
         </div>
         <?php
 

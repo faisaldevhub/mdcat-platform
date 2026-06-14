@@ -235,5 +235,41 @@ class MDCAT_Platform_Database {
 
         dbDelta($sql_daily_activity);
 
+        /**
+         * Enrollment Requests Table
+         *
+         * Stores student enrollment requests submitted via the public
+         * enrollment form. Each request tracks student details, payment
+         * screenshot, review status, and the resulting WordPress user ID
+         * when approved.
+         */
+
+        $enrollment_requests_table = $wpdb->prefix . 'mdcat_enrollment_requests';
+
+        $sql_enrollment_requests = "CREATE TABLE $enrollment_requests_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            full_name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            phone VARCHAR(50) NOT NULL,
+            city VARCHAR(255) NOT NULL,
+            screenshot_url VARCHAR(500) NOT NULL,
+            screenshot_path VARCHAR(500) NOT NULL,
+            status VARCHAR(20) DEFAULT 'pending',
+            admin_notes TEXT NULL,
+            reviewed_by BIGINT UNSIGNED NULL,
+            reviewed_at DATETIME NULL,
+            wp_user_id BIGINT UNSIGNED NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id),
+            UNIQUE KEY email (email),
+            KEY status (status),
+            KEY created_at (created_at)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_enrollment_requests);
+
     }
 }

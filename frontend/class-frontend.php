@@ -19,6 +19,7 @@ class MDCAT_Platform_Frontend {
         add_shortcode('mdcat_bookmarks', [__CLASS__, 'render_bookmarks_shortcode']);
         add_shortcode('mdcat_wrong_questions', [__CLASS__, 'render_wrong_questions_shortcode']);
         add_shortcode('mdcat_subject_progress', [__CLASS__, 'render_subject_progress_shortcode']);
+        add_shortcode('mdcat_enrollment_form', [__CLASS__, 'render_enrollment_form_shortcode']);
         add_action('wp_enqueue_scripts', [__CLASS__, 'register_assets']);
     }
 
@@ -551,6 +552,23 @@ class MDCAT_Platform_Frontend {
             return false;
         }
 
-        return has_shortcode($post->post_content, 'mdcat_dashboard') || has_shortcode($post->post_content, 'mdcat_streak') || has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions') || has_shortcode($post->post_content, 'mdcat_subject_progress');
+        return has_shortcode($post->post_content, 'mdcat_dashboard') || has_shortcode($post->post_content, 'mdcat_streak') || has_shortcode($post->post_content, 'mdcat_quiz') || has_shortcode($post->post_content, 'mdcat_attempt_history') || has_shortcode($post->post_content, 'mdcat_performance') || has_shortcode($post->post_content, 'mdcat_bookmarks') || has_shortcode($post->post_content, 'mdcat_wrong_questions') || has_shortcode($post->post_content, 'mdcat_subject_progress') || has_shortcode($post->post_content, 'mdcat_enrollment_form');
+    }
+
+    /**
+     * Render the enrollment form shortcode.
+     *
+     * Delegates to the enrollment form view class which handles
+     * guest detection, form rendering, and asset enqueuing.
+     *
+     * @return string HTML output.
+     */
+    public static function render_enrollment_form_shortcode() {
+
+        if (!class_exists('MDCAT_Platform_Enrollment_Form_View')) {
+            return '';
+        }
+
+        return MDCAT_Platform_Enrollment_Form_View::render();
     }
 }

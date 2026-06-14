@@ -68,6 +68,10 @@ class MDCAT_Platform_Loader {
 
         MDCAT_Platform_Progress::init();
 
+        require_once MDCAT_PLATFORM_PATH . 'modules/enrollment/class-enrollment.php';
+
+        MDCAT_Platform_Enrollment::init();
+
         /**
          * Load Public Files
          */

@@ -1,0 +1,600 @@
+/**
+ * Enrollment Styles
+ *
+ * Covers both the public enrollment form and admin enrollment
+ * management page. Uses the mdcat- prefix and BEM naming
+ * convention matching the rest of the platform.
+ */
+
+/* ===================================================
+   PUBLIC ENROLLMENT FORM
+   =================================================== */
+
+.mdcat-enrollment {
+    max-width: 560px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.mdcat-enrollment__header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mdcat-enrollment__icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.mdcat-enrollment__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 0.5rem;
+}
+
+.mdcat-enrollment__subtitle {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Form Fields */
+.mdcat-enrollment__field {
+    margin-bottom: 1.25rem;
+}
+
+.mdcat-enrollment__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.375rem;
+}
+
+.mdcat-enrollment__required {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+.mdcat-enrollment__input {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.9rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.mdcat-enrollment__input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+    background: #ffffff;
+}
+
+.mdcat-enrollment__hint {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin: 0.25rem 0 0;
+}
+
+/* Upload Zone */
+.mdcat-enrollment__upload-zone {
+    position: relative;
+    border: 2px dashed #d1d5db;
+    border-radius: 10px;
+    padding: 2rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.mdcat-enrollment__upload-zone:hover,
+.mdcat-enrollment__upload-zone--dragover {
+    border-color: #6366f1;
+    background: #f5f3ff;
+}
+
+.mdcat-enrollment__upload-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.mdcat-enrollment__upload-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin: 0 0 0.25rem;
+}
+
+.mdcat-enrollment__upload-hint {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.mdcat-enrollment__file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Screenshot Preview */
+.mdcat-enrollment__preview {
+    position: relative;
+    margin-top: 0.75rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.mdcat-enrollment__preview img {
+    width: 100%;
+    display: block;
+    max-height: 300px;
+    object-fit: contain;
+    background: #f9fafb;
+}
+
+.mdcat-enrollment__preview-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: #ef4444;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.mdcat-enrollment__preview-remove:hover {
+    background: #dc2626;
+}
+
+/* Honeypot */
+.mdcat-enrollment__hp {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Messages */
+.mdcat-enrollment__message {
+    min-height: 0;
+    margin-bottom: 0.75rem;
+    padding: 0;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    transition: all 0.3s;
+}
+
+.mdcat-enrollment__message--error {
+    padding: 0.75rem 1rem;
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.mdcat-enrollment__message--success {
+    padding: 0.75rem 1rem;
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+/* Submit Button */
+.mdcat-enrollment__submit {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.mdcat-enrollment__submit:hover {
+    opacity: 0.92;
+}
+
+.mdcat-enrollment__submit:active {
+    transform: scale(0.99);
+}
+
+.mdcat-enrollment__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Success State */
+.mdcat-enrollment__success {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.mdcat-enrollment__success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.mdcat-enrollment__success-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #15803d;
+    margin: 0 0 0.75rem;
+}
+
+.mdcat-enrollment__success-message {
+    font-size: 0.9rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Already Enrolled State */
+.mdcat-enrollment--enrolled {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.mdcat-enrollment--enrolled .mdcat-enrollment__message {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+
+    .mdcat-enrollment {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .mdcat-enrollment__title {
+        font-size: 1.25rem;
+    }
+}
+
+/* ===================================================
+   ADMIN ENROLLMENT PAGE
+   =================================================== */
+
+.mdcat-enrollment-admin__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.mdcat-enrollment-admin__subtitle {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Status Tabs */
+.mdcat-enrollment-admin__tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 1.5rem;
+}
+
+.mdcat-enrollment-admin__tab {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.mdcat-enrollment-admin__tab:hover {
+    color: #374151;
+}
+
+.mdcat-enrollment-admin__tab--active {
+    color: #6366f1;
+    border-bottom-color: #6366f1;
+    font-weight: 600;
+}
+
+.mdcat-enrollment-admin__tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    margin-left: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: #9ca3af;
+    border-radius: 10px;
+}
+
+.mdcat-enrollment-admin__tab--active .mdcat-enrollment-admin__tab-count {
+    background: #6366f1;
+}
+
+/* Request List */
+.mdcat-enrollment-admin__loading {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.mdcat-enrollment-admin__empty {
+    text-align: center;
+    padding: 3rem;
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.mdcat-enrollment-admin__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.mdcat-enrollment-admin__table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #374151;
+    background: #f9fafb;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.mdcat-enrollment-admin__table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+}
+
+.mdcat-enrollment-admin__table tr:hover td {
+    background: #f9fafb;
+}
+
+/* Status Badges */
+.mdcat-enrollment-admin__badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 12px;
+}
+
+.mdcat-enrollment-admin__badge--pending {
+    color: #b45309;
+    background: #fef3c7;
+}
+
+.mdcat-enrollment-admin__badge--approved {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+.mdcat-enrollment-admin__badge--rejected {
+    color: #b91c1c;
+    background: #fee2e2;
+}
+
+/* Action Buttons in Table */
+.mdcat-enrollment-admin__action-btn {
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 4px;
+    transition: opacity 0.2s;
+}
+
+.mdcat-enrollment-admin__action-btn:hover {
+    opacity: 0.85;
+}
+
+.mdcat-enrollment-admin__action-btn--view {
+    color: #4338ca;
+    background: #e0e7ff;
+}
+
+.mdcat-enrollment-admin__action-btn--approve {
+    color: #ffffff;
+    background: #22c55e;
+}
+
+.mdcat-enrollment-admin__action-btn--reject {
+    color: #ffffff;
+    background: #ef4444;
+}
+
+.mdcat-enrollment-admin__action-btn--delete {
+    color: #6b7280;
+    background: #f3f4f6;
+}
+
+/* Modal */
+.mdcat-enrollment-admin__modal,
+.mdcat-enrollment-admin__reject-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mdcat-enrollment-admin__modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.mdcat-enrollment-admin__modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.mdcat-enrollment-admin__modal-content--small {
+    max-width: 440px;
+}
+
+.mdcat-enrollment-admin__modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 1.5rem;
+    color: #9ca3af;
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.mdcat-enrollment-admin__modal-close:hover {
+    color: #374151;
+}
+
+.mdcat-enrollment-admin__modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 1.25rem;
+    color: #1a1a2e;
+}
+
+/* Modal Detail Fields */
+.mdcat-enrollment-admin__detail {
+    margin-bottom: 0.75rem;
+}
+
+.mdcat-enrollment-admin__detail-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.125rem;
+}
+
+.mdcat-enrollment-admin__detail-value {
+    font-size: 0.9rem;
+    color: #1f2937;
+}
+
+/* Screenshot in Modal */
+.mdcat-enrollment-admin__screenshot {
+    margin-top: 1rem;
+}
+
+.mdcat-enrollment-admin__screenshot img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+/* Modal Actions */
+.mdcat-enrollment-admin__modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* Rejection Modal */
+.mdcat-enrollment-admin__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.375rem;
+}
+
+.mdcat-enrollment-admin__textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.mdcat-enrollment-admin__textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.mdcat-enrollment-admin__reject-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.mdcat-enrollment-admin__btn--reject {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+/* Admin page responsive */
+@media (max-width: 782px) {
+
+    .mdcat-enrollment-admin__tabs {
+        flex-wrap: wrap;
+    }
+
+    .mdcat-enrollment-admin__table {
+        display: block;
+        overflow-x: auto;
+    }
+}
