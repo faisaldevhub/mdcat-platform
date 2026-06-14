@@ -124,17 +124,33 @@ Last Updated:
 * GitHub Workflow
 * Documentation Workflow
 
+
+## Student Management Systems
+
+* Student Directory
+* Student Search & Filters
+* Student Profiles
+* Enrollment Information View
+* Student Progress Monitoring
+* Student Analytics Monitoring
+* Student Activity Monitoring
+* Student Status Management
+* Student Suspension System
+* Student Reactivation System
+* Admin Student Controls
+
 ---
 
 # Current Active Sprint 🚧
 
-## Student Management System
+## Engagement & Motivation System
 
 Status:
 Planning
 
 Sprint Goal:
-Build a centralized student management layer for administrators to manage students, monitor activity, review progress, and control account access.
+Increase student engagement and retention through XP, badges, achievements, and leaderboard systems.
+
 
 ---
 

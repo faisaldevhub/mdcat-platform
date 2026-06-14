@@ -3,10 +3,10 @@
 # Active Sprint
 
 Sprint Name:
-Student Management System
+Engagement & Motivation System
 
 Sprint Goal:
-Build a centralized student management system that allows administrators to view, manage, monitor, and control student accounts, enrollment records, learning activity, and progress.
+Increase student engagement and retention through XP, badges, achievements, and leaderboard systems.
 
 Status:
 Planning
@@ -15,64 +15,58 @@ Planning
 
 # Sprint Objectives
 
-The platform administrator should be able to:
+The platform should be able to:
 
-* view all students
-* search and filter students
-* view student profiles
-* monitor learning activity
-* monitor progress and performance
-* manage student status
-* review enrollment history
+* reward student activity
+* encourage consistency
+* increase daily engagement
+* recognize achievements
+* create healthy competition
 
 This sprint focuses ONLY on:
-student management and administration.
+engagement and motivation systems.
 
 ---
 
 # Current Tasks
 
-## Student Directory
+## XP System
 
-[ ] Student Listing
-[ ] Search Students
-[ ] Filter Students
-[ ] Pagination
+[ ] XP Architecture
+[ ] XP Award Rules
+[ ] Quiz Completion XP
+[ ] Streak XP
+[ ] Progress XP
+[ ] XP Dashboard Integration
 
-## Student Profiles
+## Badges System
 
-[ ] Student Overview
-[ ] Enrollment Details
-[ ] Registration Information
-[ ] Last Activity Tracking
+[ ] Badge Architecture
+[ ] First Quiz Badge
+[ ] Streak Badges
+[ ] Accuracy Badges
+[ ] Completion Badges
 
-## Learning Analytics
+## Achievement System
 
-[ ] Progress Overview
-[ ] Subject Completion
-[ ] Chapter Completion
-[ ] Overall Progress
-[ ] Accuracy Summary
+[ ] Achievement Tracking
+[ ] Milestone Detection
+[ ] Achievement Notifications
+[ ] Achievement History
 
-## Activity Monitoring
+## Leaderboard System
 
-[ ] Recent Attempts
-[ ] Recent Scores
-[ ] Login Activity
-[ ] Learning History
+[ ] Global Leaderboard
+[ ] Weekly Leaderboard
+[ ] Monthly Leaderboard
+[ ] Top Performer Rankings
 
-## Student Management
+## Dashboard Integration
 
-[ ] Activate Student
-[ ] Suspend Student
-[ ] Student Status Management
-[ ] Enrollment Review Access
-
-## Admin Dashboard Integration
-
-[ ] Student Detail Links
-[ ] Student Quick Actions
-[ ] Reporting Integration
+[ ] XP Widget
+[ ] Badge Showcase
+[ ] Achievement Timeline
+[ ] Leaderboard Widget
 
 ---
 
@@ -80,48 +74,26 @@ student management and administration.
 
 Rules:
 
-* Reuse existing enrollment services
-* Reuse analytics services
-* Reuse progress services
-* Reuse reporting services
+* Reuse existing progress tracking
+* Reuse analytics data
+* Reuse streak system
 * Maintain modular architecture
-* Keep admin functionality isolated
-* Avoid duplicate data storage
-* Minimize database queries
+* Keep calculations centralized
+* Avoid duplicate tracking data
 
 ---
 
 # Technical Direction
 
-Student management should derive from:
+The engagement system should derive from:
 
-* WordPress users
-* enrollment requests
-* attempts
-* analytics
+* quiz attempts
 * progress tracking
-* streak tracking
+* streak activity
+* analytics data
+* existing student activity
 
-Avoid duplicating information already available in existing systems.
-
----
-
-# Architecture Requirements
-
-Use:
-
-* service layer
-* AJAX handlers
-* admin views
-* reusable reporting services
-* reusable progress services
-
-Do NOT:
-
-* duplicate analytics calculations
-* duplicate enrollment data
-* create unnecessary tables
-* tightly couple modules
+Avoid unnecessary duplicate storage.
 
 ---
 
@@ -129,14 +101,12 @@ Do NOT:
 
 Sprint is complete when:
 
-* admin can view all students
-* admin can search and filter students
-* admin can view student profiles
-* admin can review student activity
-* admin can monitor progress
-* admin can suspend or activate students
+* XP is awarded correctly
+* badges unlock correctly
+* achievements track correctly
+* leaderboards update correctly
+* dashboard integrations work
 * frontend remains responsive
-* no security regressions exist
 
 ---
 
@@ -144,15 +114,13 @@ Sprint is complete when:
 
 Do NOT build:
 
-* payments
 * AI systems
-* badges
-* XP systems
-* notifications
-* leaderboards
+* payment gateways
+* advanced notifications
+* mobile applications
 
 Only:
-Student Management System.
+Engagement & Motivation System.
 
 ---
 
