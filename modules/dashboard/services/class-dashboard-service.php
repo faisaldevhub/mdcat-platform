@@ -358,4 +358,29 @@ class MDCAT_Platform_Dashboard_Service {
             'achievements' => $achievements,
         ];
     }
+
+    /**
+     * Fetch study recommendations for the dashboard display.
+     *
+     * Delegates entirely to the Recommendation Service to avoid
+     * duplicating recommendation logic inside the dashboard layer.
+     *
+     * When called from the dashboard AJAX handler, $context contains
+     * pre-fetched data to avoid duplicate service queries. See
+     * Recommendation_Service::get_study_plan() for supported keys.
+     *
+     * @param int   $user_id WordPress user ID.
+     * @param array $context Optional pre-fetched data from the dashboard.
+     * @return array|WP_Error
+     */
+    public static function get_study_recommendations( $user_id, $context = [] ) {
+
+        $user_id = absint($user_id);
+
+        if (!$user_id) {
+            return new WP_Error('invalid_user', __('A valid user is required.', 'mdcat-platform'));
+        }
+
+        return MDCAT_Platform_Recommendation_Service::get_study_plan($user_id, $context);
+    }
 }

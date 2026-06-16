@@ -1373,7 +1373,9 @@
                 activity: root.querySelector('.mdcat-dashboard__activity'),
                 xpWidget: root.querySelector('.mdcat-dashboard__xp-widget'),
                 badgeShowcase: root.querySelector('.mdcat-dashboard__badge-showcase'),
-                leaderboardWidget: root.querySelector('.mdcat-dashboard__leaderboard-widget')
+                leaderboardWidget: root.querySelector('.mdcat-dashboard__leaderboard-widget'),
+                dailyPlan: root.querySelector('.mdcat-dashboard__daily-plan'),
+                priorityTopics: root.querySelector('.mdcat-dashboard__priority-topics')
             };
 
             this.fetchStudentDashboard();
@@ -1411,8 +1413,10 @@
             this.renderContinueLearning(data.continue_learning);
             this.renderStatsCards(stats);
             this.renderXPWidget(data.engagement);
+            this.renderDailyPlan(data.study_plan);
             this.renderStreakSection(streak);
             this.renderBadgeShowcase(data.engagement);
+            this.renderPriorityTopics(data.study_plan);
             this.renderSubjectProgress(data.subject_progress);
             this.renderChapterProgress(data.chapter_progress);
             this.renderPerformanceSnapshot(snapshot);
@@ -1810,6 +1814,120 @@
 
             container.appendChild(list);
             return container;
+        }
+
+        renderDailyPlan(studyPlan) {
+            if (!this.elements.dailyPlan) {
+                return;
+            }
+
+            this.elements.dailyPlan.innerHTML = '';
+
+            const plan = studyPlan && studyPlan.daily_plan ? studyPlan.daily_plan : {};
+            const items = Array.isArray(plan.items) ? plan.items : [];
+            const streakMessage = plan.streak_message || '';
+
+            if (!items.length) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'mdcat-daily-plan__empty';
+                emptyState.innerHTML = `
+                    <span class="mdcat-daily-plan__empty-icon">🎉</span>
+                    <p class="mdcat-daily-plan__empty-text">Complete some quizzes to get personalized study recommendations!</p>
+                `;
+                this.elements.dailyPlan.appendChild(emptyState);
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.className = 'mdcat-daily-plan';
+
+            const list = document.createElement('div');
+            list.className = 'mdcat-daily-plan__items';
+
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `mdcat-daily-plan__item mdcat-daily-plan__item--${this.escapeAttribute(item.type || 'default')}`;
+                card.style.animationDelay = `${index * 100}ms`;
+
+                card.innerHTML = `
+                    <div class="mdcat-daily-plan__item-number">${index + 1}</div>
+                    <div class="mdcat-daily-plan__item-icon">${item.icon || '📋'}</div>
+                    <div class="mdcat-daily-plan__item-body">
+                        <div class="mdcat-daily-plan__item-header">
+                            <span class="mdcat-daily-plan__item-title">${this.escapeHtml(item.title || '')}</span>
+                            <span class="mdcat-daily-plan__item-target">${this.escapeHtml(item.target || '')}</span>
+                        </div>
+                        <div class="mdcat-daily-plan__item-detail">${this.escapeHtml(item.detail || '')}</div>
+                        <div class="mdcat-daily-plan__item-context">${this.escapeHtml(item.context || '')}</div>
+                    </div>
+                `;
+
+                list.appendChild(card);
+            });
+
+            container.appendChild(list);
+
+            if (streakMessage) {
+                const streakBar = document.createElement('div');
+                streakBar.className = 'mdcat-daily-plan__streak-bar';
+                streakBar.textContent = streakMessage;
+                container.appendChild(streakBar);
+            }
+
+            this.elements.dailyPlan.appendChild(container);
+        }
+
+        renderPriorityTopics(studyPlan) {
+            if (!this.elements.priorityTopics) {
+                return;
+            }
+
+            this.elements.priorityTopics.innerHTML = '';
+
+            const topics = studyPlan && Array.isArray(studyPlan.priority_topics) ? studyPlan.priority_topics : [];
+
+            if (!topics.length) {
+                const emptyState = document.createElement('div');
+                emptyState.className = 'mdcat-priority-topics__empty';
+                emptyState.innerHTML = `
+                    <span class="mdcat-priority-topics__empty-icon">✅</span>
+                    <p class="mdcat-priority-topics__empty-text">All your topics are in good shape! Keep it up.</p>
+                `;
+                this.elements.priorityTopics.appendChild(emptyState);
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.className = 'mdcat-priority-topics';
+
+            topics.forEach((topic, index) => {
+                const accuracy = parseFloat(topic.accuracy) || 0;
+                const isWeak = accuracy < 60;
+                const statusClass = isWeak ? 'mdcat-priority-topics__item--weak' : 'mdcat-priority-topics__item--average';
+                const statusIcon = isWeak ? '⚠️' : '⚡';
+
+                const item = document.createElement('div');
+                item.className = `mdcat-priority-topics__item ${statusClass}`;
+                item.style.animationDelay = `${index * 80}ms`;
+
+                item.innerHTML = `
+                    <div class="mdcat-priority-topics__item-status">${statusIcon}</div>
+                    <div class="mdcat-priority-topics__item-body">
+                        <div class="mdcat-priority-topics__item-chapter">${this.escapeHtml(topic.chapter_title || '')}</div>
+                        <div class="mdcat-priority-topics__item-subject">${this.escapeHtml(topic.subject_title || '')}</div>
+                    </div>
+                    <div class="mdcat-priority-topics__item-accuracy">
+                        <span class="mdcat-priority-topics__item-percentage">${accuracy}%</span>
+                        <div class="mdcat-priority-topics__item-bar">
+                            <div class="mdcat-priority-topics__item-fill" style="width: ${Math.min(accuracy, 100)}%"></div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(item);
+            });
+
+            this.elements.priorityTopics.appendChild(container);
         }
 
         renderQuickActions() {

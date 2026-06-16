@@ -84,6 +84,44 @@ class MDCAT_Platform_Dashboard_Ajax {
             $engagement = ['xp' => [], 'badges' => [], 'achievements' => []];
         }
 
+        /**
+         * Fetch chapter-level performance once for the study planner.
+         *
+         * The dashboard widgets above do not use raw chapter performance
+         * directly, but the study planner needs it for priority topic
+         * scoring. Fetching it here avoids a duplicate query inside
+         * the recommendation service.
+         */
+        $chapter_performance = MDCAT_Platform_Performance_Analytics::get_chapter_performance($user_id);
+
+        if (is_wp_error($chapter_performance)) {
+            $chapter_performance = [];
+        }
+
+        /**
+         * Build study plan context from already-fetched dashboard data.
+         *
+         * The recommendation service accepts pre-fetched data via the
+         * $context parameter. This eliminates 6 duplicate service calls
+         * that would otherwise re-query the same indexed tables.
+         *
+         * subject_progress and chapter_progress are the raw arrays from
+         * Progress_Service, which the delegate methods return unchanged.
+         */
+        $study_plan_context = [
+            'chapter_performance' => $chapter_performance,
+            'subject_completion'  => is_wp_error($subject_progress) ? [] : $subject_progress,
+            'chapter_completion'  => is_wp_error($chapter_progress) ? [] : $chapter_progress,
+            'continue_learning'   => is_wp_error($continue_learning) ? [] : $continue_learning,
+            'streak_summary'      => is_wp_error($streak) ? [] : $streak,
+        ];
+
+        $study_plan = MDCAT_Platform_Dashboard_Service::get_study_recommendations($user_id, $study_plan_context);
+
+        if (is_wp_error($study_plan)) {
+            $study_plan = [];
+        }
+
         wp_send_json_success(
             [
                 'stats'                => $stats,
@@ -95,6 +133,7 @@ class MDCAT_Platform_Dashboard_Ajax {
                 'overall_progress'     => $overall_progress,
                 'continue_learning'    => $continue_learning,
                 'engagement'           => $engagement,
+                'study_plan'           => $study_plan,
             ]
         );
     }

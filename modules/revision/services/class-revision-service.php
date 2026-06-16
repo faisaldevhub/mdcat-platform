@@ -190,9 +190,9 @@ class MDCAT_Platform_Revision_Service {
                 $wpdb->prepare(
                     "SELECT questions.id AS question_id, questions.question, questions.option_a, questions.option_b,
                         questions.option_c, questions.option_d, questions.correct_option, questions.explanation,
-                        questions.difficulty, collections.title AS collection_title, chapters.name AS chapter_title,
-                        subjects.name AS subject_title, MAX(answers.answered_at) AS last_seen_at,
-                        COUNT(answers.id) AS wrong_count
+                        questions.difficulty, collections.title AS collection_title, chapters.id AS chapter_id,
+                        chapters.name AS chapter_title, subjects.name AS subject_title,
+                        MAX(answers.answered_at) AS last_seen_at, COUNT(answers.id) AS wrong_count
                     FROM {$tables['answers']} AS answers
                     INNER JOIN {$tables['attempts']} AS attempts ON answers.attempt_id = attempts.id
                     INNER JOIN {$tables['questions']} AS questions ON answers.question_id = questions.id
@@ -204,7 +204,7 @@ class MDCAT_Platform_Revision_Service {
                         AND answers.is_correct = %d
                     GROUP BY questions.id, questions.question, questions.option_a, questions.option_b,
                         questions.option_c, questions.option_d, questions.correct_option, questions.explanation,
-                        questions.difficulty, collections.title, chapters.name, subjects.name
+                        questions.difficulty, collections.title, chapters.id, chapters.name, subjects.name
                     ORDER BY last_seen_at DESC, wrong_count DESC",
                     $user_id,
                     'completed',
@@ -216,8 +216,9 @@ class MDCAT_Platform_Revision_Service {
                 $wpdb->prepare(
                     "SELECT questions.id AS question_id, questions.question, questions.option_a, questions.option_b,
                         questions.option_c, questions.option_d, questions.correct_option, questions.explanation,
-                        questions.difficulty, collections.title AS collection_title, chapters.name AS chapter_title,
-                        subjects.name AS subject_title, bookmarks.created_at AS bookmarked_at, 0 AS wrong_count
+                        questions.difficulty, collections.title AS collection_title, chapters.id AS chapter_id,
+                        chapters.name AS chapter_title, subjects.name AS subject_title,
+                        bookmarks.created_at AS bookmarked_at, 0 AS wrong_count
                     FROM {$tables['bookmarks']} AS bookmarks
                     INNER JOIN {$tables['questions']} AS questions ON bookmarks.question_id = questions.id
                     LEFT JOIN {$tables['collections']} AS collections ON questions.collection_id = collections.id
@@ -257,6 +258,7 @@ class MDCAT_Platform_Revision_Service {
                 'explanation'      => $row->explanation,
                 'difficulty'       => sanitize_key($row->difficulty),
                 'collection_title' => $row->collection_title ? $row->collection_title : __('Collection unavailable', 'mdcat-platform'),
+                'chapter_id'       => isset($row->chapter_id) ? absint($row->chapter_id) : 0,
                 'chapter_title'    => $row->chapter_title ? $row->chapter_title : __('Chapter unavailable', 'mdcat-platform'),
                 'subject_title'    => $row->subject_title ? $row->subject_title : __('Subject unavailable', 'mdcat-platform'),
                 'wrong_count'      => isset($row->wrong_count) ? absint($row->wrong_count) : 0,

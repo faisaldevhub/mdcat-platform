@@ -2285,3 +2285,317 @@
     }
 }
 
+/* =============================================
+   Study Planner — Daily Plan Widget
+   ============================================= */
+
+.mdcat-daily-plan {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.mdcat-daily-plan__items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mdcat-daily-plan__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-left: 4px solid #dcdcde;
+    animation: mdcatPlanSlideIn 400ms ease-out both;
+}
+
+@keyframes mdcatPlanSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.mdcat-daily-plan__item--revision {
+    border-left-color: #ef4444;
+    background: linear-gradient(135deg, #fff, #fef2f2);
+}
+
+.mdcat-daily-plan__item--learning {
+    border-left-color: #3b82f6;
+    background: linear-gradient(135deg, #fff, #eff6ff);
+}
+
+.mdcat-daily-plan__item--practice {
+    border-left-color: #f59e0b;
+    background: linear-gradient(135deg, #fff, #fffbeb);
+}
+
+.mdcat-daily-plan__item-number {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f0f0f3;
+    font-size: 12px;
+    font-weight: 700;
+    color: #50575e;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.mdcat-daily-plan__item--revision .mdcat-daily-plan__item-number {
+    background: #fecaca;
+    color: #dc2626;
+}
+
+.mdcat-daily-plan__item--learning .mdcat-daily-plan__item-number {
+    background: #bfdbfe;
+    color: #2563eb;
+}
+
+.mdcat-daily-plan__item--practice .mdcat-daily-plan__item-number {
+    background: #fde68a;
+    color: #d97706;
+}
+
+.mdcat-daily-plan__item-icon {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.mdcat-daily-plan__item-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.mdcat-daily-plan__item-header {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.mdcat-daily-plan__item-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #50575e;
+}
+
+.mdcat-daily-plan__item-target {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.mdcat-daily-plan__item-detail {
+    font-size: 13px;
+    color: #646970;
+    margin-bottom: 2px;
+}
+
+.mdcat-daily-plan__item-context {
+    font-size: 12px;
+    color: #a7aaad;
+}
+
+.mdcat-daily-plan__streak-bar {
+    margin-top: 12px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #fff7ed, #ffedd5);
+    border: 1px solid #fed7aa;
+    font-size: 14px;
+    font-weight: 600;
+    color: #c2410c;
+    text-align: center;
+}
+
+.mdcat-daily-plan__empty {
+    text-align: center;
+    padding: 24px 16px;
+}
+
+.mdcat-daily-plan__empty-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.mdcat-daily-plan__empty-text {
+    font-size: 14px;
+    color: #646970;
+    margin: 0;
+}
+
+/* =============================================
+   Study Planner — Priority Topics Widget
+   ============================================= */
+
+.mdcat-priority-topics {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mdcat-priority-topics__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    animation: mdcatTopicSlideIn 350ms ease-out both;
+}
+
+@keyframes mdcatTopicSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mdcat-priority-topics__item--weak {
+    border-left: 4px solid #ef4444;
+    background: linear-gradient(135deg, #fff, #fef2f2);
+}
+
+.mdcat-priority-topics__item--average {
+    border-left: 4px solid #f59e0b;
+    background: linear-gradient(135deg, #fff, #fffbeb);
+}
+
+.mdcat-priority-topics__item-status {
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.mdcat-priority-topics__item-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.mdcat-priority-topics__item-chapter {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mdcat-priority-topics__item-subject {
+    font-size: 12px;
+    color: #646970;
+    margin-top: 2px;
+}
+
+.mdcat-priority-topics__item-accuracy {
+    flex-shrink: 0;
+    text-align: right;
+    min-width: 70px;
+}
+
+.mdcat-priority-topics__item-percentage {
+    font-size: 16px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.mdcat-priority-topics__item--weak .mdcat-priority-topics__item-percentage {
+    color: #dc2626;
+}
+
+.mdcat-priority-topics__item--average .mdcat-priority-topics__item-percentage {
+    color: #d97706;
+}
+
+.mdcat-priority-topics__item-bar {
+    width: 70px;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.mdcat-priority-topics__item-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 600ms ease-out;
+}
+
+.mdcat-priority-topics__item--weak .mdcat-priority-topics__item-fill {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+}
+
+.mdcat-priority-topics__item--average .mdcat-priority-topics__item-fill {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.mdcat-priority-topics__empty {
+    text-align: center;
+    padding: 24px 16px;
+}
+
+.mdcat-priority-topics__empty-icon {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.mdcat-priority-topics__empty-text {
+    font-size: 14px;
+    color: #646970;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .mdcat-daily-plan__item {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .mdcat-daily-plan__item-header {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .mdcat-priority-topics__item {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .mdcat-priority-topics__item-chapter {
+        font-size: 13px;
+    }
+
+    .mdcat-priority-topics__item-accuracy {
+        min-width: 55px;
+    }
+
+    .mdcat-priority-topics__item-bar {
+        width: 55px;
+    }
+}

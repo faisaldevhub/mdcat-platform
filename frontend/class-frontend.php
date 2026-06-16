@@ -200,6 +200,11 @@ class MDCAT_Platform_Frontend {
                     <div class="mdcat-dashboard__xp-widget"></div>
                 </section>
 
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--daily-plan">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Your Daily Study Plan', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__daily-plan"></div>
+                </section>
+
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--streak">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Study Streak', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__streak"></div>
@@ -208,6 +213,11 @@ class MDCAT_Platform_Frontend {
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--badges">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Badges', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__badge-showcase"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--priority-topics">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Priority Topics', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__priority-topics"></div>
                 </section>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--snapshot">
