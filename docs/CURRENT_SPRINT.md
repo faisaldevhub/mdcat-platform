@@ -3,10 +3,10 @@
 # Active Sprint
 
 Sprint Name:
-Smart Study Planner & Recommendations
+Notifications & Communication System
 
 Sprint Goal:
-Help students understand exactly what to study next by using analytics, progress tracking, weak-topic detection, and learning history.
+Keep students informed, engaged, and connected through in-app notifications, email notifications, achievement alerts, enrollment updates, and platform communication tools.
 
 Status:
 Planning
@@ -17,54 +17,60 @@ Planning
 
 The platform should be able to:
 
-* recommend next learning steps
-* identify weak topics automatically
-* guide daily study sessions
-* prioritize revision areas
-* personalize learning recommendations
+* notify students about important events
+* increase engagement through reminders
+* celebrate achievements and milestones
+* communicate platform updates
+* improve retention through activity reminders
 
 This sprint focuses ONLY on:
-study planning and recommendation intelligence.
+notifications and communication systems.
 
 ---
 
 # Current Tasks
 
-## Recommendation Engine
+## In-App Notifications
 
-[ ] Recommendation Architecture
-[ ] Weak Topic Recommendations
-[ ] Next Quiz Recommendations
-[ ] Revision Recommendations
-[ ] Study Priority Logic
+[ ] Notification Architecture
+[ ] Notification Storage
+[ ] Notification Feed
+[ ] Notification Read Status
+[ ] Notification Counter
 
-## Study Planner
+## Achievement Notifications
 
-[ ] Daily Study Plan
-[ ] Continue Learning Recommendations
-[ ] Personalized Learning Path
-[ ] Smart Learning Suggestions
+[ ] Badge Unlock Notifications
+[ ] Achievement Unlock Notifications
+[ ] XP Milestone Notifications
+[ ] Level-Up Notifications
 
-## Analytics Integration
+## Enrollment Notifications
 
-[ ] Weak Topic Analysis Integration
-[ ] Progress Tracking Integration
-[ ] Performance Analytics Integration
-[ ] Streak Integration
+[ ] Enrollment Approved Notifications
+[ ] Enrollment Rejected Notifications
+[ ] Enrollment Status Updates
+
+## Learning Notifications
+
+[ ] Streak Reminder Notifications
+[ ] Study Planner Reminders
+[ ] Revision Reminders
+[ ] Continue Learning Reminders
+
+## Email Notifications
+
+[ ] Enrollment Approval Emails
+[ ] Enrollment Rejection Emails
+[ ] Achievement Emails
+[ ] Platform Update Emails
 
 ## Dashboard Integration
 
-[ ] Study Planner Widget
-[ ] Recommended Actions Widget
-[ ] Priority Topics Section
-[ ] Revision Recommendations Section
-
-## Learning Intelligence
-
-[ ] Topic Prioritization
-[ ] Recommendation Scoring
-[ ] Study Path Generation
-[ ] Recommendation History
+[ ] Notification Widget
+[ ] Notification Feed
+[ ] Unread Counter
+[ ] Notification Actions
 
 ---
 
@@ -72,29 +78,29 @@ study planning and recommendation intelligence.
 
 Rules:
 
-* Reuse existing analytics systems
-* Reuse existing progress tracking
-* Reuse existing weak-topic detection
-* Reuse existing dashboard architecture
+* Reuse existing gamification systems
+* Reuse enrollment systems
+* Reuse study planner systems
 * Maintain modular architecture
-* Avoid duplicate calculations
-* Keep recommendation logic centralized
+* Keep notification logic centralized
+* Avoid duplicate event tracking
+* Prefer event-driven communication
 
 ---
 
 # Technical Direction
 
-Recommendations should derive from:
+Notifications should derive from:
 
-* quiz attempts
-* weak topics
-* progress tracking
-* subject analytics
-* chapter analytics
+* enrollment events
+* quiz completion events
+* badge unlock events
+* achievement unlock events
 * streak activity
-* learning history
+* study planner recommendations
+* platform announcements
 
-Avoid unnecessary duplicate storage.
+Avoid duplicate data storage whenever possible.
 
 ---
 
@@ -102,11 +108,12 @@ Avoid unnecessary duplicate storage.
 
 Sprint is complete when:
 
-* students receive study recommendations
-* weak topics are prioritized
-* daily study plans are generated
-* dashboard displays recommendations
-* recommendation logic is scalable
+* students receive notifications
+* notification history is available
+* unread counts work correctly
+* achievement notifications work
+* enrollment notifications work
+* email notifications work
 * frontend remains responsive
 
 ---
@@ -115,14 +122,13 @@ Sprint is complete when:
 
 Do NOT build:
 
-* AI chat systems
-* AI tutors
-* payment systems
-* advanced notifications
+* AI tutor
+* AI chatbot
+* payment gateways
 * mobile applications
 
 Only:
-Smart Study Planner & Recommendations.
+Notifications & Communication System.
 
 ---
 
