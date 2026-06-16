@@ -79,6 +79,10 @@ class MDCAT_Platform_Loader {
 
         MDCAT_Platform_Enrollment::init();
 
+        require_once MDCAT_PLATFORM_PATH . 'modules/notifications/class-notifications.php';
+
+        MDCAT_Platform_Notifications::init();
+
         /**
          * Load Public Files
          */

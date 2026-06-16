@@ -333,5 +333,40 @@ class MDCAT_Platform_Database {
 
         dbDelta($sql_user_rewards);
 
+        /**
+         * Notifications Table
+         *
+         * Stores in-app notifications for students. Each row is one
+         * notification targeting one user. The source_type + source_id
+         * pair enables idempotency checks to prevent duplicate
+         * notifications from retried or concurrent requests.
+         */
+
+        $notifications_table = $wpdb->prefix . 'mdcat_notifications';
+
+        $sql_notifications = "CREATE TABLE $notifications_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT UNSIGNED NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            message TEXT NOT NULL,
+            icon VARCHAR(10) NULL,
+            source_type VARCHAR(50) NULL,
+            source_id BIGINT UNSIGNED NULL,
+            is_read TINYINT(1) DEFAULT 0,
+            read_at DATETIME NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id),
+            KEY user_unread (user_id, is_read),
+            KEY user_source (user_id, source_type, source_id),
+            KEY type (type),
+            KEY created_at (created_at)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_notifications);
+
     }
 }

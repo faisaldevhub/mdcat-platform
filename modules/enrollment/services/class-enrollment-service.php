@@ -301,6 +301,9 @@ class MDCAT_Platform_Enrollment_Service {
             $password
         );
 
+        // Broadcast enrollment approval for notification listeners.
+        do_action('mdcat_enrollment_approved', absint($wp_user_id), $request);
+
         return [
             'request_id' => absint($request_id),
             'wp_user_id' => absint($wp_user_id),
@@ -366,6 +369,9 @@ class MDCAT_Platform_Enrollment_Service {
                 __('Could not reject enrollment request. Please try again.', 'mdcat-platform')
             );
         }
+
+        // Broadcast enrollment rejection for notification listeners.
+        do_action('mdcat_enrollment_rejected', $request);
 
         return true;
     }

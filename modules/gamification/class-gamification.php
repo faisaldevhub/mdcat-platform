@@ -96,8 +96,18 @@ class MDCAT_Platform_Gamification {
         // 3. Badge evaluation (quiz count, streak, accuracy, completion).
         $new_badges = MDCAT_Platform_Badge_Service::evaluate_badges($user_id);
 
+        // Broadcast badge unlock events for notification listeners.
+        foreach ((array) $new_badges as $badge_slug) {
+            do_action('mdcat_badge_unlocked', $user_id, $badge_slug);
+        }
+
         // 4. Achievement evaluation (XP milestones, activity milestones, exploration).
         $new_achievements = MDCAT_Platform_Achievement_Service::evaluate_achievements($user_id);
+
+        // Broadcast achievement unlock events for notification listeners.
+        foreach ((array) $new_achievements as $achievement_slug) {
+            do_action('mdcat_achievement_unlocked', $user_id, $achievement_slug);
+        }
 
         // Snapshot XP after all processing (includes reward XP from badges/achievements).
         $xp_after = MDCAT_Platform_XP_Service::get_total_xp($user_id);

@@ -1375,7 +1375,9 @@
                 badgeShowcase: root.querySelector('.mdcat-dashboard__badge-showcase'),
                 leaderboardWidget: root.querySelector('.mdcat-dashboard__leaderboard-widget'),
                 dailyPlan: root.querySelector('.mdcat-dashboard__daily-plan'),
-                priorityTopics: root.querySelector('.mdcat-dashboard__priority-topics')
+                priorityTopics: root.querySelector('.mdcat-dashboard__priority-topics'),
+                notifications: root.querySelector('.mdcat-dashboard__notifications'),
+                notificationBadge: root.querySelector('.mdcat-dashboard__notification-badge')
             };
 
             this.fetchStudentDashboard();
@@ -1403,9 +1405,13 @@
             const snapshot = data.performance_snapshot || {};
             const streak = data.streak || {};
 
+            // Notifications render independently of quiz/progress data.
+            // New students with 0 attempts must still see enrollment notifications.
+            this.renderNotifications(data.notification_summary);
+
             if (!stats.total_attempts && !recentActivity.length) {
-                this.hide(this.elements.content);
                 this.showMessage(this.t('dashboard_empty'), 'empty');
+                this.show(this.elements.content);
                 return;
             }
 
@@ -2025,6 +2031,182 @@
             table.appendChild(tbody);
             tableWrap.appendChild(table);
             this.elements.activity.appendChild(tableWrap);
+        }
+
+        renderNotifications(summary) {
+            if (!this.elements.notifications) {
+                return;
+            }
+
+            this.elements.notifications.innerHTML = '';
+
+            const unreadCount = parseInt(summary && summary.unread_count, 10) || 0;
+            const notifications = Array.isArray(summary && summary.notifications) ? summary.notifications : [];
+
+            // Update unread badge.
+            if (this.elements.notificationBadge) {
+                if (unreadCount > 0) {
+                    this.elements.notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    this.elements.notificationBadge.hidden = false;
+                } else {
+                    this.elements.notificationBadge.hidden = true;
+                }
+            }
+
+            // Empty state.
+            if (!notifications.length) {
+                const empty = document.createElement('div');
+                empty.className = 'mdcat-notification-empty';
+                empty.innerHTML = `
+                    <div class="mdcat-notification-empty__icon">🔔</div>
+                    <p class="mdcat-notification-empty__text">No notifications yet. Complete quizzes to earn badges and achievements!</p>
+                `;
+                this.elements.notifications.appendChild(empty);
+                return;
+            }
+
+            // Header with mark all as read.
+            if (unreadCount > 0) {
+                const headerActions = document.createElement('div');
+                headerActions.className = 'mdcat-notification-header-actions';
+                headerActions.innerHTML = `
+                    <button type="button" class="mdcat-notification-mark-all-btn" id="mdcat-mark-all-read">
+                        Mark all as read
+                    </button>
+                `;
+                this.elements.notifications.appendChild(headerActions);
+
+                headerActions.querySelector('#mdcat-mark-all-read').addEventListener('click', () => {
+                    this.markAllNotificationsRead();
+                });
+            }
+
+            // Notification cards.
+            const list = document.createElement('div');
+            list.className = 'mdcat-notification-list';
+
+            notifications.forEach((notification, index) => {
+                const card = document.createElement('div');
+                card.className = `mdcat-notification-card${notification.is_read ? '' : ' mdcat-notification-card--unread'}`;
+                card.dataset.notificationId = notification.id;
+                card.style.animationDelay = `${index * 0.06}s`;
+
+                const timeAgo = this.getTimeAgo(notification.created_at);
+
+                card.innerHTML = `
+                    <div class="mdcat-notification-card__icon">${this.escapeHtml(notification.icon || '🔔')}</div>
+                    <div class="mdcat-notification-card__body">
+                        <div class="mdcat-notification-card__title">${this.escapeHtml(notification.title || '')}</div>
+                        <div class="mdcat-notification-card__message">${this.escapeHtml(notification.message || '')}</div>
+                        <div class="mdcat-notification-card__time">${this.escapeHtml(timeAgo)}</div>
+                    </div>
+                    ${!notification.is_read ? '<button type="button" class="mdcat-notification-card__mark-read" title="Mark as read">✓</button>' : ''}
+                `;
+
+                // Mark individual as read.
+                const markBtn = card.querySelector('.mdcat-notification-card__mark-read');
+                if (markBtn) {
+                    markBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.markNotificationRead(notification.id, card);
+                    });
+                }
+
+                list.appendChild(card);
+            });
+
+            this.elements.notifications.appendChild(list);
+        }
+
+        async markNotificationRead(notificationId, cardElement) {
+            const response = await this.request('mdcat_mark_notification_read', {
+                notification_id: notificationId
+            });
+
+            if (response && response.success) {
+                cardElement.classList.remove('mdcat-notification-card--unread');
+                const markBtn = cardElement.querySelector('.mdcat-notification-card__mark-read');
+                if (markBtn) {
+                    markBtn.remove();
+                }
+
+                // Update badge counter.
+                const newCount = parseInt(response.data && response.data.unread_count, 10) || 0;
+                this.updateNotificationBadge(newCount);
+
+                // Hide mark-all button if no more unread.
+                if (newCount === 0) {
+                    const markAllBtn = this.elements.notifications.querySelector('.mdcat-notification-header-actions');
+                    if (markAllBtn) {
+                        markAllBtn.remove();
+                    }
+                }
+            }
+        }
+
+        async markAllNotificationsRead() {
+            const response = await this.request('mdcat_mark_all_notifications_read', {});
+
+            if (response && response.success) {
+                // Update all cards visually.
+                const unreadCards = this.elements.notifications.querySelectorAll('.mdcat-notification-card--unread');
+                unreadCards.forEach(card => {
+                    card.classList.remove('mdcat-notification-card--unread');
+                    const markBtn = card.querySelector('.mdcat-notification-card__mark-read');
+                    if (markBtn) {
+                        markBtn.remove();
+                    }
+                });
+
+                // Remove mark-all button.
+                const markAllBtn = this.elements.notifications.querySelector('.mdcat-notification-header-actions');
+                if (markAllBtn) {
+                    markAllBtn.remove();
+                }
+
+                this.updateNotificationBadge(0);
+            }
+        }
+
+        updateNotificationBadge(count) {
+            if (!this.elements.notificationBadge) {
+                return;
+            }
+
+            if (count > 0) {
+                this.elements.notificationBadge.textContent = count > 99 ? '99+' : count;
+                this.elements.notificationBadge.hidden = false;
+            } else {
+                this.elements.notificationBadge.hidden = true;
+            }
+        }
+
+        getTimeAgo(dateString) {
+            if (!dateString) {
+                return '';
+            }
+
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) {
+                return 'Just now';
+            }
+            if (diffMins < 60) {
+                return `${diffMins}m ago`;
+            }
+            if (diffHours < 24) {
+                return `${diffHours}h ago`;
+            }
+            if (diffDays < 7) {
+                return `${diffDays}d ago`;
+            }
+
+            return this.formatDate(dateString);
         }
 
         renderXPWidget(engagement) {

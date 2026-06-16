@@ -383,4 +383,25 @@ class MDCAT_Platform_Dashboard_Service {
 
         return MDCAT_Platform_Recommendation_Service::get_study_plan($user_id, $context);
     }
+
+    /**
+     * Fetch notification summary for the dashboard preview.
+     *
+     * Returns unread count and the 5 most recent notifications.
+     * Full notification history is loaded via the dedicated
+     * notification AJAX endpoint.
+     *
+     * @param int $user_id WordPress user ID.
+     * @return array Notification summary with unread_count and notifications.
+     */
+    public static function get_notification_summary( $user_id ) {
+
+        $user_id = absint($user_id);
+
+        if (!$user_id) {
+            return ['unread_count' => 0, 'notifications' => []];
+        }
+
+        return MDCAT_Platform_Notification_Service::get_dashboard_preview($user_id);
+    }
 }

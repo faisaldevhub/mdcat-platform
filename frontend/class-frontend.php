@@ -169,6 +169,14 @@ class MDCAT_Platform_Frontend {
 
             <div class="mdcat-dashboard__content" hidden>
 
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--notifications">
+                    <h2 class="mdcat-dashboard__section-title">
+                        <?php esc_html_e('Notifications', 'mdcat-platform'); ?>
+                        <span class="mdcat-dashboard__notification-badge" hidden></span>
+                    </h2>
+                    <div class="mdcat-dashboard__notifications"></div>
+                </section>
+
                 <div class="mdcat-dashboard__progress-hub">
 
                     <section class="mdcat-dashboard__section mdcat-dashboard__section--overall-progress">

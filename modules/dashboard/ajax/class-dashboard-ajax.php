@@ -122,18 +122,21 @@ class MDCAT_Platform_Dashboard_Ajax {
             $study_plan = [];
         }
 
+        $notification_summary = MDCAT_Platform_Dashboard_Service::get_notification_summary($user_id);
+
         wp_send_json_success(
             [
-                'stats'                => $stats,
-                'recent_activity'      => $recent_activity,
-                'performance_snapshot' => $performance_snapshot,
-                'streak'               => $streak,
-                'subject_progress'     => $subject_progress,
-                'chapter_progress'     => $chapter_progress,
-                'overall_progress'     => $overall_progress,
-                'continue_learning'    => $continue_learning,
-                'engagement'           => $engagement,
-                'study_plan'           => $study_plan,
+                'stats'                  => $stats,
+                'recent_activity'        => $recent_activity,
+                'performance_snapshot'   => $performance_snapshot,
+                'streak'                 => $streak,
+                'subject_progress'       => $subject_progress,
+                'chapter_progress'       => $chapter_progress,
+                'overall_progress'       => $overall_progress,
+                'continue_learning'      => $continue_learning,
+                'engagement'             => $engagement,
+                'study_plan'             => $study_plan,
+                'notification_summary'   => $notification_summary,
             ]
         );
     }
