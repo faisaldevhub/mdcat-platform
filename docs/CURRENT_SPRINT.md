@@ -3,10 +3,10 @@
 # Active Sprint
 
 Sprint Name:
-Engagement & Motivation System
+Smart Study Planner & Recommendations
 
 Sprint Goal:
-Increase student engagement and retention through XP, badges, achievements, and leaderboard systems.
+Help students understand exactly what to study next by using analytics, progress tracking, weak-topic detection, and learning history.
 
 Status:
 Planning
@@ -17,56 +17,54 @@ Planning
 
 The platform should be able to:
 
-* reward student activity
-* encourage consistency
-* increase daily engagement
-* recognize achievements
-* create healthy competition
+* recommend next learning steps
+* identify weak topics automatically
+* guide daily study sessions
+* prioritize revision areas
+* personalize learning recommendations
 
 This sprint focuses ONLY on:
-engagement and motivation systems.
+study planning and recommendation intelligence.
 
 ---
 
 # Current Tasks
 
-## XP System
+## Recommendation Engine
 
-[ ] XP Architecture
-[ ] XP Award Rules
-[ ] Quiz Completion XP
-[ ] Streak XP
-[ ] Progress XP
-[ ] XP Dashboard Integration
+[ ] Recommendation Architecture
+[ ] Weak Topic Recommendations
+[ ] Next Quiz Recommendations
+[ ] Revision Recommendations
+[ ] Study Priority Logic
 
-## Badges System
+## Study Planner
 
-[ ] Badge Architecture
-[ ] First Quiz Badge
-[ ] Streak Badges
-[ ] Accuracy Badges
-[ ] Completion Badges
+[ ] Daily Study Plan
+[ ] Continue Learning Recommendations
+[ ] Personalized Learning Path
+[ ] Smart Learning Suggestions
 
-## Achievement System
+## Analytics Integration
 
-[ ] Achievement Tracking
-[ ] Milestone Detection
-[ ] Achievement Notifications
-[ ] Achievement History
-
-## Leaderboard System
-
-[ ] Global Leaderboard
-[ ] Weekly Leaderboard
-[ ] Monthly Leaderboard
-[ ] Top Performer Rankings
+[ ] Weak Topic Analysis Integration
+[ ] Progress Tracking Integration
+[ ] Performance Analytics Integration
+[ ] Streak Integration
 
 ## Dashboard Integration
 
-[ ] XP Widget
-[ ] Badge Showcase
-[ ] Achievement Timeline
-[ ] Leaderboard Widget
+[ ] Study Planner Widget
+[ ] Recommended Actions Widget
+[ ] Priority Topics Section
+[ ] Revision Recommendations Section
+
+## Learning Intelligence
+
+[ ] Topic Prioritization
+[ ] Recommendation Scoring
+[ ] Study Path Generation
+[ ] Recommendation History
 
 ---
 
@@ -74,24 +72,27 @@ engagement and motivation systems.
 
 Rules:
 
+* Reuse existing analytics systems
 * Reuse existing progress tracking
-* Reuse analytics data
-* Reuse streak system
+* Reuse existing weak-topic detection
+* Reuse existing dashboard architecture
 * Maintain modular architecture
-* Keep calculations centralized
-* Avoid duplicate tracking data
+* Avoid duplicate calculations
+* Keep recommendation logic centralized
 
 ---
 
 # Technical Direction
 
-The engagement system should derive from:
+Recommendations should derive from:
 
 * quiz attempts
+* weak topics
 * progress tracking
+* subject analytics
+* chapter analytics
 * streak activity
-* analytics data
-* existing student activity
+* learning history
 
 Avoid unnecessary duplicate storage.
 
@@ -101,11 +102,11 @@ Avoid unnecessary duplicate storage.
 
 Sprint is complete when:
 
-* XP is awarded correctly
-* badges unlock correctly
-* achievements track correctly
-* leaderboards update correctly
-* dashboard integrations work
+* students receive study recommendations
+* weak topics are prioritized
+* daily study plans are generated
+* dashboard displays recommendations
+* recommendation logic is scalable
 * frontend remains responsive
 
 ---
@@ -114,13 +115,14 @@ Sprint is complete when:
 
 Do NOT build:
 
-* AI systems
-* payment gateways
+* AI chat systems
+* AI tutors
+* payment systems
 * advanced notifications
 * mobile applications
 
 Only:
-Engagement & Motivation System.
+Smart Study Planner & Recommendations.
 
 ---
 
