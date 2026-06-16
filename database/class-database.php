@@ -271,5 +271,67 @@ class MDCAT_Platform_Database {
 
         dbDelta($sql_enrollment_requests);
 
+        /**
+         * XP Transactions Table (Gamification)
+         *
+         * Append-only log of all XP awards. Total XP is always derived
+         * via SUM(amount) — never stored as a separate counter.
+         * The source column identifies the trigger (quiz_completion,
+         * streak_milestone, accuracy_bonus, badge_unlock, etc).
+         */
+
+        $xp_transactions_table = $wpdb->prefix . 'mdcat_xp_transactions';
+
+        $sql_xp_transactions = "CREATE TABLE $xp_transactions_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT UNSIGNED NOT NULL,
+            amount INT NOT NULL,
+            source VARCHAR(50) NOT NULL,
+            source_id BIGINT UNSIGNED NULL,
+            description VARCHAR(255) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id),
+            KEY user_id (user_id),
+            KEY source (source),
+            KEY created_at (created_at),
+            KEY user_created (user_id, created_at)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_xp_transactions);
+
+        /**
+         * User Rewards Table (Gamification)
+         *
+         * Stores earned badges and achievements in a single table.
+         * The reward_type column distinguishes between 'badge' and
+         * 'achievement'. The UNIQUE KEY on (user_id, reward_type,
+         * reward_slug) prevents duplicate awards during the
+         * evaluate-on-every-quiz-completion flow.
+         */
+
+        $user_rewards_table = $wpdb->prefix . 'mdcat_user_rewards';
+
+        $sql_user_rewards = "CREATE TABLE $user_rewards_table (
+
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id BIGINT UNSIGNED NOT NULL,
+            reward_type VARCHAR(20) NOT NULL,
+            reward_slug VARCHAR(100) NOT NULL,
+            earned_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (id),
+            UNIQUE KEY user_reward (user_id, reward_type, reward_slug),
+            KEY user_id (user_id),
+            KEY reward_type (reward_type),
+            KEY reward_slug (reward_slug),
+            KEY earned_at (earned_at)
+
+        ) $charset_collate;";
+
+        dbDelta($sql_user_rewards);
+
     }
 }

@@ -78,6 +78,12 @@ class MDCAT_Platform_Dashboard_Ajax {
             self::send_wp_error($continue_learning);
         }
 
+        $engagement = MDCAT_Platform_Dashboard_Service::get_engagement_data($user_id);
+
+        if (is_wp_error($engagement)) {
+            $engagement = ['xp' => [], 'badges' => [], 'achievements' => []];
+        }
+
         wp_send_json_success(
             [
                 'stats'                => $stats,
@@ -88,6 +94,7 @@ class MDCAT_Platform_Dashboard_Ajax {
                 'chapter_progress'     => $chapter_progress,
                 'overall_progress'     => $overall_progress,
                 'continue_learning'    => $continue_learning,
+                'engagement'           => $engagement,
             ]
         );
     }

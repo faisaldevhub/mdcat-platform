@@ -195,14 +195,29 @@ class MDCAT_Platform_Frontend {
                     <div class="mdcat-dashboard__stats-grid"></div>
                 </section>
 
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--xp">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Experience Points', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__xp-widget"></div>
+                </section>
+
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--streak">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Study Streak', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__streak"></div>
                 </section>
 
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--badges">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Badges', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__badge-showcase"></div>
+                </section>
+
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--snapshot">
                     <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Performance Snapshot', 'mdcat-platform'); ?></h2>
                     <div class="mdcat-dashboard__snapshot"></div>
+                </section>
+
+                <section class="mdcat-dashboard__section mdcat-dashboard__section--leaderboard">
+                    <h2 class="mdcat-dashboard__section-title"><?php esc_html_e('Leaderboard', 'mdcat-platform'); ?></h2>
+                    <div class="mdcat-dashboard__leaderboard-widget"></div>
                 </section>
 
                 <section class="mdcat-dashboard__section mdcat-dashboard__section--actions">

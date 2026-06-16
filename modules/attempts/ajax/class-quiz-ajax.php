@@ -152,7 +152,18 @@ class MDCAT_Platform_Quiz_Ajax {
             self::send_wp_error($result);
         }
 
-        wp_send_json_success(self::format_result($result));
+        /**
+         * Filter the quiz completion response before sending.
+         *
+         * Other modules (gamification) can append data to the response
+         * without coupling the quiz module to their internals.
+         *
+         * @param array $response   The formatted quiz result data.
+         * @param int   $attempt_id The completed attempt ID.
+         */
+        $response = apply_filters('mdcat_quiz_completion_response', self::format_result($result), $attempt_id);
+
+        wp_send_json_success($response);
     }
 
     /**

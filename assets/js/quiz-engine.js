@@ -386,6 +386,13 @@
             const correct = this.parseInt(result.correct_answers);
             const wrong = this.parseInt(result.wrong_answers);
 
+            let gamificationHtml = '';
+            const gam = result.gamification;
+
+            if (gam) {
+                gamificationHtml = this.buildGamificationFeedback(gam);
+            }
+
             this.elements.result.innerHTML = `
                 <div class="mdcat-quiz__result-card">
                     <h3>${this.escapeHtml(this.t('quiz_complete'))}</h3>
@@ -394,6 +401,7 @@
                         <span>${this.escapeHtml(this.t('correct'))}: ${this.escapeHtml(correct)}</span>
                         <span>${this.escapeHtml(this.t('wrong'))}: ${this.escapeHtml(wrong)}</span>
                     </div>
+                    ${gamificationHtml}
                     <button type="button" class="mdcat-quiz__review-button">${this.escapeHtml(this.t('review_answers'))}</button>
                 </div>
             `;
@@ -406,6 +414,80 @@
 
             this.clearPersistedState();
         }
+
+        /**
+         * Build gamification feedback HTML for the quiz result screen.
+         *
+         * Renders XP earned, level progress, and any newly unlocked
+         * badges or achievements. Returns an empty string if no
+         * gamification data is present.
+         */
+        buildGamificationFeedback(gam) {
+            const xpEarned = parseInt(gam.xp_earned, 10) || 0;
+            const level = parseInt(gam.current_level, 10) || 1;
+            const totalXP = parseInt(gam.total_xp, 10) || 0;
+            const progress = parseFloat(gam.progress_percentage) || 0;
+            const isMax = !!gam.is_max_level;
+            const badges = Array.isArray(gam.new_badges) ? gam.new_badges : [];
+            const achievements = Array.isArray(gam.new_achievements) ? gam.new_achievements : [];
+
+            if (!xpEarned && !badges.length && !achievements.length) {
+                return '';
+            }
+
+            let html = '<div class="mdcat-quiz__gamification">';
+
+            // XP earned card.
+            if (xpEarned > 0) {
+                const levelLabel = isMax
+                    ? `Level ${level} • MAX`
+                    : `Level ${level} • ${totalXP} XP`;
+
+                html += `
+                    <div class="mdcat-quiz__xp-earned">
+                        <div class="mdcat-quiz__xp-earned-header">
+                            <span class="mdcat-quiz__xp-earned-icon">⚡</span>
+                            <span class="mdcat-quiz__xp-earned-amount">+${xpEarned} XP</span>
+                        </div>
+                        <div class="mdcat-quiz__xp-earned-bar">
+                            <div class="mdcat-quiz__xp-earned-fill" style="width: ${Math.min(progress, 100)}%"></div>
+                        </div>
+                        <div class="mdcat-quiz__xp-earned-level">${this.escapeHtml(levelLabel)}</div>
+                    </div>
+                `;
+            }
+
+            // Badge unlock notifications.
+            badges.forEach((badge) => {
+                html += `
+                    <div class="mdcat-quiz__reward-unlocked mdcat-quiz__reward-unlocked--badge">
+                        <span class="mdcat-quiz__reward-icon">${this.escapeHtml(badge.icon || '🏅')}</span>
+                        <div class="mdcat-quiz__reward-info">
+                            <span class="mdcat-quiz__reward-label">Badge Unlocked!</span>
+                            <span class="mdcat-quiz__reward-name">${this.escapeHtml(badge.name || '')}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Achievement unlock notifications.
+            achievements.forEach((achievement) => {
+                html += `
+                    <div class="mdcat-quiz__reward-unlocked mdcat-quiz__reward-unlocked--achievement">
+                        <span class="mdcat-quiz__reward-icon">${this.escapeHtml(achievement.icon || '⭐')}</span>
+                        <div class="mdcat-quiz__reward-info">
+                            <span class="mdcat-quiz__reward-label">Achievement!</span>
+                            <span class="mdcat-quiz__reward-name">${this.escapeHtml(achievement.name || '')}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+
+            return html;
+        }
+
 
         async fetchAttemptReview() {
             if (!this.state.attemptId || this.state.isBusy) {
@@ -1288,7 +1370,10 @@
                 chapterProgressSection: root.querySelector('.mdcat-dashboard__chapter-progress'),
                 snapshot: root.querySelector('.mdcat-dashboard__snapshot'),
                 actionsGrid: root.querySelector('.mdcat-dashboard__actions-grid'),
-                activity: root.querySelector('.mdcat-dashboard__activity')
+                activity: root.querySelector('.mdcat-dashboard__activity'),
+                xpWidget: root.querySelector('.mdcat-dashboard__xp-widget'),
+                badgeShowcase: root.querySelector('.mdcat-dashboard__badge-showcase'),
+                leaderboardWidget: root.querySelector('.mdcat-dashboard__leaderboard-widget')
             };
 
             this.fetchStudentDashboard();
@@ -1325,10 +1410,13 @@
             this.renderOverallProgress(data.overall_progress);
             this.renderContinueLearning(data.continue_learning);
             this.renderStatsCards(stats);
+            this.renderXPWidget(data.engagement);
             this.renderStreakSection(streak);
+            this.renderBadgeShowcase(data.engagement);
             this.renderSubjectProgress(data.subject_progress);
             this.renderChapterProgress(data.chapter_progress);
             this.renderPerformanceSnapshot(snapshot);
+            this.renderLeaderboardWidget();
             this.renderQuickActions();
             this.renderRecentActivity(recentActivity);
             this.show(this.elements.content);
@@ -1819,6 +1907,187 @@
             table.appendChild(tbody);
             tableWrap.appendChild(table);
             this.elements.activity.appendChild(tableWrap);
+        }
+
+        renderXPWidget(engagement) {
+            if (!this.elements.xpWidget) {
+                return;
+            }
+
+            this.elements.xpWidget.innerHTML = '';
+
+            const xp = engagement && engagement.xp ? engagement.xp : {};
+            const level = parseInt(xp.current_level, 10) || 1;
+            const totalXP = parseInt(xp.total_xp, 10) || 0;
+            const progress = parseFloat(xp.progress_percentage) || 0;
+            const xpInLevel = parseInt(xp.xp_in_level, 10) || 0;
+            const xpForNext = parseInt(xp.xp_for_next_level, 10) || 0;
+            const isMax = !!xp.is_max_level;
+
+            const widget = document.createElement('div');
+            widget.className = 'mdcat-xp-widget';
+
+            const progressLabel = isMax
+                ? `<span class="mdcat-xp-widget__max-label">MAX LEVEL</span>`
+                : `<span class="mdcat-xp-widget__next-label">${xpInLevel} / ${xpForNext} XP to Level ${level + 1}</span>`;
+
+            widget.innerHTML = `
+                <div class="mdcat-xp-widget__header">
+                    <div class="mdcat-xp-widget__level-badge">Lv. ${level}</div>
+                    <div class="mdcat-xp-widget__xp-total">${totalXP} XP</div>
+                </div>
+                <div class="mdcat-xp-widget__progress-wrap">
+                    <div class="mdcat-xp-widget__progress-track">
+                        <div class="mdcat-xp-widget__progress-fill" style="width: ${Math.min(progress, 100)}%"></div>
+                    </div>
+                    <div class="mdcat-xp-widget__progress-info">${progressLabel}</div>
+                </div>
+            `;
+
+            this.elements.xpWidget.appendChild(widget);
+        }
+
+        renderBadgeShowcase(engagement) {
+            if (!this.elements.badgeShowcase) {
+                return;
+            }
+
+            this.elements.badgeShowcase.innerHTML = '';
+
+            const badges = engagement && Array.isArray(engagement.badges) ? engagement.badges : [];
+
+            if (!badges.length) {
+                return;
+            }
+
+            const grid = document.createElement('div');
+            grid.className = 'mdcat-badge-showcase__grid';
+
+            badges.forEach((badge) => {
+                const card = document.createElement('div');
+                const earnedClass = badge.earned ? 'mdcat-badge-card--earned' : 'mdcat-badge-card--locked';
+                card.className = `mdcat-badge-card ${earnedClass}`;
+
+                card.innerHTML = `
+                    <div class="mdcat-badge-card__icon">${this.escapeHtml(badge.icon || '🏅')}</div>
+                    <div class="mdcat-badge-card__name">${this.escapeHtml(badge.name || '')}</div>
+                    <div class="mdcat-badge-card__desc">${this.escapeHtml(badge.description || '')}</div>
+                `;
+
+                if (badge.earned && badge.earned_at) {
+                    const dateLabel = document.createElement('div');
+                    dateLabel.className = 'mdcat-badge-card__date';
+                    dateLabel.textContent = this.formatDate(badge.earned_at);
+                    card.appendChild(dateLabel);
+                }
+
+                grid.appendChild(card);
+            });
+
+            this.elements.badgeShowcase.appendChild(grid);
+        }
+
+        renderLeaderboardWidget() {
+            if (!this.elements.leaderboardWidget) {
+                return;
+            }
+
+            this.elements.leaderboardWidget.innerHTML = '';
+
+            const container = document.createElement('div');
+            container.className = 'mdcat-leaderboard-widget';
+
+            // Tabs.
+            const tabs = document.createElement('div');
+            tabs.className = 'mdcat-leaderboard-widget__tabs';
+
+            const types = [
+                { key: 'weekly', label: 'This Week' },
+                { key: 'monthly', label: 'This Month' },
+                { key: 'all_time', label: 'All Time' }
+            ];
+
+            types.forEach((type, index) => {
+                const tab = document.createElement('button');
+                tab.className = 'mdcat-leaderboard-widget__tab' + (index === 0 ? ' mdcat-leaderboard-widget__tab--active' : '');
+                tab.textContent = type.label;
+                tab.dataset.type = type.key;
+                tab.addEventListener('click', () => {
+                    tabs.querySelectorAll('.mdcat-leaderboard-widget__tab').forEach(t => t.classList.remove('mdcat-leaderboard-widget__tab--active'));
+                    tab.classList.add('mdcat-leaderboard-widget__tab--active');
+                    this.loadLeaderboard(type.key, body);
+                });
+                tabs.appendChild(tab);
+            });
+
+            container.appendChild(tabs);
+
+            // Body.
+            const body = document.createElement('div');
+            body.className = 'mdcat-leaderboard-widget__body';
+            body.innerHTML = `<div class="mdcat-leaderboard-widget__loading">${this.t('loading') || 'Loading...'}</div>`;
+            container.appendChild(body);
+
+            this.elements.leaderboardWidget.appendChild(container);
+
+            // Load default (weekly).
+            this.loadLeaderboard('weekly', body);
+        }
+
+        async loadLeaderboard(type, container) {
+            container.innerHTML = `<div class="mdcat-leaderboard-widget__loading">${this.t('loading') || 'Loading...'}</div>`;
+
+            const response = await this.request('mdcat_get_leaderboard', { type: type, limit: 5 });
+
+            if (!response || !response.success || !response.data) {
+                container.innerHTML = `<div class="mdcat-leaderboard-widget__empty">Unable to load leaderboard.</div>`;
+                return;
+            }
+
+            const data = response.data;
+            const rankings = Array.isArray(data.rankings) ? data.rankings : [];
+            const currentUser = data.current_user || {};
+
+            if (!rankings.length) {
+                container.innerHTML = `<div class="mdcat-leaderboard-widget__empty">No rankings yet. Complete quizzes to earn XP!</div>`;
+                return;
+            }
+
+            let html = '<div class="mdcat-leaderboard-widget__list">';
+
+            rankings.forEach((entry) => {
+                const isCurrentUser = currentUser.display_name && entry.display_name === currentUser.display_name && entry.total_xp === currentUser.total_xp;
+                const highlightClass = isCurrentUser ? ' mdcat-leaderboard-widget__row--current' : '';
+                const rankIcon = entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : '#' + entry.rank;
+
+                html += `<div class="mdcat-leaderboard-widget__row${highlightClass}">`;
+                html += `<span class="mdcat-leaderboard-widget__rank">${rankIcon}</span>`;
+                html += `<span class="mdcat-leaderboard-widget__name">${this.escapeHtml(entry.display_name)}</span>`;
+                html += `<span class="mdcat-leaderboard-widget__level">Lv.${entry.level || 1}</span>`;
+                html += `<span class="mdcat-leaderboard-widget__xp">${this.escapeHtml(entry.total_xp)} XP</span>`;
+                html += '</div>';
+            });
+
+            html += '</div>';
+
+            // Current user's rank if not in the top list.
+            const inTopList = rankings.some(r => r.display_name === currentUser.display_name && r.total_xp === currentUser.total_xp);
+
+            if (currentUser.rank && !inTopList) {
+                html += '<div class="mdcat-leaderboard-widget__separator">···</div>';
+                html += '<div class="mdcat-leaderboard-widget__row mdcat-leaderboard-widget__row--current">';
+                html += `<span class="mdcat-leaderboard-widget__rank">#${currentUser.rank}</span>`;
+                html += `<span class="mdcat-leaderboard-widget__name">${this.escapeHtml(currentUser.display_name)} (You)</span>`;
+                html += `<span class="mdcat-leaderboard-widget__level">Lv.${currentUser.level || 1}</span>`;
+                html += `<span class="mdcat-leaderboard-widget__xp">${this.escapeHtml(currentUser.total_xp)} XP</span>`;
+                html += '</div>';
+            }
+
+            if (data.period_label) {
+                html += `<div class="mdcat-leaderboard-widget__period">${this.escapeHtml(data.period_label)}</div>`;
+            }
+
+            container.innerHTML = html;
         }
 
         formatDate(dateString) {

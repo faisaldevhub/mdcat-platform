@@ -330,4 +330,32 @@ class MDCAT_Platform_Dashboard_Service {
 
         return MDCAT_Platform_Progress_Service::get_continue_learning($user_id);
     }
+
+    /**
+     * Fetch engagement data (XP, badges, achievements) for the dashboard.
+     *
+     * Delegates entirely to the Gamification services to avoid
+     * duplicating engagement logic inside the dashboard layer.
+     *
+     * @param int $user_id WordPress user ID.
+     * @return array|WP_Error
+     */
+    public static function get_engagement_data( $user_id ) {
+
+        $user_id = absint($user_id);
+
+        if (!$user_id) {
+            return new WP_Error('invalid_user', __('A valid user is required.', 'mdcat-platform'));
+        }
+
+        $xp_summary   = MDCAT_Platform_XP_Service::get_xp_summary($user_id);
+        $badges       = MDCAT_Platform_Badge_Service::get_badges_with_status($user_id);
+        $achievements = MDCAT_Platform_Achievement_Service::get_user_achievements($user_id);
+
+        return [
+            'xp'           => is_wp_error($xp_summary) ? [] : $xp_summary,
+            'badges'       => $badges,
+            'achievements' => $achievements,
+        ];
+    }
 }
