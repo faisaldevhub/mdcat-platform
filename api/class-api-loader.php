@@ -91,6 +91,7 @@ class MDCAT_Platform_API_Loader {
             $api_path . 'controllers/class-rest-quiz-controller.php',
             $api_path . 'controllers/class-rest-analytics-controller.php',
             $api_path . 'controllers/class-rest-revision-controller.php',
+            $api_path . 'controllers/class-rest-gamification-controller.php',
         ];
 
         foreach ($files as $file) {
@@ -156,6 +157,11 @@ class MDCAT_Platform_API_Loader {
         // Phase 2D — Revision.
         if (class_exists('MDCAT_Platform_REST_Revision_Controller')) {
             MDCAT_Platform_REST_Revision_Controller::register_routes();
+        }
+
+        // Phase 2E — Gamification.
+        if (class_exists('MDCAT_Platform_REST_Gamification_Controller')) {
+            MDCAT_Platform_REST_Gamification_Controller::register_routes();
         }
     }
 }
