@@ -1,0 +1,14 @@
+{
+    "name": "faisal-dev-hub/mdcat-platform",
+    "description": "MDCAT Learning Platform WordPress Plugin",
+    "type": "wordpress-plugin",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.4",
+        "firebase/php-jwt": "^7.1"
+    },
+    "config": {
+        "vendor-dir": "vendor",
+        "optimize-autoloader": true
+    }
+}

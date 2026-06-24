@@ -20,6 +20,14 @@ define('MDCAT_PLATFORM_URL', plugin_dir_url(__FILE__));
 define('MDCAT_PLATFORM_VERSION', '1.0.0');
 
 /**
+ * Composer Autoloader
+ */
+
+if (file_exists(MDCAT_PLATFORM_PATH . 'vendor/autoload.php')) {
+    require_once MDCAT_PLATFORM_PATH . 'vendor/autoload.php';
+}
+
+/**
  * Load Core Files
  */
 

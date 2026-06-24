@@ -41,6 +41,16 @@ class MDCAT_Platform_Loader {
         }
 
         /**
+         * Student Status Service — loaded unconditionally.
+         *
+         * This service is used by the REST API layer (non-admin context)
+         * for suspension checks during login and token refresh. It is a
+         * pure data-access class with no admin UI dependencies.
+         */
+
+        require_once MDCAT_PLATFORM_PATH . 'modules/student-management/services/class-student-status-service.php';
+
+        /**
          * Load Backend Modules
          */
 
@@ -90,5 +100,16 @@ class MDCAT_Platform_Loader {
         require_once MDCAT_PLATFORM_PATH . 'frontend/class-frontend.php';
 
         MDCAT_Platform_Frontend::init();
+
+        /**
+         * Load REST API
+         */
+
+        if (file_exists(MDCAT_PLATFORM_PATH . 'api/class-api-loader.php')) {
+            require_once MDCAT_PLATFORM_PATH . 'api/class-api-loader.php';
+            MDCAT_Platform_API_Loader::init();
+        } else {
+            error_log('[MDCAT Platform] REST API loader not found: api/class-api-loader.php');
+        }
     }
 }
