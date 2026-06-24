@@ -86,6 +86,7 @@ class MDCAT_Platform_API_Loader {
             // 4. Controllers.
             $api_path . 'controllers/class-rest-base-controller.php',
             $api_path . 'controllers/class-rest-auth-controller.php',
+            $api_path . 'controllers/class-rest-content-controller.php',
         ];
 
         foreach ($files as $file) {
@@ -126,6 +127,11 @@ class MDCAT_Platform_API_Loader {
         // Phase 1 — Authentication.
         if (class_exists('MDCAT_Platform_REST_Auth_Controller')) {
             MDCAT_Platform_REST_Auth_Controller::register_routes();
+        }
+
+        // Phase 2A — Content browsing.
+        if (class_exists('MDCAT_Platform_REST_Content_Controller')) {
+            MDCAT_Platform_REST_Content_Controller::register_routes();
         }
     }
 }
