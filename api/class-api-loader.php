@@ -88,6 +88,7 @@ class MDCAT_Platform_API_Loader {
             $api_path . 'controllers/class-rest-auth-controller.php',
             $api_path . 'controllers/class-rest-content-controller.php',
             $api_path . 'controllers/class-rest-dashboard-controller.php',
+            $api_path . 'controllers/class-rest-quiz-controller.php',
         ];
 
         foreach ($files as $file) {
@@ -138,6 +139,11 @@ class MDCAT_Platform_API_Loader {
         // Phase 2B — Dashboard.
         if (class_exists('MDCAT_Platform_REST_Dashboard_Controller')) {
             MDCAT_Platform_REST_Dashboard_Controller::register_routes();
+        }
+
+        // Phase 2C — Quiz engine.
+        if (class_exists('MDCAT_Platform_REST_Quiz_Controller')) {
+            MDCAT_Platform_REST_Quiz_Controller::register_routes();
         }
     }
 }
