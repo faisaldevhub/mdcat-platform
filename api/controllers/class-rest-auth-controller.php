@@ -300,6 +300,8 @@ class MDCAT_Platform_REST_Auth_Controller extends MDCAT_Platform_REST_Base_Contr
         return [
             'id'           => $user->ID,
             'display_name' => $user->display_name,
+            'first_name'   => $user->first_name,
+            'last_name'    => $user->last_name,
             'email'        => $user->user_email,
             'role'         => !empty($roles) ? $roles[0] : 'subscriber',
             'avatar_url'   => get_avatar_url($user->ID, ['size' => 96]),

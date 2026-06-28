@@ -43,13 +43,13 @@ class MDCAT_Platform_REST_Content_Controller
         register_rest_route(self::$namespace, '/subjects', [
             'methods'             => 'GET',
             'callback'            => [__CLASS__, 'get_subjects'],
-            'permission_callback' => [__CLASS__, 'check_dashboard_access'],
+            'permission_callback' => [__CLASS__, 'check_public_access'],
         ]);
 
         register_rest_route(self::$namespace, '/subjects/(?P<id>\d+)', [
             'methods'             => 'GET',
             'callback'            => [__CLASS__, 'get_subject'],
-            'permission_callback' => [__CLASS__, 'check_dashboard_access'],
+            'permission_callback' => [__CLASS__, 'check_public_access'],
         ]);
 
         // --- Chapters ---
@@ -57,13 +57,13 @@ class MDCAT_Platform_REST_Content_Controller
         register_rest_route(self::$namespace, '/chapters', [
             'methods'             => 'GET',
             'callback'            => [__CLASS__, 'get_chapters'],
-            'permission_callback' => [__CLASS__, 'check_dashboard_access'],
+            'permission_callback' => [__CLASS__, 'check_public_access'],
         ]);
 
         register_rest_route(self::$namespace, '/chapters/(?P<id>\d+)', [
             'methods'             => 'GET',
             'callback'            => [__CLASS__, 'get_chapter'],
-            'permission_callback' => [__CLASS__, 'check_dashboard_access'],
+            'permission_callback' => [__CLASS__, 'check_public_access'],
         ]);
 
         // --- Collections ---
@@ -71,13 +71,13 @@ class MDCAT_Platform_REST_Content_Controller
         register_rest_route(self::$namespace, '/collections', [
             'methods'             => 'GET',
             'callback'            => [__CLASS__, 'get_collections'],
-            'permission_callback' => [__CLASS__, 'check_dashboard_access'],
+            'permission_callback' => [__CLASS__, 'check_public_access'],
         ]);
 
         register_rest_route(self::$namespace, '/collections/(?P<id>\d+)', [
             'methods'             => 'GET',
             'callback'            => [__CLASS__, 'get_collection'],
-            'permission_callback' => [__CLASS__, 'check_dashboard_access'],
+            'permission_callback' => [__CLASS__, 'check_public_access'],
         ]);
     }
 

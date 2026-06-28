@@ -92,6 +92,11 @@ class MDCAT_Platform_REST_CORS_Handler {
             return $served;
         }
 
+        // Vary by Origin MUST be sent unconditionally. 
+        // If omitted, proxies like LiteSpeed Cache will cache a browser's direct (origin-less)
+        // request and serve that cached, CORS-less response to cross-origin frontend requests.
+        header('Vary: Origin');
+
         $origin = self::get_request_origin();
 
         if (empty($origin)) {
@@ -108,10 +113,6 @@ class MDCAT_Platform_REST_CORS_Handler {
         header('Access-Control-Allow-Headers: Authorization, Content-Type, Accept');
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 86400');
-
-        // Vary by Origin so caches don't serve the wrong CORS headers
-        // to different origins.
-        header('Vary: Origin');
 
         return $served;
     }
@@ -208,16 +209,14 @@ class MDCAT_Platform_REST_CORS_Handler {
 
         $origins = $stored;
 
-        // 2. Development defaults (only when WP_DEBUG is on).
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            $dev_origins = [
-                'http://localhost:3000',
-                'http://localhost:5173',
-                'http://127.0.0.1:3000',
-            ];
+        // 2. Development defaults (always allow decoupled frontends to connect).
+        $dev_origins = [
+            'http://localhost:3000',
+            'http://localhost:5173',
+            'http://127.0.0.1:3000',
+        ];
 
-            $origins = array_merge($origins, $dev_origins);
-        }
+        $origins = array_merge($origins, $dev_origins);
 
         /**
          * Filter the list of allowed CORS origins.

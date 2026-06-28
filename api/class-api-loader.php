@@ -47,6 +47,9 @@ class MDCAT_Platform_API_Loader {
             MDCAT_Platform_REST_CORS_Handler::init();
         }
 
+        // Hook the JWT authentication lifecycle natively into WordPress.
+        add_filter('determine_current_user', ['MDCAT_Platform_REST_Auth_Middleware', 'determine_current_user'], 15);
+
         add_action('rest_api_init', [__CLASS__, 'register_routes']);
     }
 

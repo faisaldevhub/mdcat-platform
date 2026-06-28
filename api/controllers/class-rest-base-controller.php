@@ -131,7 +131,7 @@ class MDCAT_Platform_REST_Base_Controller {
     // ------------------------------------------------------------------
 
     /**
-     * Get the authenticated user ID from the request.
+     * Get the authenticated user ID from the request or WP Core natively.
      *
      * @param WP_REST_Request $request The incoming REST request.
      * @return int WordPress user ID, or 0 if not authenticated.
@@ -140,21 +140,29 @@ class MDCAT_Platform_REST_Base_Controller {
 
         $user_id = $request->get_param('_authenticated_user_id');
 
-        return $user_id ? absint($user_id) : 0;
+        if ($user_id) {
+            return absint($user_id);
+        }
+
+        return get_current_user_id();
     }
 
     /**
-     * Get the authenticated WP_User object from the request.
-     *
-     * Loaded once by the Auth Middleware — no additional database
-     * query is performed.
+     * Get the authenticated WP_User object from the request or WP Core.
      *
      * @param WP_REST_Request $request The incoming REST request.
      * @return WP_User|null WP_User object, or null if not authenticated.
      */
     protected static function get_current_user( $request ) {
 
-        return $request->get_param('_authenticated_user');
+        $user = $request->get_param('_authenticated_user');
+        
+        if ($user) {
+            return $user;
+        }
+
+        $wp_user = wp_get_current_user();
+        return $wp_user->exists() ? $wp_user : null;
     }
 
     /**
